@@ -1,0 +1,199 @@
+import 'package:flutter/material.dart';
+import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/helper/string_const.dart';
+import 'package:project_petcare/model/dashservice.dart';
+import 'package:project_petcare/view/customs/consttextform.dart';
+import 'package:project_petcare/view/ourservice/profession.dart';
+
+class OurServicesMore extends StatefulWidget {
+  final DashService? dashService;
+
+  OurServicesMore({Key? key, this.dashService}) : super(key: key);
+
+  @override
+  State<OurServicesMore> createState() => _OurServicesMoreState();
+}
+
+class _OurServicesMoreState extends State<OurServicesMore>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        backgroundColor: ColorUtil.BackGroundColorColor,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: ColorUtil.BackGroundColorColor,
+          iconTheme: const IconThemeData.fallback(),
+          title: Text(
+            (widget.dashService!.service!),
+            style: const TextStyle(color: Colors.black),
+          ),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => YourProfession()));
+              },
+              icon: Icon(Icons.person_add_alt_1_rounded),
+            ),
+            SizedBox(width: 5),
+          ],
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: ConstTextForm(
+                        hintText: "Search here...",
+                        suffixIcon: const Icon(Icons.search),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          spreadRadius: 0,
+                          blurRadius: 3,
+                          color: Colors.grey.withOpacity(1),
+                          offset: const Offset(2, 4),
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                    ),
+                    width: 55,
+                    height: 55,
+                    child: const Icon(Icons.sort),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            const Row(
+              children: [
+                SizedBox(
+                  width: 20,
+                ),
+                Text(
+                  exploreVetStr,
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+            DefaultTabController(
+              length: 3,
+              child: Container(
+                child: Expanded(
+                  child: Column(
+                    children: [
+                      TabBar(
+                        controller: _tabController,
+                        labelColor: Colors.red,
+                        unselectedLabelColor:
+                            Colors.black, // Change the color of unselected text
+                        indicatorColor: Colors.red,
+                        tabs: [
+                          Tab(
+                            child: Text(
+                              'Popular Vet',
+                            ),
+                          ),
+                          Tab(
+                            child: Text(
+                              'Nearby Vet',
+                            ),
+                          ),
+                          Tab(
+                            child: Text(
+                              'Last Visited',
+                            ),
+                          ),
+                        ],
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                          controller: _tabController,
+                          children: [
+                            all(context),
+                            nearby(context),
+                            popular(context),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  Widget popular(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: Container(
+            color: Colors.blue,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget nearby(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: Container(
+            color: Colors.red,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget all(BuildContext context) {
+    return Expanded(
+      child: Column(
+        children: [
+          Expanded(
+            child: Container(
+              color: Colors.yellow,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
