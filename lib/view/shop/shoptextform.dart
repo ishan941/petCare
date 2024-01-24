@@ -6,12 +6,14 @@ class ShopTextForm extends StatelessWidget {
   String? labelText, hintText;
   void Function(String)? onChanged;
   String? Function(String?)? validator;
+  Widget? prefixIcon;
 
    ShopTextForm({super.key,
   this.labelText,
   this.onChanged,
   this.validator,
   this.hintText,
+  this.prefixIcon
   });
 
   @override
@@ -26,6 +28,7 @@ class ShopTextForm extends StatelessWidget {
 
         decoration: InputDecoration(
     hintText: hintText,
+    prefixIcon: prefixIcon,
           labelText: labelText,
           border: OutlineInputBorder(
             

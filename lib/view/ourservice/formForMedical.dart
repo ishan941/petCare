@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:project_petcare/core/statusutil.dart';
+import 'package:project_petcare/helper/string_const.dart';
+import 'package:project_petcare/provider/ourservice_provider.dart';
+import 'package:project_petcare/view/dashboard/buttomnav.dart';
+import 'package:project_petcare/view/ourservice/formFinal.dart';
+import 'package:project_petcare/view/ourservice/profession.dart';
 import 'package:project_petcare/view/shop/shoptextform.dart';
+import 'package:provider/provider.dart';
 
 class FormForMedical extends StatefulWidget {
   const FormForMedical({super.key});
@@ -15,16 +22,23 @@ class _FormForMedicalState extends State<FormForMedical> {
       appBar: AppBar(
         elevation: 0,
       ),
-     body: Column(
-      children: [
-        Text("Medical Form"),
-        ShopTextForm(
-          onChanged: (val) {
+     body: Consumer<OurServiceProvider>(
+      builder: (context, ourServiceProvider, child) => 
+      Column(
+        children: [
+          Text("Medical Form"),
+          ShopTextForm(
+            onChanged: (val) {
+              ourServiceProvider.medical = val;
+              
+            },
+          ),
+          ElevatedButton(onPressed: (){
+           Navigator.push(context, MaterialPageRoute(builder: (context)=> FormFinalProfession()));
             
-            
-          },
-        )
-      ],
+          }, child: Text(submitStr))
+        ],
+       ),
      ),
     );
   }

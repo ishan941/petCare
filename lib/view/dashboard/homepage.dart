@@ -3,24 +3,29 @@ import 'package:project_petcare/core/smooth_scrollable.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/constant.dart';
 import 'package:project_petcare/helper/helper.dart';
+import 'package:project_petcare/model/signUp.dart';
 import 'package:project_petcare/provider/adoptprovider.dart';
 import 'package:project_petcare/provider/donateprovider.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
+import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/view/adopt/adoptDetails.dart';
 import 'package:project_petcare/view/adopt/donateData.dart';
 import 'package:project_petcare/view/adopt/adotp.dart';
 import 'package:project_petcare/view/categories.dart/categoriesContain.dart';
 import 'package:project_petcare/view/dashboard/categories.dart';
 import 'package:project_petcare/view/dashboard/donatenow.dart';
+import 'package:project_petcare/view/donate/donate_1.dart';
 import 'package:project_petcare/view/ourservice/ourservices.dart';
-import 'package:project_petcare/view/profile.dart';
+import 'package:project_petcare/view/profile/profile.dart';
 import 'package:project_petcare/view/dashboard/search.dart';
 import 'package:project_petcare/view/shop/shopall.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  HomePage({
+    super.key,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -49,6 +54,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
+      getUserName();
       getdata();
       getDashServiceDetailsinUi();
       getAdoptdata();
@@ -61,6 +67,11 @@ class _HomePageState extends State<HomePage> {
   getdata() async {
     var donateProvider = Provider.of<DonateProvider>(context, listen: false);
     await donateProvider.petDetails();
+  }
+
+  getUserName() async {
+    var signUpProvider = Provider.of<SignUpProvider>(context, listen: false);
+    await signUpProvider.userData();
   }
 
   getDashServiceDetailsinUi() async {
@@ -106,211 +117,217 @@ class _HomePageState extends State<HomePage> {
       behavior: MyBehavior(),
       child: SafeArea(
         child: SingleChildScrollView(
-          child: Consumer<PetCareProvider>(
-            builder: (context, petCareProvider, child) =>
-                Consumer<OurServiceProvider>(
-              builder: (context, ourServiceProvider, child) =>
-                  Consumer<DonateProvider>(
-                builder: (context, donateProvider, child) =>
-                    Consumer<AdoptProvider>(
-                  builder: (context, adoptProvider, child) => Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Good morning,',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                    Text(
-                                      "Ishan Shrestha",
-                                      style: TextStyle(
-                                        fontSize: 25,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const Spacer(),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Profile()));
-                                  },
-                                  child: const CircleAvatar(
-                                    radius: 25,
-                                    backgroundImage:
-                                        AssetImage("assets/images/ishan.jpg"),
-                                  ),
-                                )
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    spreadRadius: 0,
-                                    blurRadius: 3,
-                                    color: Colors.grey.withOpacity(0.5),
-                                    offset: Offset(2, 4),
-                                  ),
-                                ],
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white,
+          child: Consumer<SignUpProvider>(
+            builder: (context, signUpProvider, child) =>
+                Consumer<PetCareProvider>(
+              builder: (context, petCareProvider, child) =>
+                  Consumer<OurServiceProvider>(
+                builder: (context, ourServiceProvider, child) =>
+                    Consumer<DonateProvider>(
+                  builder: (context, donateProvider, child) =>
+                      Consumer<AdoptProvider>(
+                    builder: (context, adoptProvider, child) => Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                height: 5,
                               ),
-                              height: 50,
-                              child: TextFormField(
-                                keyboardType: TextInputType.text,
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Search(),
-                                      ));
-                                },
-                                readOnly: true,
-                                textAlignVertical: TextAlignVertical.center,
-                                decoration: InputDecoration(
-                                  prefixIcon: const Icon(Icons.search),
-                                  hintText: "Search here...",
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Column(
-                              children: [
-                                Stack(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Image.asset(
-                                            "assets/images/streetpets.png"),
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 150, left: 15),
-                                      child: GestureDetector(
-                                        onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    DonateNow())),
-                                        child: SizedBox(
-                                          height: 35,
-                                          child: Image.asset(
-                                              "assets/images/donatenow.png"),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            // SizedBox(height: 10,),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 15, horizontal: 5),
-                              child: Row(
+                              Row(
                                 children: [
-                                  InkWell(
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Good morning,',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      Text(
+                                         signUpProvider.name ?? 'User',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ],
+                                  ),
+                                  const Spacer(),
+                                  GestureDetector(
                                     onTap: () {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => Profile()));
                                     },
-                                    child: const Text(
-                                      "Categories",
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w500),
+                                    child: const CircleAvatar(
+                                      radius: 25,
+                                      backgroundImage:
+                                          AssetImage("assets/images/ishan.jpg"),
                                     ),
-                                  ),
-                                  Spacer(),
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CategoriesExplore()));
-                                    },
-                                    child: Text("Explore",
-                                        style: TextStyle(
-                                            color: ColorUtil.primaryColor,
-                                            fontSize: 18)),
                                   )
                                 ],
                               ),
-                            ),
-                            //categories
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * .15,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: imageList.length,
-                                itemBuilder: (context, index) =>
-                                    GestureDetector(
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      spreadRadius: 0,
+                                      blurRadius: 3,
+                                      color: Colors.grey.withOpacity(0.5),
+                                      offset: Offset(2, 4),
+                                    ),
+                                  ],
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                ),
+                                height: 50,
+                                child: TextFormField(
+                                  keyboardType: TextInputType.text,
                                   onTap: () {
-                                    String? categoryTitle =
-                                        imageList[index].name;
-
-                                    // Use the categoryTitle to navigate to the Search page with dynamic content
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return CategoriesContain(categoryTitle: categoryTitle,);
-                                    }));
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Search(),
+                                        ));
                                   },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(right: 8),
-                                    child: SizedBox(
-                                        height: 50,
-                                        child: Image.asset(
-                                            imageList[index].images!)),
+                                  readOnly: true,
+                                  textAlignVertical: TextAlignVertical.center,
+                                  decoration: InputDecoration(
+                                    prefixIcon: const Icon(Icons.search),
+                                    hintText: "Search here...",
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            //end categories
+                              Column(
+                                children: [
+                                  Stack(
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Image.asset(
+                                              "assets/images/streetpets.png"),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 150, left: 15),
+                                        child: GestureDetector(
+                                          onTap: () => Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      DonateFirstPage())),
+                                          child: SizedBox(
+                                            height: 35,
+                                            child: Image.asset(
+                                                "assets/images/donatenow.png"),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              // SizedBox(height: 10,),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 15, horizontal: 5),
+                                child: Row(
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Profile()));
+                                      },
+                                      child: const Text(
+                                        "Categories",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CategoriesExplore()));
+                                      },
+                                      child: Text("Explore",
+                                          style: TextStyle(
+                                              color: ColorUtil.primaryColor,
+                                              fontSize: 18)),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              //categories
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * .15,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: imageList.length,
+                                  itemBuilder: (context, index) =>
+                                      GestureDetector(
+                                    onTap: () {
+                                      String? categoryTitle =
+                                          imageList[index].name;
 
-                            //ourservice ui
-                            ourservice(context),
+                                      // Use the categoryTitle to navigate to the Search page with dynamic content
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return CategoriesContain(
+                                          categoryTitle: categoryTitle,
+                                        );
+                                      }));
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(right: 8),
+                                      child: SizedBox(
+                                          height: 50,
+                                          child: Image.asset(
+                                              imageList[index].images!)),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              //end categories
 
-                            SizedBox(
-                              height: 10,
-                            ),
-                            //adoupt ui
-                            adopt(context, donateProvider),
-                            SizedBox(
-                              height: 20,
-                            ),
+                              //ourservice ui
+                              ourservice(context),
 
-                            //adopt details
-                            adoptdetails(adoptProvider),
-                            SizedBox(
-                              height: 100,
-                            )
-                          ],
+                              SizedBox(
+                                height: 10,
+                              ),
+                              //adoupt ui
+                              // adopt(context, donateProvider),
+                              // SizedBox(
+                              //   height: 20,
+                              // ),
+
+                              //adopt details
+                              adoptdetails(adoptProvider),
+                              SizedBox(
+                                height: 100,
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -322,108 +339,142 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget adoptdetails(AdoptProvider adoptProvider) {
-    return Container(
-      height: 150,
-      width: double.infinity,
-      child: Expanded(
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: adoptProvider.adoptDetailsList.length,
-          itemBuilder: (context, index) => GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => AdoptDetails(
-                            adopt: adoptProvider.adoptDetailsList[index],
-                          )));
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        spreadRadius: 0,
-                        blurRadius: 3,
-                        color: Colors.grey.withOpacity(0.5),
-                        offset: Offset(2, 4),
-                      ),
-                    ]),
-                height: MediaQuery.of(context).size.height * .18,
-                // width: MediaQuery.of(context).size.width*0.8,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Container(
-                          height: MediaQuery.of(context).size.height,
-                          width: MediaQuery.of(context).size.width * 0.36,
-                          child: Image.network(
-                            adoptProvider.adoptDetailsList[index].imageUrl ??
-                                "",
-                            fit: BoxFit.cover,
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Row(
+            children: [
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Adopt",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  // Text("Your favourite pet",style: TextStyle(fontSize: 16),)
+                ],
+              ),
+              Spacer(),
+              InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => AdoptAll()));
+                  },
+                  child: Text(
+                    "See all",
+                    style:
+                        TextStyle(fontSize: 18, color: ColorUtil.primaryColor),
+                  ))
+            ],
+          ),
+        ),
+        Container(
+          height: 150,
+          // width: double.infinity,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: adoptProvider.adoptDetailsList.length,
+            itemBuilder: (context, index) => GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AdoptDetails(
+                              adopt: adoptProvider.adoptDetailsList[index],
+                            )));
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          spreadRadius: 0,
+                          blurRadius: 3,
+                          color: Colors.grey.withOpacity(0.5),
+                          offset: Offset(2, 4),
+                        ),
+                      ]),
+                  // height: MediaQuery.of(context).size.height * .18,
+                  // width: MediaQuery.of(context).size.width*0.8,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Container(
+                            // height: MediaQuery.of(context).size.height,
+                            width: MediaQuery.of(context).size.width * 0.36,
+                            child: Image.network(
+                              adoptProvider.adoptDetailsList[index].imageUrl ??
+                                  "",
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * .4,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              adoptProvider.adoptDetailsList[index].petbread ??
-                                  "",
-                              style: const TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w500),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              adoptProvider.adoptDetailsList[index].petname ??
-                                  "",
-                              style: const TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.w500),
-                              maxLines: 2, // Adjust as needed
-                              overflow: TextOverflow
-                                  .ellipsis, // Handle overflow gracefully
-                            ),
-                            const SizedBox(height: 5),
-                            Row(
-                              children: [
-                                Icon(Icons.location_on_outlined,
-                                    size: 15, color: ColorUtil.primaryColor),
-                                const SizedBox(
-                                  width: 2,
-                                ),
-                                Column(
-                                  children: [
-                                    Text(adoptProvider
-                                            .adoptDetailsList[index].location ??
-                                        ""),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                    ],
+                        Container(
+                          width: MediaQuery.of(context).size.width * .4,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                adoptProvider
+                                        .adoptDetailsList[index].petbread ??
+                                    "",
+                                style: const TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.w500),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                adoptProvider.adoptDetailsList[index].petname ??
+                                    "",
+                                style: const TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.w500),
+                                maxLines: 2, // Adjust as needed
+                                overflow: TextOverflow
+                                    .ellipsis, // Handle overflow gracefully
+                              ),
+                              const SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  Icon(Icons.location_on_outlined,
+                                      size: 15, color: ColorUtil.primaryColor),
+                                  const SizedBox(
+                                    width: 2,
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text(adoptProvider.adoptDetailsList[index]
+                                              .location ??
+                                          ""),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 

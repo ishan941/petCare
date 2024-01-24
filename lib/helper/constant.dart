@@ -22,3 +22,15 @@ const TextStyle titleText = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w500
 );
+const TextStyle textStyleSmallSized = TextStyle(
+  fontSize: 12,
+  color: Color.fromARGB(255, 123, 119, 119)
+);
+const TextStyle textStyleSmallTitle = TextStyle(
+  fontSize: 13,
+  fontWeight: FontWeight.w400
+);
+const TextStyle textStyleMini = TextStyle(
+  fontSize: 9,
+  color: Color.fromARGB(255, 123, 119, 119)
+);

@@ -4,9 +4,7 @@ import 'package:project_petcare/helper/constant.dart';
 import 'package:project_petcare/practice/practice1.dart';
 import 'package:project_petcare/view/dashboard/homepage.dart';
 import 'package:project_petcare/view/donate/donate_1.dart';
-import 'package:project_petcare/view/logins/forgetpassword.dart';
-import 'package:project_petcare/view/ourservice/ourservices.dart';
-import 'package:project_petcare/practice/practcie.dart';
+import 'package:project_petcare/view/profile/profile.dart';
 import 'package:project_petcare/view/shop/shopall.dart';
 class BottomNavBar extends StatefulWidget {
   @override
@@ -22,7 +20,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
    
     //  HomePage(),
   DonateFirstPage(),
-    Practice1()
+    // Practice1()
+    Profile(),
     
       //ForgetPassword(),
    

@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 SaveValueToSharedPreference()async{
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-await prefs.setBool("isUserExist", true);
+await prefs.setBool("isUserLoggedIn", true);
 
 }
  void _showAlertDialog(BuildContext context) async {

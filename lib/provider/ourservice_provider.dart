@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,6 +14,7 @@ import 'package:project_petcare/service/petcareserivce.dart';
 class OurServiceProvider extends ChangeNotifier {
   String? errorMessage;
   String? service;
+  String? medical, shop, trainner;
   String? cpimageUrl, ppimageUrl, profilePictureUrl;
   String? profession, fullname, phone, email;
   XFile? cpimage, ppimage, profilePicture;
@@ -24,9 +24,11 @@ class OurServiceProvider extends ChangeNotifier {
 
   StatusUtil _dashServiceUtil = StatusUtil.idle;
   StatusUtil _profilePictureUtil = StatusUtil.idle;
+  StatusUtil _professionUtil = StatusUtil.idle;
 
   StatusUtil get dashServiceUtil => _dashServiceUtil;
   StatusUtil get profilePictureUtil => _profilePictureUtil;
+  StatusUtil get professionUtil => _professionUtil;
 
   setDashServiceUtil(StatusUtil statusUtil) {
     _dashServiceUtil = statusUtil;
@@ -36,6 +38,29 @@ class OurServiceProvider extends ChangeNotifier {
   setProfilePictureUtil(StatusUtil statusUtil) {
     _profilePictureUtil = statusUtil;
     notifyListeners();
+  }
+  setProfessionUtil(StatusUtil statusUtil){
+    _professionUtil =statusUtil;
+    notifyListeners();
+  }
+
+  Future<void> saveProfessionData(OurService ourService)async{
+    if(_professionUtil != StatusUtil.loading){
+      setProfessionUtil(StatusUtil.loading);
+    }
+    try{
+      FireResponse response = await petCareService.saveProfessionData(ourService);
+      if(response.statusUtil == StatusUtil.success){
+        setProfessionUtil(StatusUtil.success);
+      }else if(response.statusUtil == StatusUtil.error){
+        errorMessage = response.errorMessage;
+        setProfessionUtil(StatusUtil.error,);
+      }
+
+    }catch(e){
+      errorMessage = "$e";
+      setProfessionUtil(StatusUtil.error);
+    }
   }
 
   Future<void> saveDashServiceDetails(DashService dashService) async {
@@ -188,12 +213,25 @@ class OurServiceProvider extends ChangeNotifier {
     await uploadImageInFirebaseForPpImage();
     DashService dashService =
         DashService(cpImage: cpimageUrl, ppImage: ppimageUrl, service: service);
-    await petCareService.saveDashServiceDetails(dashService).then((value) {
-      if (dashServiceUtil == StatusUtil.success) {
+    await petCareService.saveDashServiceDetails(dashService);
+  }
+  sendProfessionValueToFireBase(BuildContext context)async{
+    await uploadProfilePictureInFireBase();
+    OurService ourService = OurService(
+      profession: profession,
+      fullname: fullname,
+      email: email,
+      phone: phone,
+      medical: medical,
+
+    );
+    await petCareService.saveProfessionData(ourService).then((value) {
+      if(professionUtil == StatusUtil.success){
         Helper.snackBar(successfullySavedStr, context);
-      } else if (dashServiceUtil == StatusUtil.error) {
+      }else if (professionUtil == StatusUtil.error){
         Helper.snackBar(failedToSaveStr, context);
       }
+
     });
   }
 }

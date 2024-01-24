@@ -18,9 +18,17 @@ class AdoptProvider extends ChangeNotifier {
   String? petname, name;
 
   String? petweight;
-  String? petage;
+  String? petage, petageclc;
   String? gender, phone, location;
   String? petbread;
+
+  double _per = 0.0;
+  double get per => _per;
+  void updatePercent(double value){
+    _per = value;
+    notifyListeners();
+
+  }
   List<Adopt> adoptDetailsList = [];
 
   PetCareService petCareService = PetCareImpl();

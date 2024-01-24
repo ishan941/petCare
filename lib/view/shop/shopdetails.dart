@@ -8,8 +8,9 @@ import 'package:provider/provider.dart';
 
 class ShopDetails extends StatefulWidget {
   Shop? shop;
-   ShopDetails({super.key,
-  this.shop,
+  ShopDetails({
+    super.key,
+    this.shop,
   });
 
   @override
@@ -33,21 +34,44 @@ class _ShopDetailsState extends State<ShopDetails> {
       backgroundColor: ColorUtil.BackGroundColorColor,
       body: SafeArea(
           child: Consumer<ShopProvider>(
-            builder: (context, shopProvider, child) =>  Consumer<DonateProvider>(
-                  builder: (context, donateProvider, child) => Column(
+        builder: (context, shopProvider, child) => Consumer<DonateProvider>(
+          builder: (context, donateProvider, child) => Column(
             children: [
               Expanded(
                 child: ListView.builder(
                   itemCount: 1,
                   itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(15),
                     child: Column(
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: SizedBox(
-                              child: Image.network(
-                                 widget.shop!.images!)),
+                          child: Stack(
+                            children: [
+                              SizedBox(
+                                  child: Image.network(widget.shop!.images!)),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey,
+                                      borderRadius:
+                                          BorderRadius.circular(30)),
+                                  width: 30, // Set the desired width
+                                  height: 30, // Set the desired height
+                                  child: Icon(
+                                    Icons.arrow_back_ios_new_outlined,
+                                    color: Colors.white,
+                                    size: 18,
+                                  )),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                         SizedBox(
                           height: 20,
@@ -74,7 +98,7 @@ class _ShopDetailsState extends State<ShopDetails> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                widget.shop!.product!,
+                                  widget.shop!.product!,
                                   style: mainTitleText,
                                 ),
                                 SizedBox(
@@ -126,50 +150,65 @@ class _ShopDetailsState extends State<ShopDetails> {
                                       style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w400,
-                                          decoration: TextDecoration.lineThrough,
+                                          decoration:
+                                              TextDecoration.lineThrough,
                                           decorationThickness: 1.5),
-                                    ), 
-                                    SizedBox(width: 7,),
+                                    ),
+                                    SizedBox(
+                                      width: 7,
+                                    ),
                                     Text("-15%")
                                   ],
                                 ),
-                                SizedBox(height: 10,),
-                                Text("About", style: mainTitleText,),
-                                SizedBox(height: 10,),
-                                Text( widget.shop!.description!, style: titleText,),
-                                SizedBox(height: 25,),
-                                 Row(
-                                       children: [
-                                        Text(petWeightStr, style: subTitleText,),
-                                        SizedBox(width: 5,),
-                                         Text(donateProvider.donatePetList[index].petweight?? "",style: titleText,),
-                                       ],
-                                     ),
-                                    Row(
-                                       children: [
-                                        Text(petAgeStr, style: subTitleText,),
-                                        SizedBox(width: 5,),
-                                         Text(donateProvider.donatePetList[index].petage?? "",style: titleText,),
-                                       ],
-                                     ),Row(
-                                       children: [
-                                        Text(petSexStr, style: subTitleText,),
-                                        SizedBox(width: 5,),
-                                         Text(donateProvider.donatePetList[index].gender?? "",style: titleText,),
-                                       ],
-                                     ),Row(
-                                       children: [
-                                        Text(contactNumberStr ,style: subTitleText,),
-                                        SizedBox(width: 5,),
-                                         Text(donateProvider.donatePetList[index].phone?? "",style: titleText,),
-                                       ],
-                                     ),Row(
-                                       children: [
-                                        Text(locationStr ,style: subTitleText,),
-                                        SizedBox(width: 5,),
-                                         Text( widget.shop!.location?? "",style: titleText,),
-                                       ],
-                                     ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  "About",
+                                  style: mainTitleText,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  widget.shop!.description!,
+                                  style: titleText,
+                                ),
+                                SizedBox(
+                                  height: 25,
+                                ),
+                                //  Row(
+                                //        children: [
+                                //         Text(petWeightStr, style: subTitleText,),
+                                //         SizedBox(width: 5,),
+                                //          Text(donateProvider.donatePetList[index].petweight?? "",style: titleText,),
+                                //        ],
+                                //      ),
+                                //     Row(
+                                //        children: [
+                                //         Text(petAgeStr, style: subTitleText,),
+                                //         SizedBox(width: 5,),
+                                //          Text(donateProvider.donatePetList[index].petage?? "",style: titleText,),
+                                //        ],
+                                //      ),Row(
+                                //        children: [
+                                //         Text(petSexStr, style: subTitleText,),
+                                //         SizedBox(width: 5,),
+                                //          Text(donateProvider.donatePetList[index].gender?? "",style: titleText,),
+                                //        ],
+                                //      ),Row(
+                                //        children: [
+                                //         Text(contactNumberStr ,style: subTitleText,),
+                                //         SizedBox(width: 5,),
+                                //          Text(donateProvider.donatePetList[index].phone?? "",style: titleText,),
+                                //        ],
+                                //      ),Row(
+                                //        children: [
+                                //         Text(locationStr ,style: subTitleText,),
+                                //         SizedBox(width: 5,),
+                                //          Text( widget.shop!.location?? "",style: titleText,),
+                                //        ],
+                                //      ),
                               ],
                             ),
                           ),
@@ -180,9 +219,9 @@ class _ShopDetailsState extends State<ShopDetails> {
                 ),
               )
             ],
-                  ),
-                ),
-          )),
+          ),
+        ),
+      )),
     );
   }
 }

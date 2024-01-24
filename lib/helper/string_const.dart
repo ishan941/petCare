@@ -74,3 +74,4 @@ const String enterYourFullNameStr = "Enter Your Full Name";
 const String valiProfissionStr = "Please select your profession";
 const String pleaseEnterStr ="Please Enter your";
 const String emailStr = "Email";
+const String valiEmailStr = "Please enter your email";

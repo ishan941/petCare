@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:project_petcare/core/statusutil.dart';
+import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
 import 'package:project_petcare/view/shop/shoptextform.dart';
@@ -27,6 +29,18 @@ class _ServiceFormState extends State<ServiceForm> {
               child: Column(
                 children: [
                   SizedBox(
+                    child: InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Icon(Icons.arrow_back_ios_new_outlined),
+                          ],
+                        )),
                     height: 100,
                   ),
                   Padding(
@@ -44,7 +58,6 @@ class _ServiceFormState extends State<ServiceForm> {
                       },
                     ),
                   ),
-                 
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -79,7 +92,9 @@ class _ServiceFormState extends State<ServiceForm> {
                       ),
                     ],
                   ),
-                   SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   GestureDetector(
                     onTap: () {
                       pickImageFormGalleryForPpImage(ourServiceProvider);
@@ -110,12 +125,21 @@ class _ServiceFormState extends State<ServiceForm> {
                               )),
                   ),
                   SizedBox(
-                    height: 200,
+                    height: 20,
                   ),
                   ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           await ourServiceProvider.sendValueToFirBase(context);
+
+                          if (ourServiceProvider.dashServiceUtil ==
+                              StatusUtil.success) {
+                            Helper.snackBar(successfullySavedStr, context);
+                          } else if (ourServiceProvider.dashServiceUtil ==
+                              StatusUtil.error) {
+                            Helper.snackBar(failedToSaveStr, context);
+                          }
+
                           Navigator.pop(context);
                         }
                       },

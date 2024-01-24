@@ -1,9 +1,9 @@
 import 'dart:io';
-
-import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/helper/customDropMenu.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/provider/adoptprovider.dart';
 import 'package:project_petcare/view/donate/donate_2.dart';
@@ -23,6 +23,9 @@ class _DonateFirstPageState extends State<DonateFirstPage> {
   // late SingleValueDropDownController _cnt;
   FocusNode textFieldFocusNode = FocusNode();
   FocusNode searchFocusNode = FocusNode();
+  List<String> petAgeCalcList =["Days","Months","Year"];
+  List<String> petBreadList =["Local","Golden Retriever","German Shepad"];
+  List<String> petGenderList =["Male","Female","Others"];
 
  
 
@@ -53,19 +56,16 @@ class _DonateFirstPageState extends State<DonateFirstPage> {
                   const SizedBox(
                     width: 20,
                   ),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: SizedBox(
-                      height: 70,
-                      width: 70,
-                      child: adoptProvider.image != null
-                          ? Image.file(
-                              File(adoptProvider.image!.path),
-                              fit: BoxFit.cover,
-                            )
-                          : const SizedBox(),
-                    ),
-                  ),
+                  CircularPercentIndicator(radius: 30,
+                   animation: true,
+                   animateFromLastPercent: true,
+                   percent: adoptProvider.per,
+                   center: Text("1 to 3"),
+                   progressColor: ColorUtil.primaryColor,
+                   onAnimationEnd: () {
+                     adoptProvider.updatePercent(0.333);
+                   },
+                   ),
                   const SizedBox(
                     width: 20,
                   ),
@@ -102,10 +102,25 @@ class _DonateFirstPageState extends State<DonateFirstPage> {
                       height: 20,
                     ),
                     const Text(petAgeStr),
-                    ShopTextForm(
-                      onChanged: (val) {
-                        adoptProvider.petage = val;
-                      },
+                    Row(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width*.6,
+                          child: ShopTextForm(
+                            onChanged: (val) {
+                              adoptProvider.petage = val;
+                            },
+                          ),
+                        ),
+                        SizedBox(width: 10,),
+                        Expanded(
+                          child: CustomDropDown(
+                            onChanged: (value){
+                              adoptProvider.petageclc = value;
+                            },
+                            itemlist: petAgeCalcList),
+                        )
+                      ],
                     ),
                     const SizedBox(
                       height: 20,
@@ -121,56 +136,20 @@ class _DonateFirstPageState extends State<DonateFirstPage> {
                     ),
 
                      const Text(petSexStr),
-                    ShopTextForm(
-                      onChanged: (val) {
-                        adoptProvider.gender = val;
-                      },
-                    ),
+                   CustomDropDown(
+                    onChanged: (value){
+                      adoptProvider.gender = value;
+                    },
+                    itemlist: petGenderList),
                     const SizedBox(
                       height: 20,
                     ),
                     const Text(petBreadStr),
-                    Container(
-                      height: 60,
-                      decoration: BoxDecoration(
-                          border: Border.all(),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: DropDownTextField(
-                        dropdownRadius: 10,
-                        clearOption: false,
-                        textFieldFocusNode: textFieldFocusNode,
-                        searchFocusNode: searchFocusNode,
-                        searchAutofocus: true,
-                        dropDownItemCount: 8,
-                        searchShowCursor: false,
-                        enableSearch: true,
-                        searchKeyboardType: TextInputType.text,
-                        dropDownList: const [
-                          DropDownValueModel(
-                              name: "Golden Retriever", value: "value1"),
-                          DropDownValueModel(
-                            name: 'Pet Bull',
-                            value: "value2",
-                          ),
-                          DropDownValueModel(name: 'name3', value: "value3"),
-                          DropDownValueModel(
-                            name: 'name4',
-                            value: "value4",
-                          ),
-                          DropDownValueModel(name: 'name5', value: "value5"),
-                          DropDownValueModel(name: 'name6', value: "value6"),
-                          DropDownValueModel(name: 'name7', value: "value7"),
-                          DropDownValueModel(name: 'name8', value: "value8"),
-                          DropDownValueModel(name: 'name7', value: "value7"),
-                          DropDownValueModel(name: 'name8', value: "value8"),
-                          DropDownValueModel(name: 'name7', value: "value7"),
-                          DropDownValueModel(name: 'name8', value: "value8"),
-                        ],
-                        onChanged: (value) {
-                          adoptProvider.petbread = value;
-                        },
-                      ),
-                    ),
+                    CustomDropDown(
+                      onChanged: (value){
+                        adoptProvider.petbread = value;
+                      },
+                      itemlist:petBreadList ),
                     const SizedBox(
                       height: 10,
                     ),

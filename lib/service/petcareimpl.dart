@@ -8,9 +8,9 @@ import 'package:project_petcare/model/donate.dart';
 import 'package:project_petcare/model/ourservice.dart';
 import 'package:project_petcare/model/petcare.dart';
 import 'package:project_petcare/model/shop.dart';
+import 'package:project_petcare/model/signUp.dart';
 import 'package:project_petcare/response/response.dart';
 import 'package:project_petcare/service/petcareserivce.dart';
-
 
 class PetCareImpl extends PetCareService {
   @override
@@ -60,8 +60,30 @@ class PetCareImpl extends PetCareService {
       try {
         QuerySnapshot querySnapshot = await FirebaseFirestore.instance
             .collection("petCare")
-            .where("name", isEqualTo: petCare.name)
+            .where("phone", isEqualTo: petCare.phone)
             .where("password", isEqualTo: petCare.password)
+            .get();
+        if (querySnapshot.docs.isNotEmpty) {
+          return FireResponse(statusUtil: StatusUtil.success, data: true);
+        } else {
+          return FireResponse(statusUtil: StatusUtil.success, data: false);
+        }
+      } catch (e) {
+        return FireResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
+      }
+    } else {
+      return FireResponse(
+          statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+    }
+  }
+  @override
+  Future<FireResponse> isUserLoggedIn(SignUp signUp) async{
+    if (await Helper.checkInterNetConnection()) {
+      try {
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection("User LoginData")
+            .where("phone", isEqualTo: signUp.phone)
+            .where("password", isEqualTo: signUp.password)
             .get();
         if (querySnapshot.docs.isNotEmpty) {
           return FireResponse(statusUtil: StatusUtil.success, data: true);
@@ -98,6 +120,28 @@ class PetCareImpl extends PetCareService {
     } else {
       return FireResponse(
           statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+    }
+  }
+   @override
+  Future<FireResponse> getUserLoginData() async{
+    if(await Helper.checkInterNetConnection()){
+      try{
+        var response = await FirebaseFirestore.instance.collection("User LoginData").get();
+        final signInData = response.docs;
+        List<SignUp> userSignInDataList = [];
+        if(signInData.isNotEmpty){
+          for(var userSignInDetails in signInData){
+            userSignInDataList.add(SignUp.fromJson(userSignInDetails.data()));
+          }
+        }
+        return FireResponse(statusUtil: StatusUtil.success, data: userSignInDataList);
+        
+      }catch(e){
+        return FireResponse(statusUtil: StatusUtil.error, errorMessage: e.toString());
+      }
+      
+    }else{
+      return FireResponse(statusUtil: StatusUtil.error, errorMessage: noInternetStr);
     }
   }
 
@@ -158,7 +202,8 @@ class PetCareImpl extends PetCareService {
       try {
         FirebaseFirestore.instance.collection('ShopDetails').add(shop.toJson());
         return FireResponse(
-            statusUtil: StatusUtil.success, successMessage: successfullySavedStr);
+            statusUtil: StatusUtil.success,
+            successMessage: successfullySavedStr);
       } catch (e) {
         return FireResponse(
             statusUtil: StatusUtil.error, errorMessage: badRequestStr);
@@ -168,24 +213,26 @@ class PetCareImpl extends PetCareService {
           statusUtil: StatusUtil.error, errorMessage: noInternetStr);
     }
   }
- 
+
   @override
-  Future<FireResponse> ourServiceData(OurService ourService) async{
-    if(await Helper.checkInterNetConnection()){
-      try{
-        FirebaseFirestore.instance.collection("serviceDetails").add(ourService.toJson());
-        return FireResponse(statusUtil: StatusUtil.success,successMessage: successfullySavedStr);
-
-      }catch(e){
-        return FireResponse(statusUtil: StatusUtil.error, errorMessage: badRequestStr);
+  Future<FireResponse> ourServiceData(OurService ourService) async {
+    if (await Helper.checkInterNetConnection()) {
+      try {
+        FirebaseFirestore.instance
+            .collection("serviceDetails")
+            .add(ourService.toJson());
+        return FireResponse(
+            statusUtil: StatusUtil.success,
+            successMessage: successfullySavedStr);
+      } catch (e) {
+        return FireResponse(
+            statusUtil: StatusUtil.error, errorMessage: badRequestStr);
       }
-
-    }
-    else{
-      return FireResponse(statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+    } else {
+      return FireResponse(
+          statusUtil: StatusUtil.error, errorMessage: noInternetStr);
     }
   }
-
 
   @override
   Future<FireResponse> saveDashServiceDetails(DashService dashService) async {
@@ -194,6 +241,25 @@ class PetCareImpl extends PetCareService {
         FirebaseFirestore.instance
             .collection("ourServiceDashBoard")
             .add(dashService.toJson());
+        return FireResponse(
+            statusUtil: StatusUtil.success,
+            successMessage: successfullySavedStr);
+      } catch (e) {
+        return FireResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
+      }
+    } else {
+      return FireResponse(
+          statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+    }
+  }
+
+  @override
+  Future<FireResponse> saveProfessionData(OurService ourService) async {
+    if (await Helper.checkInterNetConnection()) {
+      try {
+        FirebaseFirestore.instance
+            .collection("ProfessionData")
+            .add(ourService.toJson());
         return FireResponse(
             statusUtil: StatusUtil.success,
             successMessage: successfullySavedStr);
@@ -224,6 +290,8 @@ class PetCareImpl extends PetCareService {
           statusUtil: StatusUtil.error, errorMessage: noInternetStr);
     }
   }
+   
+
 
   @override
   Future<FireResponse> getAdoptDetails() async {
@@ -255,9 +323,9 @@ class PetCareImpl extends PetCareService {
         var response =
             await FirebaseFirestore.instance.collection("petCare").get();
         final getUserData = response.docs;
-        List<PetCare> userDataList =[];
-        if(getUserData.isEmpty){
-          for(var petCareData in getUserData){
+        List<PetCare> userDataList = [];
+        if (getUserData.isEmpty) {
+          for (var petCareData in getUserData) {
             userDataList.add(PetCare.fromJson(petCareData.data()));
           }
         }
@@ -270,7 +338,28 @@ class PetCareImpl extends PetCareService {
           statusUtil: StatusUtil.error, errorMessage: noInternetStr);
     }
   }
+ 
+  
+  @override
+  Future<FireResponse> userLoginDetails(SignUp signUp) async{
+     if(await Helper.checkInterNetConnection()){
+    try{
+      FirebaseFirestore.instance.collection("User LoginData").add(signUp.toJson());
+      return FireResponse(statusUtil: StatusUtil.success,successMessage: successfullySavedStr);
 
+    }catch(e){
+      return FireResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
+    }
+   }else{
+    return FireResponse(statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+   }
+  }
+  
+  
+  
+  
+  
+ 
   //  @override
   // Future<FireResponse> getDashServiceDetails() async {
   //   if (await Helper.checkInterNetConnection()) {

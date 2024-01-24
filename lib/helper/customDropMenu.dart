@@ -22,6 +22,7 @@ class CustomDropDown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField(
+      elevation: 100,
       items: itemlist.map((e) => DropdownMenuItem(
         value: e,
         child: Text(e),

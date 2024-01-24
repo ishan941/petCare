@@ -38,45 +38,42 @@ class _ShopAllState extends State<ShopAll> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorUtil.BackGroundColorColor,
-      appBar: AppBar(
-        elevation: 0,
         backgroundColor: ColorUtil.BackGroundColorColor,
-        iconTheme: IconThemeData.fallback(),
-        title: Text(
-          "Shop",
-          style: TextStyle(color: Colors.black),
-        ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ShopSale()));
-              },
-              icon: Icon(Icons.shopping_cart_outlined))
-        ],
-      ),
-      body: Consumer<ShopProvider>(
-        builder: (context, value, child) => 
-        Stack(
-          children: [
-            ui(),
-
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: ColorUtil.BackGroundColorColor,
+          iconTheme: IconThemeData.fallback(),
+          title: Text(
+            "Shop",
+            style: TextStyle(color: Colors.black),
+          ),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ShopSale()));
+                },
+                icon: Icon(Icons.shopping_cart_outlined))
           ],
-        ))
-    );
+        ),
+        body: Consumer<ShopProvider>(
+            builder: (context, value, child) => Stack(
+                  children: [
+                    ui(),
+                  ],
+                )));
   }
- loader(ShopProvider shopProvider){
-  if(shopProvider.getshopIemsUtil == StatusUtil.loading){
-    Helper.backdropFilter(context);
-  }
-  else SizedBox();
 
- }
+  loader(ShopProvider shopProvider) {
+    if (shopProvider.getshopIemsUtil == StatusUtil.loading) {
+      Helper.backdropFilter(context);
+    } else
+      SizedBox();
+  }
+
   Consumer<DonateProvider> ui() {
     return Consumer<DonateProvider>(
-      builder: (context, donateProvider, child) => 
-      Column(
+      builder: (context, donateProvider, child) => Column(
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -102,8 +99,7 @@ class _ShopAllState extends State<ShopAll> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    ConfirmationShopItem()));
+                                builder: (context) => ConfirmationShopItem()));
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -157,6 +153,7 @@ class _ShopAllState extends State<ShopAll> {
                         child: Padding(
                           padding: const EdgeInsets.all(10),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -164,27 +161,52 @@ class _ShopAllState extends State<ShopAll> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: Container(
-                                    height:
-                                        MediaQuery.of(context).size.height *
-                                            0.15,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.15,
                                     width: MediaQuery.of(context).size.width,
                                     child: Image.network(
-                                      shopProvider.shopItemsList[index].images ??
+                                      shopProvider
+                                              .shopItemsList[index].images ??
                                           "",
                                       fit: BoxFit.cover,
                                     ),
-                                    
                                   ),
-                                  
                                 ),
-                                
                               ),
-                              Text(shopProvider.shopItemsList[index].product ?? ""),
-                              Text(shopProvider.shopItemsList[index].location ?? ""),
-                              Text(shopProvider.shopItemsList[index].description ?? ""),
-                              Text(shopProvider.shopItemsList[index].price ?? ""),
-                              Text(shopProvider.shopItemsList[index].negotiable ?? ""),
-                              
+                              Text(
+                                shopProvider.shopItemsList[index].product ?? "",
+                                style: textStyleSmallTitle,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),SizedBox(height: 5,),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.star,
+                                    color: Color.fromARGB(255, 244, 211, 67),
+                                    size: 15,
+                                  ),
+                                  Text(
+                                    "4.2/5 (453)",
+                                    style: textStyleMini,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 5,),
+                              Row(
+                                children: [
+                                  Text("Rs",
+                                  style: textStyleSmallSized,
+                                  ),
+                                  Text(
+                                    shopProvider.shopItemsList[index].price ??
+                                      "",
+                                      style: subTitleText,
+                                      ),
+                                ],
+                              ),
+                                  
+                             
                             ],
                           ),
                         ),

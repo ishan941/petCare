@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:project_petcare/helper/constant.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/provider/adoptprovider.dart';
@@ -41,19 +42,17 @@ class _DonateSecondState extends State<DonateSecond> {
                     const SizedBox(
                       width: 20,
                     ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: SizedBox(
-                        height: 70,
-                        width: 70,
-                        child: adoptProvider.image != null
-                            ? Image.file(
-                                File(adoptProvider.image!.path),
-                                fit: BoxFit.cover,
-                              )
-                            : const SizedBox(),
-                      ),
-                    ),
+                     CircularPercentIndicator(
+                      radius: 30,
+                   animation: true,
+                   animateFromLastPercent: true,
+                   percent: adoptProvider.per,
+                   center: Text("2 to 3"),
+                   progressColor: ColorUtil.primaryColor,
+                   onAnimationEnd: () {
+                     adoptProvider.updatePercent(0.60);
+                   },
+                   ),
                     const SizedBox(
                       width: 20,
                     ),
