@@ -27,11 +27,14 @@ class _FormForMedicalState extends State<FormForMedical> {
       Column(
         children: [
           Text("Medical Form"),
-          ShopTextForm(
-            onChanged: (val) {
-              ourServiceProvider.medical = val;
-              
-            },
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: ShopTextForm(
+              onChanged: (val) {
+                ourServiceProvider.medical = val;
+                
+              },
+            ),
           ),
           ElevatedButton(onPressed: (){
            Navigator.push(context, MaterialPageRoute(builder: (context)=> FormFinalProfession()));

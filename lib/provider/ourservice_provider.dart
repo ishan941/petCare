@@ -15,20 +15,25 @@ class OurServiceProvider extends ChangeNotifier {
   String? errorMessage;
   String? service;
   String? medical, shop, trainner;
+  String? shopLocation, shopName;
   String? cpimageUrl, ppimageUrl, profilePictureUrl;
   String? profession, fullname, phone, email;
   XFile? cpimage, ppimage, profilePicture;
   List<DashService> dashServiceList = [];
+          List<OurService> professionDataList =[];
+
 
   PetCareService petCareService = PetCareImpl();
 
   StatusUtil _dashServiceUtil = StatusUtil.idle;
   StatusUtil _profilePictureUtil = StatusUtil.idle;
   StatusUtil _professionUtil = StatusUtil.idle;
+  StatusUtil _getProfessionUtil = StatusUtil.idle;
 
   StatusUtil get dashServiceUtil => _dashServiceUtil;
   StatusUtil get profilePictureUtil => _profilePictureUtil;
   StatusUtil get professionUtil => _professionUtil;
+  StatusUtil get getProfessionUtil => _getProfessionUtil;
 
   setDashServiceUtil(StatusUtil statusUtil) {
     _dashServiceUtil = statusUtil;
@@ -39,27 +44,70 @@ class OurServiceProvider extends ChangeNotifier {
     _profilePictureUtil = statusUtil;
     notifyListeners();
   }
-  setProfessionUtil(StatusUtil statusUtil){
-    _professionUtil =statusUtil;
+
+  setProfessionUtil(StatusUtil statusUtil) {
+    _professionUtil = statusUtil;
+    notifyListeners();
+  }
+  setGetProfessionUtil(StatusUtil statusUtil){
+    _getProfessionUtil = statusUtil;
     notifyListeners();
   }
 
-  Future<void> saveProfessionData(OurService ourService)async{
-    if(_professionUtil != StatusUtil.loading){
+  Future<void> saveProfessionData() async {
+    if (_professionUtil != StatusUtil.loading) {
       setProfessionUtil(StatusUtil.loading);
     }
-    try{
-      FireResponse response = await petCareService.saveProfessionData(ourService);
-      if(response.statusUtil == StatusUtil.success){
+
+    try {
+      await uploadProfilePictureInFireBase();
+      OurService ourService = OurService(
+        profession: profession,
+        fullname: fullname,
+        email: email,
+        phone: phone,
+        medical: medical,
+        shop: shop,
+        shopLocation: shopLocation,
+        shopName: shopName,
+        trainner: trainner,
+        profilePicture: profilePictureUrl,
+      );
+      
+
+      FireResponse response =
+          await petCareService.saveProfessionData(ourService);
+      if (response.statusUtil == StatusUtil.success) {
         setProfessionUtil(StatusUtil.success);
-      }else if(response.statusUtil == StatusUtil.error){
+      } else if (response.statusUtil == StatusUtil.error) {
         errorMessage = response.errorMessage;
-        setProfessionUtil(StatusUtil.error,);
+        setProfessionUtil(
+          StatusUtil.error,
+        );
+      }
+    } catch (e) {
+      errorMessage = "$e";
+      setProfessionUtil(StatusUtil.error);
+    }
+  }
+  Future<void> getProfessionData()async{
+    if(_getProfessionUtil != StatusUtil.loading){
+      setGetProfessionUtil(StatusUtil.loading);
+    }
+    try{
+      FireResponse response = await petCareService.getProfessionDetails();
+      if(response.statusUtil == StatusUtil.success){
+        professionDataList = response.data;
+        setGetProfessionUtil(StatusUtil.success);
+      }else{
+        errorMessage = response.errorMessage;
+        setGetProfessionUtil(StatusUtil.error);
+
       }
 
     }catch(e){
-      errorMessage = "$e";
-      setProfessionUtil(StatusUtil.error);
+      errorMessage = e.toString();
+      setGetProfessionUtil(StatusUtil.error);
     }
   }
 
@@ -208,30 +256,13 @@ class OurServiceProvider extends ChangeNotifier {
     }
   }
 
-  sendValueToFirBase(BuildContext context) async {
+  sendValueToFirBase() async {
     await uploadImageInFireBaseForDashService();
     await uploadImageInFirebaseForPpImage();
     DashService dashService =
         DashService(cpImage: cpimageUrl, ppImage: ppimageUrl, service: service);
     await petCareService.saveDashServiceDetails(dashService);
   }
-  sendProfessionValueToFireBase(BuildContext context)async{
-    await uploadProfilePictureInFireBase();
-    OurService ourService = OurService(
-      profession: profession,
-      fullname: fullname,
-      email: email,
-      phone: phone,
-      medical: medical,
 
-    );
-    await petCareService.saveProfessionData(ourService).then((value) {
-      if(professionUtil == StatusUtil.success){
-        Helper.snackBar(successfullySavedStr, context);
-      }else if (professionUtil == StatusUtil.error){
-        Helper.snackBar(failedToSaveStr, context);
-      }
-
-    });
-  }
+  sendProfessionValueToFireBase() async {}
 }

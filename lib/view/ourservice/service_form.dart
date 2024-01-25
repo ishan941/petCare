@@ -130,7 +130,7 @@ class _ServiceFormState extends State<ServiceForm> {
                   ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          await ourServiceProvider.sendValueToFirBase(context);
+                          await ourServiceProvider.sendValueToFirBase();
 
                           if (ourServiceProvider.dashServiceUtil ==
                               StatusUtil.success) {

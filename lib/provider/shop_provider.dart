@@ -31,11 +31,11 @@ class ShopProvider extends ChangeNotifier {
 
   StatusUtil _shopItems = StatusUtil.idle;
   StatusUtil _uploadImageForShop = StatusUtil.idle;
-  StatusUtil _shopItemsUtil =StatusUtil.idle;
+  StatusUtil _getshopItemsUtil =StatusUtil.idle;
 
   StatusUtil get shopIetms => _shopItems;
   StatusUtil get uploadImageInFireBase => _uploadImageForShop;
-  StatusUtil get getshopIemsUtil => _shopItemsUtil;
+  StatusUtil get getshopIemsUtil => _getshopItemsUtil;
 
   setShopItemsUtil(StatusUtil statusUtil) {
     _shopItems = statusUtil;
@@ -48,7 +48,7 @@ class ShopProvider extends ChangeNotifier {
   }
   
   setgetShopItemsUtil(StatusUtil statusUtil){
-    _shopItemsUtil =statusUtil;
+    _getshopItemsUtil =statusUtil;
     notifyListeners();
   }
 
@@ -72,7 +72,7 @@ class ShopProvider extends ChangeNotifier {
     }
   }
   Future<void> itemDetails()async{
-if(_shopItemsUtil != StatusUtil.loading){
+if(_getshopItemsUtil != StatusUtil.loading){
   setgetShopItemsUtil(StatusUtil.loading);
 }
 try{

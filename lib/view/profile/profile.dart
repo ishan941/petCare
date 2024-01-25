@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/helper/sharedpref.dart';
 import 'package:project_petcare/model/signUp.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
+import 'package:project_petcare/view/logins/loginpage.dart';
 
 import 'package:project_petcare/view/ourservice/service_form.dart';
 import 'package:project_petcare/view/profile/verifyYourAccount_1.dart';
+import 'package:project_petcare/view/test.dart/testPage.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
@@ -71,7 +74,7 @@ class _ProfileState extends State<Profile> {
                               child: CircleAvatar(
                                 radius: 30,
                                 backgroundImage: AssetImage(
-                                  "assets/images/ishan.jpg",
+                                  "assets/images/emptypp.png",
                                 ),
                               ),
                             ),
@@ -83,14 +86,14 @@ class _ProfileState extends State<Profile> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Ishan Shrestha',
+                                  signUpProvider.name ?? "User",
                                   style: subTitleText,
                                 ),
-                                Text(
-                                 widget.signUp?.name?? "User",
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                                Text("ishanshrestha941@gmail.com",
+                                // Text(
+                                //  widget.signUp?.name?? "User",
+                                //   style: TextStyle(fontSize: 20),
+                                // ),
+                                Text(signUpProvider.email ?? "",
                                     style: textStyleSmallSized),
                               ],
                             ),
@@ -133,6 +136,66 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: InkWell(
+                      onTap: () {
+                        dialogBuilder(context);
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          color: Colors.white,
+                          height: 50,
+                          width: MediaQuery.of(context).size.width,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text("Logout"),
+                                  Icon(Icons.arrow_forward_rounded)
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                   Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> TestPage()));
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          color: Colors.white,
+                          height: 50,
+                          width: MediaQuery.of(context).size.width,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text("Test"),
+                                    Spacer(),
+                                    Icon(Icons.arrow_forward_rounded)
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -141,4 +204,6 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
+
+  
 }

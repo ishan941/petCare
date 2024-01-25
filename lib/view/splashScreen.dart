@@ -14,22 +14,22 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
-  // late AnimationController _controller;
- // late Animation<double> _animation;
+  late AnimationController _controller;
+ late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
   readValue();
 
-    // _controller = AnimationController(
-    //   duration: Duration(seconds: 2), // Adjust the duration as needed
-    //   vsync: this,
-    // );
+    _controller = AnimationController(
+      duration: Duration(seconds: 2), // Adjust the duration as needed
+      vsync: this,
+    );
 
-    // _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
 
-    // _controller.forward(); // Start the animation
+    _controller.forward(); // Start the animation
   }
 
    readValue()async{
@@ -53,8 +53,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       body: Consumer<PetCareProvider>(
         builder: (context, petCareProvider, child) => 
       Center(
-         // child: FadeTransition(
-          //  opacity: _animation,
+         child: FadeTransition(
+           opacity: _animation,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -67,7 +67,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 // Helper.backdropFilter(context)
               ],
             ),
-         // ),
+         ),
         ),
       ),
     );

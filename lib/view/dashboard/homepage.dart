@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
       getdata();
       getDashServiceDetailsinUi();
       getAdoptdata();
-      getUserDataInHome();
+     
     });
 
     super.initState();
@@ -85,10 +85,7 @@ class _HomePageState extends State<HomePage> {
     await adoptProvider.getAdoptdata();
   }
 
-  getUserDataInHome() async {
-    var petCareProvider = Provider.of<PetCareProvider>(context, listen: false);
-    await petCareProvider.getUserData();
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       Text(
-                                         signUpProvider.name ?? 'User',
+                                         signUpProvider.userName ?? 'User',
                                         style: TextStyle(fontSize: 20),
                                       ),
                                     ],
@@ -163,7 +160,7 @@ class _HomePageState extends State<HomePage> {
                                     child: const CircleAvatar(
                                       radius: 25,
                                       backgroundImage:
-                                          AssetImage("assets/images/ishan.jpg"),
+                                          AssetImage("assets/images/emptypp.png"),
                                     ),
                                   )
                                 ],

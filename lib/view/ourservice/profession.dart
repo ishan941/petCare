@@ -130,8 +130,10 @@ class _YourProfessionState extends State<YourProfession> {
                           },
                         ),
                         SizedBox(
-                          height: 15,
+                          height: 10,
                         ),
+                        Text(uploadforPpStr),
+                        SizedBox(height: 5,),
                         Row(
                           children: [
                             GestureDetector(
@@ -175,6 +177,9 @@ class _YourProfessionState extends State<YourProfession> {
                                     : Container()),
                           ],
                         ),
+                        SizedBox(height: 10,),
+                        Text(tapToEditStr),
+                        Text(tapandHoldRearrangeStr)
                       ],
                     ),
                   ),

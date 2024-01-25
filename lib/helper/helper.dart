@@ -6,9 +6,23 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:project_petcare/helper/constant.dart';
+import 'package:shimmer/shimmer.dart';
 
 
 class Helper {
+
+ static simmerEffect(context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+       height: MediaQuery.of(context).size.height,
+       width: MediaQuery.of(context).size.width,
+        color: ColorUtil.BackGroundColorColor
+      ),
+    );
+  }
+
   static Future<bool> checkInterNetConnection() async {
     bool result = await InternetConnectionChecker().hasConnection;
     return result;
@@ -47,13 +61,6 @@ class Helper {
       ),
     );
   }
+  
   }
 
-// boxShadow: [
-//                             BoxShadow(
-//                               spreadRadius: 0,
-//                               blurRadius: 3,
-//                               color: Colors.grey.withOpacity(0.5),
-//                               offset: Offset(2, 4),
-//                             ),
-//                           ],

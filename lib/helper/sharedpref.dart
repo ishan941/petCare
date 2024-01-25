@@ -1,4 +1,7 @@
  import 'package:flutter/material.dart';
+import 'package:project_petcare/provider/signUpProvider.dart';
+import 'package:project_petcare/view/logins/loginpage.dart';
+import 'package:provider/provider.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -7,6 +10,56 @@ SaveValueToSharedPreference()async{
 await prefs.setBool("isUserLoggedIn", true);
 
 }
+Future<void> clearLoginStatus() async {
+  try {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("isUserLoggedIn", false);
+  } catch (e) {
+    print("$e");
+  }
+}
+Future<void> dialogBuilder(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Consumer<SignUpProvider>(
+          builder: (context, signUpProvider, child) => ClipRRect(
+            borderRadius: BorderRadius.circular(100),
+            child: AlertDialog(
+              
+              title: const Text('Logout'),
+              content: const Text("Are You sure you want to logout"),
+              actions: <Widget>[
+                TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: Theme.of(context).textTheme.labelLarge,
+                  ),
+                  child: const Text("No"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: Theme.of(context).textTheme.labelLarge,
+                  ),
+                  child: const Text("Yes"),
+                  onPressed: () {
+                    clearLoginStatus();
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                        (route) => false);
+                  },
+                ),
+                
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
  void _showAlertDialog(BuildContext context) async {
     return showDialog<void>(
       context: context,

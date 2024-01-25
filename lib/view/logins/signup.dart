@@ -170,29 +170,23 @@ class _SignUpPageState extends State<SignUpPage> {
                               height: 60,
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: ElevatedButton(
-                                onPressed: () async {
-                                  try {
-                                    await signUpProvider
+                                  onPressed: () async {
+                                  await  signUpProvider
                                         .sendUserLoginValueToFireBase();
                                     if (signUpProvider.signUpUtil ==
                                         StatusUtil.success) {
                                       Helper.snackBar(
                                           successfullySavedStr, context);
                                       Navigator.of(context).pushAndRemoveUntil(
-                                        MaterialPageRoute(
-                                            builder: (context) => LoginPage()),
-                                        (Route<dynamic> route) => false,
-                                      );
-                                    } else {
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LoginPage()),
+                                          (Route<dynamic> route) => false);
+                                    }else{
                                       Helper.snackBar(failedToSaveStr, context);
                                     }
-                                  } catch (e) {
-                                    // Handle any errors that might occur during the asynchronous operation
-                                    Helper.snackBar("Error: $e", context);
-                                  }
-                                },
-                                child: Text('Submit'),
-                              ),
+                                  },
+                                  child: Text('Submit')),
                             ),
                           ),
                         ],
