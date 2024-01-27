@@ -6,7 +6,7 @@ import 'package:project_petcare/provider/donateprovider.dart';
 import 'package:provider/provider.dart';
 
 class DonateData extends StatefulWidget {
-  Donate? donate;
+ final Donate? donate;
 
   DonateData({super.key, this.donate});
 
@@ -52,6 +52,7 @@ class _DonateDataState extends State<DonateData> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // SizedBox(height: ),
+                      
                       Text(
                         widget.donate!.petbread ?? "",
                         style: mainTitleText,

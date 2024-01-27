@@ -1,13 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/constant.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/provider/adoptprovider.dart';
 import 'package:project_petcare/view/dashboard/buttomnav.dart';
-import 'package:project_petcare/view/dashboard/homepage.dart';
 import 'package:provider/provider.dart';
 
 class DonateThird extends StatefulWidget {

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_petcare/helper/constant.dart';
 import 'package:project_petcare/helper/string_const.dart';
-import 'package:project_petcare/model/dashservice.dart';
 import 'package:project_petcare/view/customs/consttextform.dart';
-import 'package:project_petcare/view/dashboard/homepage.dart';
 import 'package:project_petcare/view/medical_servcie/lastvisited_Ms.dart';
 import 'package:project_petcare/view/medical_servcie/nearby_Ms.dart';
 import 'package:project_petcare/view/medical_servcie/popular_Ms.dart';

@@ -8,7 +8,7 @@ import 'package:project_petcare/view/profile/profile.dart';
 import 'package:provider/provider.dart';
 
 class TestConfirmVerification extends StatefulWidget {
-  String? verificationCode, phoneNumber;
+  final String? verificationCode, phoneNumber;
   TestConfirmVerification({
     super.key,
     this.phoneNumber,

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:project_petcare/helper/constBread.dart';
 import 'package:project_petcare/helper/constant.dart';
 import 'package:project_petcare/helper/customDropMenu.dart';
 import 'package:project_petcare/helper/string_const.dart';
@@ -24,7 +25,7 @@ class _DonateFirstPageState extends State<DonateFirstPage> {
   FocusNode textFieldFocusNode = FocusNode();
   FocusNode searchFocusNode = FocusNode();
   List<String> petAgeCalcList =["Days","Months","Year"];
-  List<String> petBreadList =["Local","Golden Retriever","German Shepad"];
+  List<String> petBreadList = List.from(dogBreedList);
   List<String> petGenderList =["Male","Female","Others"];
 
  
@@ -149,7 +150,7 @@ class _DonateFirstPageState extends State<DonateFirstPage> {
                       onChanged: (value){
                         adoptProvider.petbread = value;
                       },
-                      itemlist:petBreadList ),
+                      itemlist: dogBreedList ),
                     const SizedBox(
                       height: 10,
                     ),

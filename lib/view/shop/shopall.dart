@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:project_petcare/core/smooth_scrollable.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/constant.dart';
 import 'package:project_petcare/helper/helper.dart';
-import 'package:project_petcare/model/donate.dart';
+import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/provider/donateprovider.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
-import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/view/customs/consttextform.dart';
 import 'package:project_petcare/view/shop/confirmation_item.dart';
 import 'package:project_petcare/view/shop/shopdetails.dart';
@@ -39,48 +39,49 @@ class _ShopAllState extends State<ShopAll> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: ColorUtil.BackGroundColorColor,
-        appBar: AppBar(
-          elevation: 0,
+    return ScrollConfiguration(
+      behavior: MyBehavior(),
+      child: Scaffold(
           backgroundColor: ColorUtil.BackGroundColorColor,
-          iconTheme: IconThemeData.fallback(),
-          title: Text(
-            "Shop",
-            style: TextStyle(color: Colors.black),
+          appBar: AppBar(
+            elevation: 0,
+            backgroundColor: ColorUtil.BackGroundColorColor,
+            iconTheme: IconThemeData.fallback(),
+            title: Text(
+              shopStr,
+              style: TextStyle(color: Colors.black),
+            ),
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => ShopSale()));
+                  },
+                  icon: Icon(Icons.shopping_cart_outlined))
+            ],
           ),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ShopSale()));
-                },
-                icon: Icon(Icons.shopping_cart_outlined))
-          ],
-        ),
-        body: Consumer<DonateProvider>(
-          builder: (context, donateProvider, child) => 
-          Consumer<ShopProvider>(
-              builder: (context, shopProvider, child) => Stack(
-                    children: [
-                      ui(),
-                      loader(donateProvider),
-                    ],
-                  )),
-        ));
+          body: Consumer<DonateProvider>(
+            builder: (context, donateProvider, child) => Consumer<ShopProvider>(
+                builder: (context, shopProvider, child) => Stack(
+                      children: [
+                        ui(),
+                        loader(donateProvider),
+                      ],
+                    )),
+          )),
+    );
   }
 
   loader(DonateProvider donateProvider) {
     if (donateProvider.donageUtil == StatusUtil.loading) {
       Helper.simmerEffect(context);
     } else
-    return  SizedBox();
+      return SizedBox();
   }
- 
 
-   ui() {
+  ui() {
     return Consumer<ShopProvider>(
-      builder: (context, shopProvider, child) =>  Consumer<DonateProvider>(
+      builder: (context, shopProvider, child) => Consumer<DonateProvider>(
         builder: (context, donateProvider, child) => Column(
           children: [
             Padding(
@@ -91,7 +92,7 @@ class _ShopAllState extends State<ShopAll> {
                     child: Column(
                       children: [
                         ConstTextForm(
-                          hintText: "Search here...",
+                          hintText: searchHereStr,
                           suffixIcon: Icon(Icons.search),
                         ),
                       ],
@@ -107,7 +108,8 @@ class _ShopAllState extends State<ShopAll> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ConfirmationShopItem()));
+                                  builder: (context) =>
+                                      ConfirmationShopItem()));
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -171,12 +173,15 @@ class _ShopAllState extends State<ShopAll> {
                                     child: Stack(
                                       children: [
                                         Container(
-                                          height: MediaQuery.of(context).size.height *
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
                                               0.15,
-                                          width: MediaQuery.of(context).size.width,
+                                          width:
+                                              MediaQuery.of(context).size.width,
                                           child: Image.network(
-                                            shopProvider
-                                                    .shopItemsList[index].images ??
+                                            shopProvider.shopItemsList[index]
+                                                    .images ??
                                                 "",
                                             fit: BoxFit.cover,
                                           ),
@@ -187,11 +192,15 @@ class _ShopAllState extends State<ShopAll> {
                                   ),
                                 ),
                                 Text(
-                                  shopProvider.shopItemsList[index].product ?? "",
+                                  shopProvider.shopItemsList[index].product ??
+                                      "",
                                   style: textStyleSmallTitle,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
-                                ),SizedBox(height: 5,),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
                                 Row(
                                   children: [
                                     Icon(
@@ -205,21 +214,22 @@ class _ShopAllState extends State<ShopAll> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 5,),
+                                SizedBox(
+                                  height: 5,
+                                ),
                                 Row(
                                   children: [
-                                    Text("Rs",
-                                    style: textStyleSmallSized,
+                                    Text(
+                                      "Rs",
+                                      style: textStyleSmallSized,
                                     ),
                                     Text(
                                       shopProvider.shopItemsList[index].price ??
-                                        "",
-                                        style: subTitleText,
-                                        ),
+                                          "",
+                                      style: subTitleText,
+                                    ),
                                   ],
                                 ),
-                                    
-                               
                               ],
                             ),
                           ),
@@ -236,11 +246,11 @@ class _ShopAllState extends State<ShopAll> {
       ),
     );
   }
-   loaderForShop(ShopProvider shopProvider){
-    if(shopProvider.shopIetms == StatusUtil.loading){
+
+  loaderForShop(ShopProvider shopProvider) {
+    if (shopProvider.shopIetms == StatusUtil.loading) {
       Helper.simmerEffect(context);
-    }
-    else{
+    } else {
       return SizedBox();
     }
   }

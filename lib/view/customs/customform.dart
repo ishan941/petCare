@@ -2,11 +2,11 @@
 import 'package:flutter/material.dart';
 
 class CustomForm extends StatelessWidget {
-String? Function(String?)? validator;
-String? labelText, hintText;
-Widget? prefixIcon, suffixIcon;
-void Function(String)? onChanged;
-bool obscureText= false;
+final String? Function(String?)? validator;
+final String? labelText, hintText;
+final Widget? prefixIcon, suffixIcon;
+final void Function(String)? onChanged;
+ bool obscureText = false;
 
 
    CustomForm({super.key,

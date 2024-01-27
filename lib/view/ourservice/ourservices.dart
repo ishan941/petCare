@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:project_petcare/helper/constant.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/model/dashservice.dart';
-import 'package:project_petcare/model/ourservice.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
 import 'package:project_petcare/view/customs/consttextform.dart';
 import 'package:project_petcare/view/ourservice/profession.dart';
 import 'package:project_petcare/view/ourservice/serviceDetail.dart';
-import 'package:project_petcare/view/profile/profile.dart';
 import 'package:provider/provider.dart';
 
 class OurServicesMore extends StatefulWidget {
   final DashService? dashService;
-  
 
-  OurServicesMore({Key? key, this.dashService, }) : super(key: key);
+  OurServicesMore({
+    Key? key,
+    this.dashService,
+  }) : super(key: key);
 
   @override
   State<OurServicesMore> createState() => _OurServicesMoreState();
@@ -30,8 +30,10 @@ class _OurServicesMoreState extends State<OurServicesMore>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
   }
-  getvalue()async{
-    var ourServiceProvider = Provider.of<OurServiceProvider>(context, listen: false);
+
+  getvalue() async {
+    var ourServiceProvider =
+        Provider.of<OurServiceProvider>(context, listen: false);
     await ourServiceProvider.getProfessionData();
   }
 
@@ -62,10 +64,11 @@ class _OurServicesMoreState extends State<OurServicesMore>
           ],
         ),
         body: Consumer<OurServiceProvider>(
-          builder: (context, ourServiceProvider, child) =>  Column(
+          builder: (context, ourServiceProvider, child) => Column(
             children: [
-              SizedBox(height: 10,),
-             
+              SizedBox(
+                height: 10,
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Row(
@@ -125,8 +128,8 @@ class _OurServicesMoreState extends State<OurServicesMore>
                         TabBar(
                           controller: _tabController,
                           labelColor: Colors.red,
-                          unselectedLabelColor:
-                              Colors.black, // Change the color of unselected text
+                          unselectedLabelColor: Colors
+                              .black, // Change the color of unselected text
                           indicatorColor: Colors.red,
                           tabs: [
                             Tab(
@@ -173,53 +176,59 @@ class _OurServicesMoreState extends State<OurServicesMore>
     _tabController.dispose();
     super.dispose();
   }
+
   Widget all(OurServiceProvider ourServiceProvider) {
     return Expanded(
       child: Consumer<OurServiceProvider>(
-        builder: (context, ourServiceProvider, child) =>  Column(
+        builder: (context, ourServiceProvider, child) => Column(
           children: [
-      
-         
-          Container(
-            height: 500,
-            // color: Colors.red,
-            child: ListView.builder(
-              itemCount: ourServiceProvider.professionDataList.length,
-              itemBuilder: (context, index)=>
-
-            Padding(
-              padding: const EdgeInsets.all(15),
-              child: InkWell(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ServiceDetails(ourService: ourServiceProvider.professionDataList[index])));
-                },
-                child: Container(
-                  height: 100,
-                  color: Colors.white,
-                  child:  Row(
-                    children: [
-                      Container(
-                        height: MediaQuery.of(context).size.height*.9,
-                        color: Colors.green,
-                        width: MediaQuery.of(context).size.width*.25,
-                      ),
-                      Text(ourServiceProvider.professionDataList[index].fullname??""),
-                    ],
-                  ),
-                ),
-              ),
-            )),
-          )
+            Container(
+              height: 500,
+              // color: Colors.red,
+              child: ListView.builder(
+                  itemCount: ourServiceProvider.professionDataList.length,
+                  itemBuilder: (context, index) => Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ServiceDetails(
+                                        ourService: ourServiceProvider
+                                            .professionDataList[index])));
+                          },
+                          child: Container(
+                            height: 100,
+                            color: Colors.white,
+                            child: Row(
+                              children: [
+                                Container(
+                                  height:
+                                      MediaQuery.of(context).size.height * .9,
+                                  color: Colors.green,
+                                  width:
+                                      MediaQuery.of(context).size.width * .25,
+                                ),
+                                Text(ourServiceProvider
+                                        .professionDataList[index].fullname ??
+                                    ""),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )),
+            )
           ],
         ),
       ),
     );
   }
+
   Widget nearby(BuildContext context) {
     return Column(
       children: [
         Expanded(
-          
           child: Container(
             color: Colors.red,
           ),
@@ -231,7 +240,6 @@ class _OurServicesMoreState extends State<OurServicesMore>
   Widget lastVisited(BuildContext context) {
     return Column(
       children: [
-      
         Expanded(
           child: Container(
             color: Colors.blue,
@@ -240,8 +248,4 @@ class _OurServicesMoreState extends State<OurServicesMore>
       ],
     );
   }
-
-  
-
-  
 }

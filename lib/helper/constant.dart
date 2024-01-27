@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ColorUtil{
   static Color primaryColor = Color(0xFF2F92BD);
-   static const Color BackGroundColorColor = Color(0xFFF2F4FB);
+   static const Color BackGroundColorColor = Color(0XFFE5E8FF);
 }
 
  const TextStyle subTitleText = TextStyle(

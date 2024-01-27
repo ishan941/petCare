@@ -1,15 +1,7 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_phone_number_field/flutter_phone_number_field.dart';
-import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/constFormField.dart';
-import 'package:project_petcare/helper/helper.dart';
-import 'package:project_petcare/helper/string_const.dart';
-import 'package:project_petcare/practice/pincodefeld.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
-import 'package:project_petcare/view/profile/profile.dart';
 import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:project_petcare/view/test.dart/confirmVerificationTest.dart';
 import 'package:provider/provider.dart';
@@ -140,20 +132,28 @@ class _VerificationTestState extends State<VerificationTest> {
                           child: Text("Submit"),
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                                await FirebaseAuth.instance.verifyPhoneNumber(
-                            phoneNumber: petCareProvider.userPhone,
-                            verificationCompleted:
-                                (PhoneAuthCredential credential) {},
-                            verificationFailed: (FirebaseAuthException e) {},
-                            codeSent:
-                                (String verificationId, int? resendToken) {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=> TestConfirmVerification(phoneNumber: petCareProvider.userPhone,
-                                  verificationCode: verificationId,)));
+                              await FirebaseAuth.instance.verifyPhoneNumber(
+                                phoneNumber: petCareProvider.userPhone,
+                                verificationCompleted:
+                                    (PhoneAuthCredential credential) {},
+                                verificationFailed:
+                                    (FirebaseAuthException e) {},
+                                codeSent:
+                                    (String verificationId, int? resendToken) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              TestConfirmVerification(
+                                                phoneNumber:
+                                                    petCareProvider.userPhone,
+                                                verificationCode:
+                                                    verificationId,
+                                              )));
                                 },
-                            codeAutoRetrievalTimeout:
-                                (String verificationId) {},
-                          );
-                             
+                                codeAutoRetrievalTimeout:
+                                    (String verificationId) {},
+                              );
                             }
                           },
                         )

@@ -6,7 +6,7 @@ import 'package:project_petcare/provider/adoptprovider.dart';
 import 'package:provider/provider.dart';
 
 class AdoptDetails extends StatefulWidget {
-  Adopt? adopt;
+ final Adopt? adopt;
 
   AdoptDetails({super.key, this.adopt});
 
@@ -54,7 +54,7 @@ class _AdoptDetailsState extends State<AdoptDetails> {
                     children: [
                       // SizedBox(height: ),
                       Text(
-                        widget.adopt!.petbread ?? "",
+                        widget.adopt!.petbread ?? "No data availavile",
                         style: mainTitleText,
                       ),
                       Text(
@@ -71,8 +71,8 @@ class _AdoptDetailsState extends State<AdoptDetails> {
                             width: 5,
                           ),
                           Text(
-                            widget.adopt!.petweight ?? "",
-                            style: titleText,
+                           "-  ${widget.adopt!.petweight ?? ""}",
+                            style: textStyleSmallSized,
                           ),
                         ],
                       ),

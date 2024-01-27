@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:project_petcare/core/statusutil.dart';
-import 'package:project_petcare/helper/string_const.dart';
-import 'package:project_petcare/model/petcare.dart';
 import 'package:project_petcare/model/verificationTools.dart';
 import 'package:project_petcare/response/response.dart';
 import 'package:project_petcare/service/petcareimpl.dart';

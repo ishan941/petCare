@@ -6,7 +6,6 @@ import 'package:project_petcare/helper/constant.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/practice/pincodefeld.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
-import 'package:project_petcare/view/profile/verificationCode.dart';
 import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
 
@@ -112,9 +111,14 @@ class _VerifyYourAccountState extends State<VerifyYourAccount> {
                             verificationFailed: (FirebaseAuthException e) {},
                             codeSent:
                                 (String verificationId, int? resendToken) {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=> pinCodeTEst(phoneNumber: phoneNumber,
-                                  verificationCode: verificationId,)));
-                                },
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => pinCodeTEst(
+                                            phoneNumber: phoneNumber,
+                                            verificationCode: verificationId,
+                                          )));
+                            },
                             codeAutoRetrievalTimeout:
                                 (String verificationId) {},
                           );

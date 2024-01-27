@@ -4,9 +4,9 @@ class AppDropdownInput extends StatelessWidget {
   final String hintText;
   final List options;
   final  value;
-  String? labelText;
+  final String? labelText;
   final String? getLabel;
-  void Function(Object?)? onChanged;
+ final void Function(Object?)? onChanged;
 
 
 

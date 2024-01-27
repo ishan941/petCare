@@ -1,12 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/view/profile/profile.dart';
 
 class pinCodeTEst extends StatefulWidget {
-  String? verificationCode, phoneNumber;
+ final String? verificationCode, phoneNumber;
   pinCodeTEst({
     super.key,
     this.phoneNumber,

@@ -1,12 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:project_petcare/helper/constant.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
-import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
 import 'package:project_petcare/view/shop/nextitem.dart';
 import 'package:project_petcare/view/shop/shoptextform.dart';
@@ -55,17 +53,17 @@ class _ShopSaleState extends State<ShopSale> {
                     SizedBox(
                       width: 20,
                     ),
-                   CircularPercentIndicator(radius: 30,
-                   animation: true,
-                   animateFromLastPercent: true,
-                   percent: shopProvider.per,
-                   center: Text(oneoffourStr),
-                   progressColor: ColorUtil.primaryColor,
-                   onAnimationEnd: () {
-                     shopProvider.updatePercent(0.25);
-                   },
-                   ),
-
+                    CircularPercentIndicator(
+                      radius: 30,
+                      animation: true,
+                      animateFromLastPercent: true,
+                      percent: shopProvider.per,
+                      center: Text(oneoffourStr),
+                      progressColor: ColorUtil.primaryColor,
+                      onAnimationEnd: () {
+                        shopProvider.updatePercent(0.25);
+                      },
+                    ),
                     SizedBox(
                       width: 10,
                     ),
@@ -86,65 +84,61 @@ class _ShopSaleState extends State<ShopSale> {
                 ),
                 Divider(),
                 Container(
-
                   child: Expanded(
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                        ui(shopProvider, context),
-      
-                
-                SizedBox(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width * .9,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => NextDescription()));
-                      } else {
-                        Helper.snackBar(
-                            "Please fill all the forms", context);
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      elevation:
-                          5, // Adjust the elevation to control the shadow
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      primary: ColorUtil.primaryColor, // Button color
-                      onPrimary: Colors.white, // Text color
-                      shadowColor:
-                          Colors.grey.withOpacity(1), // Shadow color
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          nextStr,
-                          style: mainTitleText,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Icon(Icons.arrow_forward)
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20,)
-
-                    
+                          ui(shopProvider, context),
+                          SizedBox(
+                            height: 50,
+                            width: MediaQuery.of(context).size.width * .9,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              NextDescription()));
+                                } else {
+                                  Helper.snackBar(
+                                      "Please fill all the forms", context);
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                elevation:
+                                    5, // Adjust the elevation to control the shadow
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                primary: ColorUtil.primaryColor, // Button color
+                                onPrimary: Colors.white, // Text color
+                                shadowColor:
+                                    Colors.grey.withOpacity(1), // Shadow color
+                              ),
+                              child: const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    nextStr,
+                                    style: mainTitleText,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Icon(Icons.arrow_forward)
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          )
                         ],
                       ),
                     ),
                   ),
                 ),
-                
-                
               ],
             ),
           ),

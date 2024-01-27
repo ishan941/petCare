@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:project_petcare/helper/constant.dart';
-import 'package:project_petcare/helper/string_const.dart';
 
 class ShopTextForm extends StatelessWidget {
-  String? labelText, hintText;
-  void Function(String)? onChanged;
-  String? Function(String?)? validator;
-  Widget? prefixIcon;
+  final String? labelText, hintText;
+  final void Function(String)? onChanged;
+ final  String? Function(String?)? validator;
+ final Widget? prefixIcon;
 
    ShopTextForm({super.key,
   this.labelText,

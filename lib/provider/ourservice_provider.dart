@@ -3,8 +3,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project_petcare/core/statusutil.dart';
-import 'package:project_petcare/helper/helper.dart';
-import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/model/dashservice.dart';
 import 'package:project_petcare/model/ourservice.dart';
 import 'package:project_petcare/response/response.dart';
@@ -20,8 +18,7 @@ class OurServiceProvider extends ChangeNotifier {
   String? profession, fullname, phone, email;
   XFile? cpimage, ppimage, profilePicture;
   List<DashService> dashServiceList = [];
-          List<OurService> professionDataList =[];
-
+  List<OurService> professionDataList = [];
 
   PetCareService petCareService = PetCareImpl();
 
@@ -49,7 +46,8 @@ class OurServiceProvider extends ChangeNotifier {
     _professionUtil = statusUtil;
     notifyListeners();
   }
-  setGetProfessionUtil(StatusUtil statusUtil){
+
+  setGetProfessionUtil(StatusUtil statusUtil) {
     _getProfessionUtil = statusUtil;
     notifyListeners();
   }
@@ -73,7 +71,6 @@ class OurServiceProvider extends ChangeNotifier {
         trainner: trainner,
         profilePicture: profilePictureUrl,
       );
-      
 
       FireResponse response =
           await petCareService.saveProfessionData(ourService);
@@ -90,22 +87,21 @@ class OurServiceProvider extends ChangeNotifier {
       setProfessionUtil(StatusUtil.error);
     }
   }
-  Future<void> getProfessionData()async{
-    if(_getProfessionUtil != StatusUtil.loading){
+
+  Future<void> getProfessionData() async {
+    if (_getProfessionUtil != StatusUtil.loading) {
       setGetProfessionUtil(StatusUtil.loading);
     }
-    try{
+    try {
       FireResponse response = await petCareService.getProfessionDetails();
-      if(response.statusUtil == StatusUtil.success){
+      if (response.statusUtil == StatusUtil.success) {
         professionDataList = response.data;
         setGetProfessionUtil(StatusUtil.success);
-      }else{
+      } else {
         errorMessage = response.errorMessage;
         setGetProfessionUtil(StatusUtil.error);
-
       }
-
-    }catch(e){
+    } catch (e) {
       errorMessage = e.toString();
       setGetProfessionUtil(StatusUtil.error);
     }
@@ -263,6 +259,4 @@ class OurServiceProvider extends ChangeNotifier {
         DashService(cpImage: cpimageUrl, ppImage: ppimageUrl, service: service);
     await petCareService.saveDashServiceDetails(dashService);
   }
-
-  sendProfessionValueToFireBase() async {}
 }

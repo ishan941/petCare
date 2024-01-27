@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/view/dashboard/homepage.dart';
 
 class CategoriesExplore extends StatefulWidget {
@@ -40,7 +41,7 @@ class _CategoriesExploreState extends State<CategoriesExplore> {
                     },
                     icon: Icon(Icons.arrow_back_ios)),
                 Text(
-                  'Categories',
+                  categoriesStr,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                 ),
                 SizedBox(

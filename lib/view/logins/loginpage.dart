@@ -1,13 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/sharedpref.dart';
 import 'package:project_petcare/helper/string_const.dart';
-import 'package:project_petcare/model/petcare.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/view/customs/customform.dart';
 import 'package:project_petcare/view/dashboard/buttomnav.dart';
+import 'package:project_petcare/view/googleAuth.dart';
 import 'package:project_petcare/view/logins/signup.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +28,8 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Color.fromARGB(255, 228, 233, 249),
       body: SafeArea(
         child: Consumer<SignUpProvider>(
-          builder: (context, signUpProvider, child) =>  Consumer<PetCareProvider>(
+          builder: (context, signUpProvider, child) =>
+              Consumer<PetCareProvider>(
             builder: (context, petcareProvider, child) => Form(
               key: _formKey,
               child: SingleChildScrollView(
@@ -61,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
                             return null;
                           },
                         ),
-        
+
                         //Password
                         CustomForm(
                           obscureText:
@@ -119,23 +121,24 @@ class _LoginPageState extends State<LoginPage> {
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: ElevatedButton(
                                   onPressed: () async {
-
-                                   await signUpProvider.checkUserLoginFromFireBase();
-                                  if(signUpProvider.loginUtil == StatusUtil.success){
-                                    SaveValueToSharedPreference();
-                                    if(signUpProvider.isUserLoggedIn){
-                                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: 
-                                      (context)=> BottomNavBar()), (route) => false);
+                                    await signUpProvider
+                                        .checkUserLoginFromFireBase();
+                                    if (signUpProvider.loginUtil ==
+                                        StatusUtil.success) {
+                                      SaveValueToSharedPreference();
+                                      if (signUpProvider.isUserLoggedIn) {
+                                        Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        BottomNavBar()),
+                                                (route) => false);
+                                      } else {
+                                        _showAlertDialog(context);
+                                      }
+                                    } else {
+                                      Helper.snackBar("Sorry", context);
                                     }
-                                    else{
-                                      _showAlertDialog(context);
-                                    }
-                                    
-                                    
-
-                                  }else{
-                                    Helper.snackBar("Sorry", context);
-                                  }
 
                                     // if (_formKey.currentState!.validate())
                                     //  {
@@ -164,7 +167,6 @@ class _LoginPageState extends State<LoginPage> {
                                     //     }
                                     //   });
                                     // }
-                                    
                                   },
                                   child: Text("Login"))),
                         )
@@ -217,35 +219,52 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       height: 20,
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                                blurRadius: 10,
-                                spreadRadius: 1,
-                                offset: Offset(6, 5),
-                                color: Colors.grey.withOpacity(0.4)),
+                    InkWell(
+                      onTap: () async {
+                        User? user = await Authentication.signInWithGoogle(
+                            context: context);
+                        if (user != null) {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BottomNavBar()),
+                              (route) => false);
+                          signUpProvider.SaveValueToSharedPreference();
+                        } else {
+                          Helper.snackBar("No", context);
+                        }
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 10,
+                                  spreadRadius: 1,
+                                  offset: Offset(6, 5),
+                                  color: Colors.grey.withOpacity(0.4)),
+                            ],
+                            borderRadius: BorderRadius.circular(30),
+                            border: Border.all(
+                                color: const Color.fromARGB(255, 12, 8, 8))),
+                        height: 50,
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                                height: 40,
+                                child: Image.asset(
+                                    "assets/images/googlelogo.png")),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              signInGoogleStr,
+                              style: TextStyle(fontSize: 17),
+                            ),
                           ],
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
-                              color: const Color.fromARGB(255, 12, 8, 8))),
-                      height: 50,
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                              height: 40,
-                              child: Image.asset("assets/images/googlelogo.png")),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            signInGoogleStr,
-                            style: TextStyle(fontSize: 17),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -281,8 +300,7 @@ class _LoginPageState extends State<LoginPage> {
                               width: 10,
                             ),
                             Text(
-                              signInAppleStr
-                              ,
+                              signInAppleStr,
                               style: TextStyle(fontSize: 17),
                             ),
                           ],

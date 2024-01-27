@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class ConstTextForm extends StatelessWidget {
-  String? Function(String?)? validator;
-  String? labelText, hintText;
-  Widget? prefixIcon, suffixIcon;
-  void Function(String)? onChanged;
+  final String? Function(String?)? validator;
+  final String? labelText, hintText;
+  final Widget? prefixIcon, suffixIcon;
+  final void Function(String)? onChanged;
 
   ConstTextForm({
     super.key,

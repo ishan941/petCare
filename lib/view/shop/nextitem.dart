@@ -5,7 +5,6 @@ import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
 import 'package:project_petcare/view/shop/pricing.dart';
-import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
 
 class NextDescription extends StatefulWidget {
@@ -24,7 +23,7 @@ class _NextDescription extends State<NextDescription> {
       backgroundColor: ColorUtil.BackGroundColorColor,
       body: SafeArea(
         child: Consumer<ShopProvider>(
-          builder: (context, shopProvider, child) =>  Form(
+          builder: (context, shopProvider, child) => Form(
             key: _formKey,
             child: Column(
               children: [
@@ -50,16 +49,17 @@ class _NextDescription extends State<NextDescription> {
                     SizedBox(
                       width: 20,
                     ),
-                    CircularPercentIndicator(radius: 30,
-                   animation: true,
-                   animateFromLastPercent: true,
-                   percent: shopProvider.per,
-                   center: Text(twoofFourStr),
-                   progressColor: ColorUtil.primaryColor,
-                   onAnimationEnd: () {
-                     shopProvider.updatePercent(0.5);
-                   },
-                   ),
+                    CircularPercentIndicator(
+                      radius: 30,
+                      animation: true,
+                      animateFromLastPercent: true,
+                      percent: shopProvider.per,
+                      center: Text(twoofFourStr),
+                      progressColor: ColorUtil.primaryColor,
+                      onAnimationEnd: () {
+                        shopProvider.updatePercent(0.5);
+                      },
+                    ),
                     SizedBox(
                       width: 10,
                     ),
@@ -108,7 +108,6 @@ class _NextDescription extends State<NextDescription> {
                                       },
                                       maxLines: null, // Allow multiple lines
                                       decoration: InputDecoration(
-                                        
                                           labelText: descriptionreqStr,
                                           contentPadding: EdgeInsets.symmetric(
                                               vertical: 150,
@@ -139,10 +138,12 @@ class _NextDescription extends State<NextDescription> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => NextPricing()));
+                                            builder: (context) =>
+                                                NextPricing()));
                                   } else {
                                     Helper.snackBar(
-                                        "Your Description Box is empty", context);
+                                        "Your Description Box is empty",
+                                        context);
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -151,10 +152,11 @@ class _NextDescription extends State<NextDescription> {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  primary: ColorUtil.primaryColor, // Button color
+                                  primary:
+                                      ColorUtil.primaryColor, // Button color
                                   onPrimary: Colors.white, // Text color
-                                  shadowColor:
-                                      Colors.grey.withOpacity(1), // Shadow color
+                                  shadowColor: Colors.grey
+                                      .withOpacity(1), // Shadow color
                                 ),
                                 child: const Row(
                                   mainAxisSize: MainAxisSize.min,

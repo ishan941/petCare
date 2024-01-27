@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:project_petcare/helper/constant.dart';
@@ -20,7 +18,7 @@ class _DonateSecondState extends State<DonateSecond> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       backgroundColor: ColorUtil.BackGroundColorColor,
+      backgroundColor: ColorUtil.BackGroundColorColor,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: ColorUtil.BackGroundColorColor,
@@ -32,102 +30,101 @@ class _DonateSecondState extends State<DonateSecond> {
         centerTitle: true,
       ),
       body: Consumer<AdoptProvider>(
-        builder: (context, adoptProvider, child) => 
-        SingleChildScrollView(
+        builder: (context, adoptProvider, child) => SingleChildScrollView(
           child: Column(
             children: [
-                 SizedBox(
-                  height: 100,
-                  child: Row(children: [
-                    const SizedBox(
-                      width: 20,
-                    ),
-                     CircularPercentIndicator(
-                      radius: 30,
-                   animation: true,
-                   animateFromLastPercent: true,
-                   percent: adoptProvider.per,
-                   center: Text("2 to 3"),
-                   progressColor: ColorUtil.primaryColor,
-                   onAnimationEnd: () {
-                     adoptProvider.updatePercent(0.60);
-                   },
-                   ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Your Details"),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text("Next Step: Confirmation"),
-                      ],
-                    ),
-                  ]),
-                ),
-                 const Divider(
-                  thickness: 2,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              SizedBox(
+                height: 100,
+                child: Row(children: [
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  CircularPercentIndicator(
+                    radius: 30,
+                    animation: true,
+                    animateFromLastPercent: true,
+                    percent: adoptProvider.per,
+                    center: Text("2 to 3"),
+                    progressColor: ColorUtil.primaryColor,
+                    onAnimationEnd: () {
+                      adoptProvider.updatePercent(0.60);
+                    },
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const SizedBox(
-                        height: 20,
+                      Text("Your Details"),
+                      SizedBox(
+                        height: 5,
                       ),
-                      const Text("Your Name"),
-                      ShopTextForm(
-                        onChanged: (val) {
-                          adoptProvider.name = val;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Text(contactNumberStr),
-                      ShopTextForm(
-                        onChanged: (val) {
-                          adoptProvider.phone = val;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Text(locationStr),
-                      ShopTextForm(
-                        onChanged: (val){
-                          adoptProvider.location = val;
-        
-                        },
-                      ),
-        
-                     
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      
-                      const SizedBox(
-                        height: 25,
-                      ),
-                      Center(
-                          child: Container(
-                        height: 50,
-                        width: MediaQuery.of(context).size.width * .9,
-                        child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=> DonateThird()));
-                            }, child: const Text(nextStr)),
-                      )),
-                      const SizedBox(
-                        height: 80,
-                      )
+                      Text("Next Step: Confirmation"),
                     ],
                   ),
+                ]),
+              ),
+              const Divider(
+                thickness: 2,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Text("Your Name"),
+                    ShopTextForm(
+                      onChanged: (val) {
+                        adoptProvider.name = val;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Text(contactNumberStr),
+                    ShopTextForm(
+                      onChanged: (val) {
+                        adoptProvider.phone = val;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Text(locationStr),
+                    ShopTextForm(
+                      onChanged: (val) {
+                        adoptProvider.location = val;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    Center(
+                        child: Container(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width * .9,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DonateThird()));
+                          },
+                          child: const Text(nextStr)),
+                    )),
+                    const SizedBox(
+                      height: 80,
+                    )
+                  ],
                 ),
+              ),
             ],
           ),
         ),

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:project_petcare/helper/constant.dart';
-import 'package:project_petcare/practice/practice1.dart';
 import 'package:project_petcare/view/dashboard/homepage.dart';
-import 'package:project_petcare/view/donate/donate_1.dart';
 import 'package:project_petcare/view/profile/profile.dart';
 import 'package:project_petcare/view/shop/shopall.dart';
+import 'package:project_petcare/view/test.dart/ui.dart';
 class BottomNavBar extends StatefulWidget {
   @override
   _BottomNavBarState createState() => _BottomNavBarState();
@@ -17,9 +16,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
   List<Widget> widgetList=[
     HomePage(),
     ShopAll(),
+    UiTest(),
    
     //  HomePage(),
-  DonateFirstPage(),
+  // DonateFirstPage(),
     // Practice1()
     Profile(),
     
@@ -44,7 +44,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
           ],
           color: ColorUtil.primaryColor,
           buttonBackgroundColor: ColorUtil.primaryColor,
-          backgroundColor: Colors.white,
+          backgroundColor: Color(0XFFE5E8FF),
           animationCurve: Curves.fastEaseInToSlowEaseOut,
           animationDuration: Duration(milliseconds: 600),
           onTap: (value) {

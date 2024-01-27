@@ -1,52 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:project_petcare/helper/constBread.dart';
+import 'package:project_petcare/model/categories.dart';
+import 'package:project_petcare/provider/categoryprovider.dart';
+import 'package:provider/provider.dart';
 
-class CategoriesContain extends StatefulWidget {
-  final String? categoryTitle;
+class CategoriesDetails extends StatefulWidget {
+  final Categories? categories;
 
-  CategoriesContain({Key? key, this.categoryTitle}) : super(key: key);
+  CategoriesDetails({Key? key, this.categories}) : super(key: key);
 
   @override
-  _CategoriesContainState createState() => _CategoriesContainState();
+  State<CategoriesDetails> createState() => _CategoriesDetailsState();
 }
 
-class _CategoriesContainState extends State<CategoriesContain> {
-  String? selectedDogBreed, selectedCatBreed, selectedFishBreed;
-  List<String> hellolist = ["1", "1"];
+class _CategoriesDetailsState extends State<CategoriesDetails> {
+  String? selectedCatBreed, selectedDogBreed, selectedFishBreed;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(widget.categoryTitle ?? "Search Page"),
-      ),
-      body: Center(
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
+      body: Consumer<CategoriesProvider>(
+        builder: (context, categoriesProvider, child) => Column(
           children: [
-            Text(
-              "Category: ${widget.categoryTitle ?? 'Unknown'}",
-              style: TextStyle(fontSize: 24),
+            Container(
+              height: 100,
             ),
-            if (widget.categoryTitle == "Dog") ...[
-              category_Dog(),
-            ] else if (widget.categoryTitle == "Cat") ...[
-              Category_Cat()
-            ] else if (widget.categoryTitle == "Fish") ...[
-              Category_Fish()
-            ],
+            Container(
+              child: Column(
+                children: [
+                  Image.network(widget.categories!.categoriesImage!),
+                  Text(widget.categories!.categoriesName!),
+                  _buildCategoryContent(widget.categories!.categoriesName!),
+                ],
+              ),
+            )
           ],
         ),
       ),
     );
   }
 
-  Widget category_Dog() {
+  Widget _buildCategoryContent(String category) {
+    if (category == "Dog") {
+      return _categoryDog();
+    } else if (category == "Cat") {
+      return _categoryCat();
+    } else if (category == "Fish") {
+      return _categoryFish();
+    } else {
+      return Text("Unknown category");
+    }
+  }
+
+  Widget _categoryDog() {
     return Column(
       children: [
-        Text(
-          "Dog-specific content",
-        ),
+        Text("Dog-specific content"),
         DropdownButton<String>(
           hint: Text("Select a dog breed"),
           value: selectedDogBreed,
@@ -66,7 +75,7 @@ class _CategoriesContainState extends State<CategoriesContain> {
     );
   }
 
-  Widget Category_Cat() {
+  Widget _categoryCat() {
     return Column(
       children: [
         Text("Cat-specific content"),
@@ -89,7 +98,7 @@ class _CategoriesContainState extends State<CategoriesContain> {
     );
   }
 
-  Widget Category_Fish() {
+  Widget _categoryFish() {
     return Column(
       children: [
         DropdownButton<String>(

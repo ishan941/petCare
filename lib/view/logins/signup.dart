@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
-import 'package:project_petcare/model/petcare.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/view/customs/customform.dart';
@@ -171,7 +170,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: ElevatedButton(
                                   onPressed: () async {
-                                  await  signUpProvider
+                                    await signUpProvider
                                         .sendUserLoginValueToFireBase();
                                     if (signUpProvider.signUpUtil ==
                                         StatusUtil.success) {
@@ -182,7 +181,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                               builder: (context) =>
                                                   LoginPage()),
                                           (Route<dynamic> route) => false);
-                                    }else{
+                                    } else {
                                       Helper.snackBar(failedToSaveStr, context);
                                     }
                                   },

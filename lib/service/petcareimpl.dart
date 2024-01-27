@@ -3,6 +3,7 @@ import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/model/adopt.dart';
+import 'package:project_petcare/model/categories.dart';
 import 'package:project_petcare/model/dashservice.dart';
 import 'package:project_petcare/model/donate.dart';
 import 'package:project_petcare/model/ourservice.dart';
@@ -378,45 +379,46 @@ class PetCareImpl extends PetCareService {
     }
   }
 
-  //  @override
-  // Future<FireResponse> getDashServiceDetails() async {
-  //   if (await Helper.checkInterNetConnection()) {
-  //     try {
-  //       var response = await FirebaseFirestore.instance
-  //           .collection("ourServiceDashBoard")
-  //           .get();
-  //       final getDashService = response.docs;
-  //       List<DashService> dashServiceList = [];
-  //       if (getDashService.isNotEmpty) {
-  //         for (var dashServiceDetails in getDashService) {
-  //           dashServiceList
-  //               .add(DashService.fromJson(dashServiceDetails.data()));
-  //         }
-  //       }
-  //       return FireResponse(
-  //           statusUtil: StatusUtil.success, data: dashServiceList);
-  //     } catch (e) {
-  //       return FireResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
-  //     }
-  //   } else {
-  //     return FireResponse(
-  //         statusUtil: StatusUtil.error, errorMessage: noInternetStr);
-  //   }
-  // }
-  // @override
-  // Future<FireResponse> adoptImage(Donate donate) async{
-  //     if (await Helper.checkInterNetConnection()) {
-  //     try {
-  //       FirebaseFirestore.instance
-  //           .collection("AdoptDetails")
-  //           .add(donate.toJson());
-  //       return FireResponse(
-  //           statusUtil: StatusUtil.success,
-  //           successMessage: successfullySavedStr);
-  //     } catch (e) {
-  //       return FireResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
-  //     }
-  //   }else{
-  //     return FireResponse(statusUtil: StatusUtil.error, errorMessage: noInternetStr);
-  //   }
+  @override
+  Future<FireResponse> categoriesDetails(Categories categories)async {
+   if( await Helper.checkInterNetConnection()){
+    try{
+      FirebaseFirestore.instance.collection("CategoriesItems").add(categories.toJson());
+      return FireResponse(statusUtil: StatusUtil.success, successMessage: successfullySavedStr);
+
+    }catch(e){
+      return FireResponse(statusUtil: StatusUtil.error,errorMessage: e.toString());
+    }
+
+   }else{
+    return FireResponse(statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+   }
+  }
+  
+  @override
+  Future<FireResponse> getCategoriesDetails() async{
+   if( await Helper.checkInterNetConnection()){
+    try{
+     var response = await  FirebaseFirestore.instance.collection("CategoriesItems").get();
+    final items = response.docs;
+    List<Categories> categoriesList =[];
+    if(items.isNotEmpty){
+      for( var categoriesitems in items){
+        categoriesList.add(Categories.fromJson(categoriesitems.data()));
+
+      }
+    }
+      return FireResponse(statusUtil: StatusUtil.success, data: categoriesList);
+
+    }catch(e){
+      return FireResponse(statusUtil: StatusUtil.error, errorMessage: badRequestStr);
+    }
+
+
+   }else{
+    return FireResponse(statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+   }
+  }
+
+  
 }
