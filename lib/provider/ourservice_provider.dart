@@ -15,17 +15,35 @@ class OurServiceProvider extends ChangeNotifier {
   String? medical, shop, trainner;
   String? shopLocation, shopName;
   String? cpimageUrl, ppimageUrl, profilePictureUrl;
-  String? profession, fullname, phone, email;
+  String? profession, fullname, phone, email, description;
+  String? chosenProfession;
   XFile? cpimage, ppimage, profilePicture;
   List<DashService> dashServiceList = [];
   List<OurService> professionDataList = [];
+  
+  List<OurService> filterByProfession(String chosenProfession) {
+    return professionDataList.where((data) => data.profession == chosenProfession).toList();
+  }
+  
+List<OurService> _filteredProfessionData =[];
 
+List<OurService> get filteredProfessionData => _filteredProfessionData;
+
+setFilteredProfessionData(List<OurService> filteredData){
+  _filteredProfessionData =filteredData;
+  notifyListeners();
+}
+setChosenProfession(String profession){
+  chosenProfession = profession;
+  notifyListeners();
+}
   PetCareService petCareService = PetCareImpl();
 
   StatusUtil _dashServiceUtil = StatusUtil.idle;
   StatusUtil _profilePictureUtil = StatusUtil.idle;
   StatusUtil _professionUtil = StatusUtil.idle;
   StatusUtil _getProfessionUtil = StatusUtil.idle;
+  
 
   StatusUtil get dashServiceUtil => _dashServiceUtil;
   StatusUtil get profilePictureUtil => _profilePictureUtil;
@@ -70,6 +88,8 @@ class OurServiceProvider extends ChangeNotifier {
         shopName: shopName,
         trainner: trainner,
         profilePicture: profilePictureUrl,
+        description:description,
+        
       );
 
       FireResponse response =

@@ -6,9 +6,10 @@ class Adopt {
   String? gender, phone, location;
   String? petbread;
   String? imageUrl;
+  String? id;
 
   Adopt(
-      {this.petname, this.petweight, this.petage, this.gender, this.petbread, this.imageUrl, this.location, this.phone, this.name});
+      {this.petname, this.petweight, this.id, this.petage, this.gender, this.petbread, this.imageUrl, this.location, this.phone, this.name});
 
   Adopt.fromJson(Map<String, dynamic> json) {
     petname = json['petname'];
@@ -20,6 +21,7 @@ class Adopt {
     phone = json['phone'];
     location = json['location'];
     name = json['name'];
+    id = json['id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -33,6 +35,7 @@ class Adopt {
     data['phone'] = this.phone;
     data['location'] = this.location;
     data['name'] = this.name;
+    data['id'] = this.id;
     
     return data;
   }

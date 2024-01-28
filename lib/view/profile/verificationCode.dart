@@ -17,36 +17,37 @@ class _VerificationCodeState extends State<VerificationCode> {
     return Scaffold(
       body: SafeArea(
         child: Consumer<PetCareProvider>(
-          builder: (context, petCareProvider, child) => 
-          Column(
+          builder: (context, petCareProvider, child) => Column(
             children: [
-              Container(height: 200,),
+              Container(
+                height: 200,
+              ),
               OtpTextField(
-            numberOfFields: 4,
-            borderColor: ColorUtil.primaryColor,
-            //set to true to show as box or false to show as dash
-            showFieldAsBox: true, 
-            //runs when a code is typed in
-            onCodeChanged: (String code) {
-                petCareProvider.code = code;        
-            },
-            
-            //runs when every textfield is filled
-            onSubmit: (String verificationCode){
-                showDialog(
-                    context: context,
-                    builder: (context){
-                    return AlertDialog(
-                        title: Text("Verification Code"),
-                        content: Text('Code entered is $verificationCode'),
-                    );
-                    }
-                );
-            }, // end onSubmit
-            ),
-            SizedBox(height: 10,),
-            ElevatedButton(onPressed: (){}, child: Text("Verify"))
-              
+                numberOfFields: 4,
+                borderColor: ColorUtil.primaryColor,
+                //set to true to show as box or false to show as dash
+                showFieldAsBox: true,
+                //runs when a code is typed in
+                onCodeChanged: (String code) {
+                  petCareProvider.code = code;
+                },
+
+                //runs when every textfield is filled
+                onSubmit: (String verificationCode) {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text("Verification Code"),
+                          content: Text('Code entered is $verificationCode'),
+                        );
+                      });
+                }, // end onSubmit
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              ElevatedButton(onPressed: () {}, child: Text("Verify"))
             ],
           ),
         ),

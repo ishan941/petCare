@@ -78,22 +78,33 @@ class SignUpProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> userData() async {
-    if (userDetailsStatus != StatusUtil.loading) {
-      setUserDetailsStatus(StatusUtil.loading);
-    }
+ Future<void> userData() async {
+  if (userDetailsStatus != StatusUtil.loading) {
+    setUserDetailsStatus(StatusUtil.loading);
+  }
 
+  try {
     FireResponse response = await petCareService.getUserLoginData();
-    if (response.statusUtil == StatusUtil.success) {
-      userName = response.data.name;
-      userEmail = response.data.email;
 
-      setUserDetailsStatus(StatusUtil.success);
-    } else if (response.statusUtil == StatusUtil.success) {
+    if (response.statusUtil == StatusUtil.success) {
+      if (response.data != null && response.data is SignUp) {
+        userName = response.data.name;
+        userEmail = response.data.email;
+        setUserDetailsStatus(StatusUtil.success);
+      } else {
+        errorMessage = "Invalid data structure from Firestore";
+        setUserDetailsStatus(StatusUtil.error);
+      }
+    } else if (response.statusUtil == StatusUtil.error) {
       errorMessage = response.errorMessage;
       setUserDetailsStatus(StatusUtil.error);
     }
+  } catch (e) {
+    errorMessage = "$e";
+    setUserDetailsStatus(StatusUtil.error);
   }
+}
+
 
   checkUserLoginFromFireBase() async {
     if (_loginUtil != StatusUtil.loading) {

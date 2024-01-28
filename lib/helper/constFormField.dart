@@ -6,8 +6,8 @@ import 'package:flutter_phone_number_field/flutter_phone_number_field.dart';
 import 'package:project_petcare/helper/constant.dart';
 
 class ConstPhoneField extends StatelessWidget {
-  FocusNode? focusNode;
-  void Function(PhoneNumber)? onChanged;
+ final FocusNode? focusNode;
+ final void Function(PhoneNumber)? onChanged;
   ConstPhoneField({super.key, this.focusNode, this.onChanged});
 
   @override
@@ -38,8 +38,8 @@ class ConstPhoneField extends StatelessWidget {
   }
 }
 class ConstElevated extends StatelessWidget {
-   Widget? child;
-   void Function()? onPressed;
+   final Widget? child;
+  final void Function()? onPressed;
    ConstElevated({super.key,
   required this.child,
   required this.onPressed,

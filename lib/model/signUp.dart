@@ -4,6 +4,7 @@ class SignUp {
   String? phone;
   String? email;
   String? password;
+  
 
   SignUp({this.name, this.phone, this.email, this.password});
 

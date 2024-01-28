@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/constant.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
+import 'package:project_petcare/view/dashboard/buttomnav.dart';
 import 'package:project_petcare/view/shop/confirmation_item.dart';
 import 'package:provider/provider.dart';
 
@@ -48,16 +50,17 @@ class _NextPricingState extends State<NextPricing> {
                     SizedBox(
                       width: 20,
                     ),
-                     CircularPercentIndicator(radius: 30,
-                   animation: true,
-                   animateFromLastPercent: true,
-                   percent: shopProvider.per,
-                   center: Text(threeOfFourStr),
-                   progressColor: ColorUtil.primaryColor,
-                   onAnimationEnd: () {
-                     shopProvider.updatePercent(0.75);
-                   },
-                   ),
+                    CircularPercentIndicator(
+                      radius: 30,
+                      animation: true,
+                      animateFromLastPercent: true,
+                      percent: shopProvider.per,
+                      center: Text(threeOfFourStr),
+                      progressColor: ColorUtil.primaryColor,
+                      onAnimationEnd: () {
+                        shopProvider.updatePercent(0.75);
+                      },
+                    ),
                     SizedBox(
                       width: 10,
                     ),
@@ -191,16 +194,23 @@ class _NextPricingState extends State<NextPricing> {
                               child: ElevatedButton(
                                 onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
-                                    shopProvider.sendValueToFireBase(context);
-
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ConfirmationShopItem()));
+                                    shopProvider.sendValueToFireBase();
+                                    if (shopProvider.shopIetms ==
+                                        StatusUtil.success) {
+                                      Helper.snackBar(
+                                          successfullySavedStr, context);
+                                      Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BottomNavBar()),
+                                          (route) => false);
+                                    }
+                                    else{
+                                      Helper.snackBar(failedToSaveStr, context);
+                                    }
                                   } else {
-                                    Helper.snackBar(
-                                        "Please enter your price", context);
+                                    Helper.snackBar(valiPriceStr, context);
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(

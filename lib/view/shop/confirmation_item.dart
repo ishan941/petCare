@@ -24,7 +24,6 @@ class _ConfirmationShopItemState extends State<ConfirmationShopItem> {
   //   var donateProvider = Provider.of<DonateProvider>(context, listen: false);
   //   await donateProvider.petDetails();
   // }
- 
 
   @override
   Widget build(BuildContext context) {
@@ -39,16 +38,19 @@ class _ConfirmationShopItemState extends State<ConfirmationShopItem> {
             Expanded(
               child: ListView.builder(
                   itemBuilder: (context, index) => GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> ShopDetails(
-                        shop: shopProvider.shopItemsList[index],
-                      )));
-                    },
-                    child: Container(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ShopDetails(
+                                        shop: shopProvider.shopItemsList[index],
+                                      )));
+                        },
+                        child: Container(
                           child: Image.network(
                               shopProvider.shopItemsList[index].images ?? ""),
                         ),
-                  )),
+                      )),
             )
           ],
         ),

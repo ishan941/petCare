@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,26 +11,22 @@ import 'package:project_petcare/service/petcareimpl.dart';
 import 'package:project_petcare/service/petcareserivce.dart';
 
 class ShopProvider extends ChangeNotifier {
-  
-
-
   String? errorMessage, imageUrl;
   String? product, condition, location, price, description, images, negotiable;
   XFile? image;
   PetCareService petCareService = PetCareImpl();
-   List<Shop> shopItemsList=[];
+  List<Shop> shopItemsList = [];
 
-   double _per = 0.0;
+  double _per = 0.0;
   double get per => _per;
-  void updatePercent(double value){
+  void updatePercent(double value) {
     _per = value;
     notifyListeners();
-
   }
 
   StatusUtil _shopItems = StatusUtil.idle;
   StatusUtil _uploadImageForShop = StatusUtil.idle;
-  StatusUtil _getshopItemsUtil =StatusUtil.idle;
+  StatusUtil _getshopItemsUtil = StatusUtil.idle;
 
   StatusUtil get shopIetms => _shopItems;
   StatusUtil get uploadImageInFireBase => _uploadImageForShop;
@@ -46,23 +41,23 @@ class ShopProvider extends ChangeNotifier {
     _uploadImageForShop = statusUtil;
     notifyListeners();
   }
-  
-  setgetShopItemsUtil(StatusUtil statusUtil){
-    _getshopItemsUtil =statusUtil;
+
+  setgetShopItemsUtil(StatusUtil statusUtil) {
+    _getshopItemsUtil = statusUtil;
     notifyListeners();
   }
 
   Future<void> shopItemDetails(Shop shop) async {
     if (_shopItems != StatusUtil.loading) {
-       setShopItemsUtil(StatusUtil.loading);
+      setShopItemsUtil(StatusUtil.loading);
     }
     try {
       FireResponse response = await petCareService.shopItemDetails(shop);
       if (response.statusUtil == StatusUtil.success) {
-         setShopItemsUtil(StatusUtil.success);
+        setShopItemsUtil(StatusUtil.success);
       } else if (response.statusUtil == StatusUtil.error) {
         errorMessage = response.errorMessage;
-         setShopItemsUtil(StatusUtil.error);
+        setShopItemsUtil(StatusUtil.error);
       }
     } catch (e) {
       errorMessage = "$e";
@@ -71,35 +66,33 @@ class ShopProvider extends ChangeNotifier {
       );
     }
   }
-  Future<void> itemDetails()async{
-if(_getshopItemsUtil != StatusUtil.loading){
-  setgetShopItemsUtil(StatusUtil.loading);
-}
-try{
-  FireResponse response = await petCareService.getShopItems();
-  if(response.statusUtil == StatusUtil.success){
-     shopItemsList=response.data;
-    setShopItemsUtil(StatusUtil.success);
-   
-  }else if (response.statusUtil == StatusUtil.error){
-    errorMessage = response.errorMessage;
-    setgetShopItemsUtil(StatusUtil.error);
-  }
 
-}catch(e){
-  errorMessage = "$e";
-  setgetShopItemsUtil(StatusUtil.error);
-}
-
+  Future<void> itemDetails() async {
+    if (_getshopItemsUtil != StatusUtil.loading) {
+      setgetShopItemsUtil(StatusUtil.loading);
+    }
+    try {
+      FireResponse response = await petCareService.getShopItems();
+      if (response.statusUtil == StatusUtil.success) {
+        shopItemsList = response.data;
+        setShopItemsUtil(StatusUtil.success);
+      } else if (response.statusUtil == StatusUtil.error) {
+        errorMessage = response.errorMessage;
+        setgetShopItemsUtil(StatusUtil.error);
+      }
+    } catch (e) {
+      errorMessage = "$e";
+      setgetShopItemsUtil(StatusUtil.error);
+    }
   }
 
   setImage(XFile? image) {
-    this.image=image;
+    this.image = image;
     notifyListeners();
   }
 
   setImageUrl(String? imageUrl) {
-    this.imageUrl=imageUrl;
+    this.imageUrl = imageUrl;
     notifyListeners();
   }
 
@@ -119,42 +112,33 @@ try{
         setShopItemsUtil(StatusUtil.error);
       }
     }
-    Future<void> shopItemDetails(Shop shop) async {
-      if(_uploadImageForShop != StatusUtil.loading){
-        setUploadImageInFireBaseUtil(StatusUtil.loading);
-      }
-      try{ 
-        FireResponse response = await petCareService.shopItemDetails(shop);
-        if(response.statusUtil == StatusUtil.success){
-          setUploadImageInFireBaseUtil(StatusUtil.success);
-        }else if(response.statusUtil == StatusUtil.error){
-          setUploadImageInFireBaseUtil(StatusUtil.error);
-        }
-
-      }catch(e){
-        errorMessage= "$e";
-        setUploadImageInFireBaseUtil(StatusUtil.error);
-      }
-
-    }
   }
 
-  sendValueToFireBase(BuildContext context) async {
-   await  uploadImageForShop();
+  Future<void> sendValueToFireBase() async {
+    setShopItemsUtil(StatusUtil.loading);
+
+    await uploadImageForShop();
     Shop shop = Shop(
-        product: product,
-        condition: condition,
-        location: location,
-        images: imageUrl,
-        price: price,
-        negotiable: negotiable,
-        description: description);
-    await petCareService.shopItemDetails(shop).then((value) {
-      if (shopIetms == StatusUtil.success) {
-        Helper.snackBar(successfullySavedStr, context);
-      } else if (shopIetms == StatusUtil.error) {
-        Helper.snackBar(failedToSaveStr, context);
+      product: product,
+      condition: condition,
+      location: location,
+      images: imageUrl,
+      price: price,
+      negotiable: negotiable,
+      description: description,
+    );
+
+    try {
+      FireResponse response = await petCareService.shopItemDetails(shop);
+      if (response.statusUtil == StatusUtil.success) {
+        setShopItemsUtil(StatusUtil.success);
+      } else {
+        errorMessage = response.errorMessage;
+        setShopItemsUtil(StatusUtil.error);
       }
-    });
+    } catch (e) {
+      errorMessage = e.toString();
+      setShopItemsUtil(StatusUtil.error);
+    }
   }
 }

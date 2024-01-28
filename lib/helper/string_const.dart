@@ -78,3 +78,4 @@ const String seeAllStr = "See all";
 const String noDateAvailableStr = "No data available";
 const String ourServiceStr =  "Our Services";
 const String viewStr = "View";
+const String valiPriceStr = "Please enter the price of your product";

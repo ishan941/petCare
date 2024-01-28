@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -24,11 +23,11 @@ class AdoptProvider extends ChangeNotifier {
 
   double _per = 0.0;
   double get per => _per;
-  void updatePercent(double value){
+  void updatePercent(double value) {
     _per = value;
     notifyListeners();
-
   }
+
   List<Adopt> adoptDetailsList = [];
 
   PetCareService petCareService = PetCareImpl();
@@ -126,7 +125,7 @@ class AdoptProvider extends ChangeNotifier {
     });
   }
 
-  Future<void>getAdoptdata() async {
+  Future<void> getAdoptdata() async {
     if (_getAdoptDetails != StatusUtil.loading) {
       setGetAdoptDetails(StatusUtil.loading);
     }

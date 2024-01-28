@@ -7,6 +7,7 @@ import 'package:project_petcare/provider/shop_provider.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/view/ourservice/service_form.dart';
 import 'package:project_petcare/view/profile/verifyYourAccount_1.dart';
+import 'package:project_petcare/view/test.dart/foradmin.dart';
 import 'package:project_petcare/view/test.dart/testPage.dart';
 import 'package:project_petcare/view/test.dart/ui.dart';
 import 'package:provider/provider.dart';
@@ -253,6 +254,41 @@ class _ProfileState extends State<Profile> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text("forms"),
+                                    Spacer(),
+                                    Icon(Icons.arrow_forward_rounded)
+                                  ],
+                                ),
+                              ),
+                              
+                              
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                     Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> 
+                        ForAdmin()));
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          color: Colors.white,
+                          height: 50,
+                          width: MediaQuery.of(context).size.width,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text("View"),
                                     Spacer(),
                                     Icon(Icons.arrow_forward_rounded)
                                   ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
+import 'package:project_petcare/view/ourservice/formFinal.dart';
 import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +26,11 @@ class _FormForTrainnerState extends State<FormForTrainner> {
               onChanged: (val){
                 ourServiceProvider.trainner = val;
               },
-            )
+            ),
+             ElevatedButton(onPressed: (){
+           Navigator.push(context, MaterialPageRoute(builder: (context)=> FormFinalProfession()));
+            
+          }, child: Text(submitStr)),
             
           ],
         ),

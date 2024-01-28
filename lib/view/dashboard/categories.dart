@@ -11,20 +11,7 @@ class CategoriesExplore extends StatefulWidget {
 }
 
 class _CategoriesExploreState extends State<CategoriesExplore> {
-  List<LoadImages> imageList = [
-    LoadImages(
-      images: "assets/images/catsCategores.png",
-    ),
-    LoadImages(
-      images: "assets/images/Group 1058.png",
-    ),
-    LoadImages(
-      images: "assets/images/fishCategores.png",
-    ),
-    LoadImages(
-      images: "assets/images/rabbitCategories.png",
-    )
-  ];
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,35 +36,7 @@ class _CategoriesExploreState extends State<CategoriesExplore> {
                 ),
               ],
             ),
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  // crossAxisSpacing: 8.0,
-                  // mainAxisSpacing: 8.0,
-                ),
-                itemCount: imageList.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15,
-                    vertical: 15),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Container(
-                        // decoration: BoxDecoration(
-                        //    color: Colors.blue,
-                        //   borderRadius: BorderRadius.circular(20)
-                        // ),
-                        child: Image.asset(imageList[index].images!,
-                        fit: BoxFit.cover,
-                        ),
-                        
-                        ),
-                    ),
-                  );
-                },
-              ),
-            )
+         
           ],
         ),
       ),

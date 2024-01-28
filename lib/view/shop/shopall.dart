@@ -65,21 +65,13 @@ class _ShopAllState extends State<ShopAll> {
                 builder: (context, shopProvider, child) => Stack(
                       children: [
                         ui(),
-                        loader(donateProvider),
                       ],
                     )),
           )),
     );
   }
 
-  loader(DonateProvider donateProvider) {
-    if (donateProvider.donageUtil == StatusUtil.loading) {
-      Helper.simmerEffect(context);
-    } else
-      return SizedBox();
-  }
-
-  ui() {
+  Widget ui() {
     return Consumer<ShopProvider>(
       builder: (context, shopProvider, child) => Consumer<DonateProvider>(
         builder: (context, donateProvider, child) => Column(
@@ -126,118 +118,113 @@ class _ShopAllState extends State<ShopAll> {
                 ],
               ),
             ),
-            Consumer<ShopProvider>(
-              builder: (context, shopProvider, child) => Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: StaggeredGridView.countBuilder(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    itemCount: shopProvider.shopItemsList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ShopDetails(
-                                shop: shopProvider.shopItemsList[index],
-                              ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: StaggeredGridView.countBuilder(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  itemCount: shopProvider.shopItemsList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ShopDetails(
+                              shop: shopProvider.shopItemsList[index],
                             ),
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                spreadRadius: 0,
-                                blurRadius: 3,
-                                color: Colors.grey.withOpacity(0.5),
-                                offset: Offset(2, 4),
-                              ),
-                            ],
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 7, vertical: 7),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Stack(
-                                      children: [
-                                        Container(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.15,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: Image.network(
-                                            shopProvider.shopItemsList[index]
-                                                    .images ??
-                                                "",
-                                            fit: BoxFit.cover,
-                                          ),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              spreadRadius: 0,
+                              blurRadius: 3,
+                              color: Colors.grey.withOpacity(0.5),
+                              offset: Offset(2, 4),
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 7, vertical: 7),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.15,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: Image.network(
+                                          shopProvider.shopItemsList[index]
+                                                  .images ??
+                                              "",
+                                          fit: BoxFit.cover,
                                         ),
-                                        loaderForShop(shopProvider),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Text(
-                                  shopProvider.shopItemsList[index].product ??
-                                      "",
-                                  style: textStyleSmallTitle,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.star,
-                                      color: Color.fromARGB(255, 244, 211, 67),
-                                      size: 15,
-                                    ),
-                                    Text(
-                                      "4.2/5 (453)",
-                                      style: textStyleMini,
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Rs",
-                                      style: textStyleSmallSized,
-                                    ),
-                                    Text(
-                                      shopProvider.shopItemsList[index].price ??
-                                          "",
-                                      style: subTitleText,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                              ),
+                              Text(
+                                shopProvider.shopItemsList[index].product ?? "",
+                                style: textStyleSmallTitle,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.star,
+                                    color: Color.fromARGB(255, 244, 211, 67),
+                                    size: 15,
+                                  ),
+                                  Text(
+                                    "4.2/5 (453)",
+                                    style: textStyleMini,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Rs",
+                                    style: textStyleSmallSized,
+                                  ),
+                                  Text(
+                                    shopProvider.shopItemsList[index].price ??
+                                        "",
+                                    style: subTitleText,
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                      );
-                    },
-                    staggeredTileBuilder: (int index) => StaggeredTile.fit(1),
-                  ),
+                      ),
+                    );
+                  },
+                  staggeredTileBuilder: (int index) => StaggeredTile.fit(1),
                 ),
               ),
             )

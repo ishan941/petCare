@@ -10,7 +10,8 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
@@ -50,16 +51,22 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   readValue() async {
     var signUpProvider = Provider.of<SignUpProvider>(context, listen: false);
     bool isLogin = await signUpProvider.readValueFromSharedPreference();
-    bool isGoogleIn = await signUpProvider.readGooogelValueFromSharedPreference();
+    bool isGoogleIn =
+        await signUpProvider.readGooogelValueFromSharedPreference();
     Future.delayed(Duration(seconds: 2), () {
       if (isLogin || isGoogleIn) {
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => BottomNavBar()), (route) => false);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => BottomNavBar()),
+            (route) => false);
       } else {
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginPage()), (route) => false);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false);
       }
     });
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -73,13 +80,14 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'assets/images/Screenshot_2023-12-15_at_18.50.26-removebg-preview.png',
-                    width: 300,
-                    height: 300,
+                  Container(
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: Image.asset(
+                      'assets/images/splash.png',
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                  SizedBox(height: 20),
-                  Text("PetCare")
                 ],
               ),
             ),

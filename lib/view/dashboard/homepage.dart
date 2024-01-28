@@ -31,24 +31,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<LoadImages> imageList = [
-    LoadImages(
-        images: "assets/images/catsCategores.png",
-        pageIdentifier: "category1",
-        name: "Cat"),
-    LoadImages(
-        images: "assets/images/Group 1058.png",
-        pageIdentifier: "category2",
-        name: "Dog"),
-    LoadImages(
-        images: "assets/images/fishCategores.png",
-        pageIdentifier: "category3",
-        name: "Fish"),
-    LoadImages(
-        images: "assets/images/rabbitCategories.png",
-        pageIdentifier: "category4",
-        name: "Rabbit"),
-  ];
+  
 
   @override
   void initState() {
@@ -304,7 +287,7 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: Stack(children: [
                   categoriesUi(context, categoriesProvider, index),
-                  loaderForCategories(categoriesProvider),
+                
                 ])),
           ),
         ),
@@ -312,13 +295,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  loaderForCategories(CategoriesProvider categoriesProvider) {
-    if (categoriesProvider.getCategoriesUtil == StatusUtil.loading) {
-      return Helper.simmerEffect(context);
-    } else {
-      return SizedBox();
-    }
-  }
+ 
 
   Widget categoriesUi(
       BuildContext context, CategoriesProvider categoriesProvider, int index) {
@@ -807,9 +784,4 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class LoadImages {
-  String? images;
-  String? name;
-  String? pageIdentifier;
-  LoadImages({this.images, this.pageIdentifier, this.name});
-}
+

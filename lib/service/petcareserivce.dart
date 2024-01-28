@@ -18,7 +18,6 @@ abstract class PetCareService {
   Future<FireResponse> donateData(Donate donate);
   Future<FireResponse> adoptDetails(Adopt adopt);
   Future<FireResponse> getPetDetails();
-  // Future<FireResponse> getUserDetails();
   Future<FireResponse> getAdoptDetails();
   Future<FireResponse> shopItemDetails(Shop shop);
   Future<FireResponse> getShopItems();

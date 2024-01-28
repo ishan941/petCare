@@ -4,13 +4,15 @@ class OurService {
   String? phone;
   String? email;
   String? shop;
+  String? location;
+  String? description;
   String? medical;
   String? trainner;
   String? profilePicture;
   String? shopLocation;
   String? shopName;
 
-  OurService({this.profession,this.shopName, this.shopLocation, this.profilePicture, this.fullname, this.phone, this.email, this.medical, this.shop,this.trainner});
+  OurService({this.profession, this.location, this.description, this.shopName, this.shopLocation, this.profilePicture, this.fullname, this.phone, this.email, this.medical, this.shop,this.trainner});
 
   OurService.fromJson(Map<String, dynamic> json) {
     profession = json['profession'];
@@ -23,6 +25,8 @@ class OurService {
        profilePicture = json['profilePictureUrl'];
        shopName = json['shopName'];
        shopLocation = json['shopLocation'];
+       description = json['description'];
+       location = json['location'];
   }
 
   Map<String, dynamic> toJson() {
@@ -37,6 +41,8 @@ class OurService {
     data['profilePictureUrl'] = this.profilePicture;
     data['shopLocation'] = this.shopLocation;
     data['shopName'] = this.shopName;
+    data['description']= this.description;
+    data['location']= this.location;
     return data;
   }
 }
