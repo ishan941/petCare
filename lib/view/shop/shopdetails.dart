@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/provider/donateprovider.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
+import 'package:project_petcare/view/shop/mycart.dart';
 import 'package:project_petcare/view/shop/shopBuyNow.dart';
 import 'package:project_petcare/view/shop/shopall.dart';
 import 'package:provider/provider.dart';
 
 class ShopDetails extends StatefulWidget {
- final Shop? shop;
-  ShopDetails({
-    super.key,
-    this.shop,
-  });
+  final Shop? shop;
+
+  ShopDetails({this.shop});
 
   @override
   State<ShopDetails> createState() => _ShopDetailsState();
@@ -20,17 +20,6 @@ class ShopDetails extends StatefulWidget {
 
 class _ShopDetailsState extends State<ShopDetails> {
   int _currentIndex = 0;
-
-  List<PetShop> shopList = [
-    PetShop(
-      itemName:
-          "Pedigree Adult Dry Dog Food, (High Protein Variant)PEDIGREE With MarroBites Pieces Adult Dry Dog Food, Steak & Vegetable Flavor is full of the delicious meat and marrow ",
-      price: "4,100",
-      reviews: "107",
-      description:
-          "PEDIGREE With MarroBites Pieces Adult Dry Dog Food, Steak & Vegetable Flavor is full of the delicious meat and marrow flavors your dog craves.",
-    )
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -52,13 +41,8 @@ class _ShopDetailsState extends State<ShopDetails> {
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
-                                child: Stack(
-                                  children: [
-                                    SizedBox(
-                                      child:
-                                          Image.network(widget.shop!.images!),
-                                    ),
-                                  ],
+                                child: SizedBox(
+                                  child: Image.network(widget.shop!.images!),
                                 ),
                               ),
                               SizedBox(
@@ -106,7 +90,6 @@ class _ShopDetailsState extends State<ShopDetails> {
                                           SizedBox(
                                             width: 30,
                                           ),
-                                          Text(shopList[index].reviews!),
                                           SizedBox(
                                             width: 3,
                                           ),
@@ -164,7 +147,9 @@ class _ShopDetailsState extends State<ShopDetails> {
                                         widget.shop!.description!,
                                         style: titleText,
                                       ),
-                                     SizedBox(height: 20,)
+                                      SizedBox(
+                                        height: 20,
+                                      )
                                     ],
                                   ),
                                 ),
@@ -215,8 +200,10 @@ class _ShopDetailsState extends State<ShopDetails> {
                           child: Column(
                             children: [
                               InkWell(
-                                onTap: () => 
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=> ShopAll())),
+                                onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ShopAll())),
                                 child: Icon(
                                   Icons.storefront_outlined,
                                   color: ColorUtil.primaryColor,
@@ -229,15 +216,15 @@ class _ShopDetailsState extends State<ShopDetails> {
                             ],
                           ),
                         ),
-                         Container(
+                        Container(
                           height: MediaQuery.of(context).size.height,
                           width: MediaQuery.of(context).size.width * .2,
                           // color: Colors.red,
                           child: Column(
                             children: [
                               InkWell(
-                                onTap: () => 
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=> ShopAll())),
+                                onTap: () =>
+                                    _showAlertDialog(context, shopProvider),
                                 child: Icon(
                                   Icons.shopping_cart_outlined,
                                   color: ColorUtil.primaryColor,
@@ -251,16 +238,35 @@ class _ShopDetailsState extends State<ShopDetails> {
                           ),
                         ),
                         ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStatePropertyAll(
+                                  ColorUtil.primaryColor)),
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> ShopBuyNow(shopList: shopList)));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ShopBuyNow(
+                                        shopList: shopProvider.shopItemsList)));
                           },
                           child: Text('Buy Now'),
                         ),
                         ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStatePropertyAll(
+                                  ColorUtil.primaryColor)),
                           onPressed: () {
-                            // Handle button press
+                            if (shopProvider.isCart(widget.shop!)) {
+                              Helper.snackBar(
+                                  "The item is already on cart", context);
+                            } else {
+                              shopProvider.addToCart(widget.shop!);
+                              Helper.snackBar(
+                                "Your item has been successfully saved to your cart. Please visit My Cart.",
+                                context,
+                              );
+                            }
                           },
-                          child: Text('Action'),
+                          child: Text('Add to cart'),
                         ),
                       ],
                     ),
@@ -273,14 +279,43 @@ class _ShopDetailsState extends State<ShopDetails> {
       ),
     );
   }
-}
 
-class PetShop {
-  String? itemName, reviews, price, description;
-  PetShop({
-    this.description,
-    this.itemName,
-    this.price,
-    this.reviews,
-  });
+  void _showAlertDialog(BuildContext context, ShopProvider shopProvider) {
+    showDialog(
+      context: context,
+      builder: (
+        BuildContext context,
+      ) {
+        return AlertDialog(
+          title: Text(
+            widget.shop!.product!,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          content: Text(
+            "Do you want to add this item to your Cart ?",
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                shopProvider.addToCart(widget.shop!);
+                Navigator.of(context).pop();
+                Helper.snackBar(
+                  "Your item has been successfully saved to your cart. Please visit My Cart.",
+                  context,
+                );
+              },
+              child: Text("Add to Cart"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

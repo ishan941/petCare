@@ -12,7 +12,8 @@ class ColorUtil{
 );
 const TextStyle mainTitleText = TextStyle(
   fontSize: 20,
-  fontWeight: FontWeight.w600
+  fontWeight: FontWeight.w600,
+  color: Colors.black
 );
 const TextStyle defultTextStyle = TextStyle(
   fontSize: 14,

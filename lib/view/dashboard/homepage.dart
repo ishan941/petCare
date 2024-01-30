@@ -134,6 +134,7 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                             categories(categoriesProvider),
                                             ourservice(context),
+                                            
                                             adoptdetails(adoptProvider),
                                             Column(
                                               children: [
@@ -344,6 +345,7 @@ class _HomePageState extends State<HomePage> {
   Widget adoptdetails(AdoptProvider adoptProvider) {
     return Column(
       children: [
+       
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Row(
@@ -351,6 +353,7 @@ class _HomePageState extends State<HomePage> {
               const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(height: 10,),
                   Text(
                     adoptStr,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
@@ -375,6 +378,8 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
+         adoptProvider.adoptDetailsList.isEmpty?
+        Center(child: Text("No Data available for adopt")):
         Container(
           height: 150,
           // width: double.infinity,

@@ -35,10 +35,12 @@ class AdoptProvider extends ChangeNotifier {
   StatusUtil _adoptUtil = StatusUtil.idle;
   StatusUtil _uploadImageUtil = StatusUtil.idle;
   StatusUtil _getAdoptDetails = StatusUtil.idle;
+  StatusUtil _deleteAdoptDetails = StatusUtil.idle;
 
   StatusUtil get adoptUtil => _adoptUtil;
   StatusUtil get uploadImageUtil => _uploadImageUtil;
   StatusUtil get getAdoptDetails => _getAdoptDetails;
+  StatusUtil get deleteAdoptDetails => _deleteAdoptDetails;
 
   setGetAdoptDetails(StatusUtil statusUtil) {
     _getAdoptDetails = statusUtil;
@@ -55,6 +57,11 @@ class AdoptProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  setDeleteAdoptUtil(StatusUtil statusUtil) {
+    _deleteAdoptDetails = statusUtil;
+    notifyListeners();
+  }
+
   setImage(XFile? image) {
     this.image = image;
     notifyListeners();
@@ -63,6 +70,21 @@ class AdoptProvider extends ChangeNotifier {
   setImageUrl(String? imageUrl) {
     this.imageUrl = imageUrl;
     notifyListeners();
+  }
+
+  Future<void> deleteAdoptData(String id) async {
+    if (_deleteAdoptDetails != StatusUtil.loading) {
+      setDeleteAdoptUtil(StatusUtil.loading);
+    }
+    try {
+      FireResponse response = await petCareService.deleteAdoptById(id);
+      if (response.statusUtil == StatusUtil.success) {
+        setDeleteAdoptUtil(StatusUtil.success);
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+      setDeleteAdoptUtil(StatusUtil.error);
+    }
   }
 
   Future<void> uploadAdoptImageInFireBase() async {

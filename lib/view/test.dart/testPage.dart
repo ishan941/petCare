@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_petcare/view/shop/shope_sale.dart';
 import 'package:project_petcare/view/test.dart/verificationTest.dart';
 
 class TestPage extends StatefulWidget {
@@ -59,7 +60,7 @@ class _TestPageState extends State<TestPage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => VerificationTest()));
+                        builder: (context) => ShopSale()));
               },
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),

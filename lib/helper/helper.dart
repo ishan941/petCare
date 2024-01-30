@@ -3,21 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:project_petcare/helper/constant.dart';
-import 'package:shimmer/shimmer.dart';
+
 
 class Helper {
-  static simmerEffect(context) {
-    return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
-      child: Container(
-        height: double.infinity, // Set the desired height
-        width: double.infinity, // Set the desired width
-        color: ColorUtil.BackGroundColorColor,
-      ),
-    );
-  }
+ 
+// static showDialog ( context){
+//   var alertBox = showDialog(context: context, builder: )
 
+//   )
+// }
   static Future<bool> checkInterNetConnection() async {
     bool result = await InternetConnectionChecker().hasConnection;
     return result;

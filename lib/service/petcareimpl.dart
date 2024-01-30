@@ -270,32 +270,31 @@ class PetCareImpl extends PetCareService {
           statusUtil: StatusUtil.error, errorMessage: noInternetStr);
     }
   }
-    
+
   @override
-  Future<FireResponse> getProfessionDetails() async{
-    if(await Helper.checkInterNetConnection() ){
-      try{
-        var response = await FirebaseFirestore.instance.collection("ProfessionData").get();
+  Future<FireResponse> getProfessionDetails() async {
+    if (await Helper.checkInterNetConnection()) {
+      try {
+        var response =
+            await FirebaseFirestore.instance.collection("ProfessionData").get();
         final user = response.docs;
-        List<OurService> professionDataList =[];
-        if(user.isNotEmpty){
-          for (var professionData in user){
+        List<OurService> professionDataList = [];
+        if (user.isNotEmpty) {
+          for (var professionData in user) {
             professionDataList.add(OurService.fromJson(professionData.data()));
-
           }
-        }return FireResponse(statusUtil: StatusUtil.success, data: professionDataList);
+        }
+        return FireResponse(
+            statusUtil: StatusUtil.success, data: professionDataList);
+      } catch (e) {
+        return FireResponse(
+            statusUtil: StatusUtil.error, errorMessage: e.toString());
       }
-      catch(e){
-      return  FireResponse(statusUtil: StatusUtil.error, errorMessage: e.toString());
-      }
-
+    } else {
+      return FireResponse(
+          statusUtil: StatusUtil.error, errorMessage: noInternetStr);
     }
-    else{
-      return FireResponse(statusUtil: StatusUtil.error, errorMessage: noInternetStr);
-    }
-    
   }
-
 
   @override
   Future<FireResponse> adoptDetails(Adopt adopt) async {
@@ -326,7 +325,9 @@ class PetCareImpl extends PetCareService {
         List<Adopt> adoptDetailsList = [];
         if (getAdoptdata.isNotEmpty) {
           for (var adoptDetails in getAdoptdata) {
-            adoptDetailsList.add(Adopt.fromJson(adoptDetails.data()));
+            Adopt adopt = Adopt.fromJson(adoptDetails.data());
+            adopt.id = adoptDetails.id;
+            adoptDetailsList.add(adopt);
           }
         }
         return FireResponse(
@@ -380,45 +381,63 @@ class PetCareImpl extends PetCareService {
   }
 
   @override
-  Future<FireResponse> categoriesDetails(Categories categories)async {
-   if( await Helper.checkInterNetConnection()){
-    try{
-      FirebaseFirestore.instance.collection("CategoriesItems").add(categories.toJson());
-      return FireResponse(statusUtil: StatusUtil.success, successMessage: successfullySavedStr);
-
-    }catch(e){
-      return FireResponse(statusUtil: StatusUtil.error,errorMessage: e.toString());
-    }
-
-   }else{
-    return FireResponse(statusUtil: StatusUtil.error, errorMessage: noInternetStr);
-   }
-  }
-  
-  @override
-  Future<FireResponse> getCategoriesDetails() async{
-   if( await Helper.checkInterNetConnection()){
-    try{
-     var response = await  FirebaseFirestore.instance.collection("CategoriesItems").get();
-    final items = response.docs;
-    List<Categories> categoriesList =[];
-    if(items.isNotEmpty){
-      for( var categoriesitems in items){
-        categoriesList.add(Categories.fromJson(categoriesitems.data()));
-
+  Future<FireResponse> categoriesDetails(Categories categories) async {
+    if (await Helper.checkInterNetConnection()) {
+      try {
+        FirebaseFirestore.instance
+            .collection("CategoriesItems")
+            .add(categories.toJson());
+        return FireResponse(
+            statusUtil: StatusUtil.success,
+            successMessage: successfullySavedStr);
+      } catch (e) {
+        return FireResponse(
+            statusUtil: StatusUtil.error, errorMessage: e.toString());
       }
+    } else {
+      return FireResponse(
+          statusUtil: StatusUtil.error, errorMessage: noInternetStr);
     }
-      return FireResponse(statusUtil: StatusUtil.success, data: categoriesList);
-
-    }catch(e){
-      return FireResponse(statusUtil: StatusUtil.error, errorMessage: badRequestStr);
-    }
-
-
-   }else{
-    return FireResponse(statusUtil: StatusUtil.error, errorMessage: noInternetStr);
-   }
   }
 
-  
+  @override
+  Future<FireResponse> getCategoriesDetails() async {
+    if (await Helper.checkInterNetConnection()) {
+      try {
+        var response = await FirebaseFirestore.instance
+            .collection("CategoriesItems")
+            .get();
+        final items = response.docs;
+        List<Categories> categoriesList = [];
+        if (items.isNotEmpty) {
+          for (var categoriesitems in items) {
+            categoriesList.add(Categories.fromJson(categoriesitems.data()));
+          }
+        }
+        return FireResponse(
+            statusUtil: StatusUtil.success, data: categoriesList);
+      } catch (e) {
+        return FireResponse(
+            statusUtil: StatusUtil.error, errorMessage: badRequestStr);
+      }
+    } else {
+      return FireResponse(
+          statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+    }
+  }
+
+  @override
+  Future<FireResponse> deleteAdoptById(String id) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("AdoptDetails")
+          .doc(id)
+          .delete();
+
+      return FireResponse(statusUtil: StatusUtil.success);
+    } catch (e) {
+      return FireResponse(
+          statusUtil: StatusUtil.error, errorMessage: e.toString());
+    }
+  }
 }

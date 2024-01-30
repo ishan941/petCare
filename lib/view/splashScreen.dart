@@ -18,7 +18,10 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void initState() {
-    readValue();
+    Future.delayed(Duration.zero, () {
+      readValue();
+    });
+
     super.initState();
 
     _controller = AnimationController(

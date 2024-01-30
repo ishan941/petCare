@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:project_petcare/core/smooth_scrollable.dart';
+import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/helper/helper.dart';
+import 'package:project_petcare/helper/simmer.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/model/dashservice.dart';
 import 'package:project_petcare/model/ourservice.dart';
@@ -28,19 +32,22 @@ class _OurServicesMoreState extends State<OurServicesMore>
 
   @override
   void initState() {
-    getvalue();
     super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+    getvalue();
+  });
+    
     _tabController = TabController(length: 3, vsync: this);
   }
 
   getvalue() async {
     var ourServiceProvider =
         Provider.of<OurServiceProvider>(context, listen: false);
-    String chosenProfession = widget.dashService?.service ?? "";
+    String chosenProfession = widget.dashService!.service!;
     List<OurService> filteredList =
         ourServiceProvider.filterByProfession(chosenProfession);
     ourServiceProvider.setFilteredProfessionData(filteredList);
-    await ourServiceProvider.getProfessionData();
+   await ourServiceProvider.getProfessionData();
   }
 
   @override
@@ -63,8 +70,10 @@ class _OurServicesMoreState extends State<OurServicesMore>
             actions: [
               IconButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => YourProfession()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => YourProfession()));
                 },
                 icon: Icon(Icons.person_add_alt_1_rounded),
               ),
@@ -123,7 +132,8 @@ class _OurServicesMoreState extends State<OurServicesMore>
                     ),
                     Text(
                       exploreVetStr,
-                      style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
@@ -181,10 +191,11 @@ class _OurServicesMoreState extends State<OurServicesMore>
   }
 
   @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
+void dispose() {
+  _tabController.dispose();
+  super.dispose();
+}
+
 
   Widget popular(OurServiceProvider ourServiceProvider) {
     List<OurService> filteredList = ourServiceProvider.filteredProfessionData;
@@ -196,118 +207,145 @@ class _OurServicesMoreState extends State<OurServicesMore>
               child: Expanded(
                 child: ListView.builder(
                   itemCount: filteredList.length,
-                  itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ServiceDetails(
-                                    ourService: filteredList[index])));
-                      },
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Container(
-                          height: 110,
-                          color: Colors.white,
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Container(
-                                    child: Image.network(
-                                      filteredList[index].profilePicture ?? "",
-                                      fit: BoxFit.cover,
-                                    ),
-                                    height:
-                                        MediaQuery.of(context).size.height * .9,
-                                    width:
-                                        MediaQuery.of(context).size.width * .25,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                  itemBuilder: (context, index) => ourServiceProvider
+                              .getProfessionUtil ==
+                          StatusUtil.loading
+                      ? SimmerEffect.simmerEffect(context)
+                      : ourServiceProvider.getProfessionUtil == StatusUtil.error
+                      ? Text("Error: ${ourServiceProvider.errorMessage}")
+                      
+                      : Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ServiceDetails(
+                                          ourService: filteredList[index])));
+                            },
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Container(
+                                height: 110,
+                                color: Colors.white,
+                                child: Row(
                                   children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          filteredList[index].fullname ?? "",
-                                          style: subTitleText,
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Container(
+                                          child: ourServiceProvider
+                                                      .getProfessionUtil ==
+                                                  StatusUtil.loading
+                                              ? SimmerEffect.simmerEffect(
+                                                  context)
+                                              : Image.network(
+                                                  filteredList[index]
+                                                          .profilePicture ??
+                                                      "",
+                                                  fit: BoxFit.cover,
+                                                ),
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              .9,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              .25,
                                         ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text(
-                                          "  ${filteredList[index].profession ?? ""}",
-                                          style: textStyleMini,
-                                        ),
-                                      ],
+                                      ),
                                     ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.phone_in_talk_outlined,
-                                          size: 15,
-                                        ),
-                                        Text(
-                                          " -  ${filteredList[index].phone!}",
-                                          style: textStyleSmallSized,
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.email_outlined,
-                                          size: 15,
-                                        ),
-                                        Text(
-                                            " -  ${filteredList[index].email!}",
-                                            style: textStyleSmallSized),
-                                      ],
-                                    ),
-                                    Spacer(),
-                                    Row(
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              color: ColorUtil.primaryColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(8)),
-                                          height: 30,
-                                          width: 100,
-                                          child: Center(
-                                            child: Text(
-                                              "Book Now",
-                                              style: TextStyle(color: Colors.white),
-                                            ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                filteredList[index].fullname ??
+                                                    "",
+                                                style: subTitleText,
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                "  ${filteredList[index].profession ?? ""}",
+                                                style: textStyleMini,
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                        Icon(Icons.location_on_outlined,
-                                        size: 15,
-                                        color: Colors.black.withOpacity(0.5),
-                                        ),
-                                        Text(filteredList[index].location?? "")
-                                      ],
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.phone_in_talk_outlined,
+                                                size: 15,
+                                              ),
+                                              Text(
+                                                " -  ${filteredList[index].phone!}",
+                                                style: textStyleSmallSized,
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.email_outlined,
+                                                size: 15,
+                                              ),
+                                              Text(
+                                                  " -  ${filteredList[index].email!}",
+                                                  style: textStyleSmallSized),
+                                            ],
+                                          ),
+                                          Spacer(),
+                                          Row(
+                                            children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    color:
+                                                        ColorUtil.primaryColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                                height: 30,
+                                                width: 100,
+                                                child: Center(
+                                                  child: Text(
+                                                    "Book Now",
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                              ),
+                                              Icon(
+                                                Icons.location_on_outlined,
+                                                size: 15,
+                                                color: Colors.black
+                                                    .withOpacity(0.5),
+                                              ),
+                                              Text(filteredList[index]
+                                                      .location ??
+                                                  "")
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ],
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
                 ),
               ),
             ),
@@ -419,15 +457,17 @@ class _OurServicesMoreState extends State<OurServicesMore>
                                           child: Center(
                                             child: Text(
                                               "Book Now",
-                                              style: TextStyle(color: Colors.white),
+                                              style: TextStyle(
+                                                  color: Colors.white),
                                             ),
                                           ),
                                         ),
-                                        Icon(Icons.location_on_outlined,
-                                        size: 15,
-                                        color: Colors.black.withOpacity(0.5),
+                                        Icon(
+                                          Icons.location_on_outlined,
+                                          size: 15,
+                                          color: Colors.black.withOpacity(0.5),
                                         ),
-                                        Text(filteredList[index].location?? "")
+                                        Text(filteredList[index].location ?? "")
                                       ],
                                     ),
                                   ],
@@ -550,15 +590,17 @@ class _OurServicesMoreState extends State<OurServicesMore>
                                           child: Center(
                                             child: Text(
                                               "Book Now",
-                                              style: TextStyle(color: Colors.white),
+                                              style: TextStyle(
+                                                  color: Colors.white),
                                             ),
                                           ),
                                         ),
-                                        Icon(Icons.location_on_outlined,
-                                        size: 15,
-                                        color: Colors.black.withOpacity(0.5),
+                                        Icon(
+                                          Icons.location_on_outlined,
+                                          size: 15,
+                                          color: Colors.black.withOpacity(0.5),
                                         ),
-                                        Text(filteredList[index].location?? "")
+                                        Text(filteredList[index].location ?? "")
                                       ],
                                     ),
                                   ],

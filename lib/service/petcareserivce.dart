@@ -29,5 +29,6 @@ abstract class PetCareService {
   Future<FireResponse> getDashServiceDetails();
   Future<FireResponse> userLoginDetails(SignUp signUp);
   Future<FireResponse> userVerification(VerificationTools verificationTools);
+  Future<FireResponse> deleteAdoptById(String id);
   
 }

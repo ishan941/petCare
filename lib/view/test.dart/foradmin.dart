@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/provider/adoptprovider.dart';
 import 'package:project_petcare/provider/donateprovider.dart';
@@ -44,6 +46,7 @@ class _ForAdminState extends State<ForAdmin> {
                             },
                             icon: Icon(Icons.arrow_back_ios_sharp)),
                         Column(
+                          
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -56,7 +59,7 @@ class _ForAdminState extends State<ForAdmin> {
                         )
                       ],
                     )),
-                Expanded(
+             adoptProvider.adoptDetailsList.isNotEmpty?   Expanded(
                   child: ListView.builder(
                     itemCount: adoptProvider.adoptDetailsList.length,
                     itemBuilder: (context, index) => GestureDetector(
@@ -183,15 +186,25 @@ class _ForAdminState extends State<ForAdmin> {
                                   ),
                                   Row(
                                     children: [
-                                      IconButton(onPressed: (){
-
-                                      }, icon: Icon(Icons.delete_forever,
-                                      color: Colors.red,)),
-                                        IconButton(onPressed: (){
-
-                                      }, icon: Icon(Icons.edit,
-                                      color: Colors.red,)),
-
+                                      IconButton(
+                                          onPressed: () {
+                                            showDeleteConfirmationDialog(
+                                                context,
+                                                adoptProvider,
+                                                adoptProvider
+                                                    .adoptDetailsList[index]
+                                                    .id!);
+                                          },
+                                          icon: Icon(
+                                            Icons.delete_forever,
+                                            color: Colors.red,
+                                          )),
+                                      IconButton(
+                                          onPressed: () async {},
+                                          icon: Icon(
+                                            Icons.edit,
+                                            color: Colors.red,
+                                          )),
                                     ],
                                   )
                                 ],
@@ -202,12 +215,53 @@ class _ForAdminState extends State<ForAdmin> {
                       ),
                     ),
                   ),
-                )
+                ) :Center(child: Text("No data Available"))
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> showDeleteConfirmationDialog(
+      BuildContext context, AdoptProvider adoptProvider, String id) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Confirmation'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Are you sure you want to delete this item?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await adoptProvider.deleteAdoptData(id).then((value) async {
+                  if (adoptProvider.deleteAdoptDetails == StatusUtil.success) {
+                    await adoptProvider.getAdoptdata();
+                    Helper.snackBar("Delete Successfully", context);
+                    Navigator.pop(context);
+                    
+                  }
+                });
+              },
+              child: Text('Delete'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

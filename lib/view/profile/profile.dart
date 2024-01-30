@@ -13,7 +13,7 @@ import 'package:project_petcare/view/test.dart/ui.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
- final SignUp? signUp;
+  final SignUp? signUp;
   Profile({super.key, this.signUp});
 
   @override
@@ -62,248 +62,242 @@ class _ProfileState extends State<Profile> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Container(
+                            color: Colors.white,
+                            height: 100,
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage: AssetImage(
+                                      "assets/images/emptypp.png",
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      signUpProvider.name ?? "User",
+                                      style: subTitleText,
+                                    ),
+                                    // Text(
+                                    //  widget.signUp?.name?? "User",
+                                    //   style: TextStyle(fontSize: 20),
+                                    // ),
+                                    Text(signUpProvider.email ?? "",
+                                        style: textStyleSmallSized),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            
+                          ),
+                        ),
+                        SizedBox(
+                    height: 10,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => VerifyYourAccount()));
+                    },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Container(
                         color: Colors.white,
-                        height: 100,
-                        child: Row(
+                        height: 50,
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: CircleAvatar(
-                                radius: 30,
-                                backgroundImage: AssetImage(
-                                  "assets/images/emptypp.png",
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(
-                                  signUpProvider.name ?? "User",
-                                  style: subTitleText,
-                                ),
-                                // Text(
-                                //  widget.signUp?.name?? "User",
-                                //   style: TextStyle(fontSize: 20),
-                                // ),
-                                Text(signUpProvider.email ?? "",
-                                    style: textStyleSmallSized),
+                                Text("Verify your account"),
+                                Icon(Icons.arrow_forward_rounded)
                               ],
                             ),
                           ],
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => VerifyYourAccount()));
-                      },
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Container(
-                          color: Colors.white,
-                          height: 50,
-                          width: MediaQuery.of(context).size.width,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
+                  ),SizedBox(height: 10,),
+                  InkWell(
+                    onTap: () async {
+                      dialogBuilder(context);
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        color: Colors.white,
+                        height: 50,
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text("Logout"),
+                                Icon(Icons.arrow_forward_rounded)
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),SizedBox(height: 10,),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TestPage()));
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        color: Colors.white,
+                        height: 50,
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text("Verify your account"),
+                                  Text("Test"),
+                                  Spacer(),
                                   Icon(Icons.arrow_forward_rounded)
                                 ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: InkWell(
-                      onTap: () async{
-                       
-                        dialogBuilder(context);
-                      },
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Container(
-                          color: Colors.white,
-                          height: 50,
-                          width: MediaQuery.of(context).size.width,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
+                  SizedBox(height: 10,),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => UiTest()));
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        color: Colors.white,
+                        height: 50,
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text("Logout"),
+                                  Text("uiTest"),
+                                  Spacer(),
                                   Icon(Icons.arrow_forward_rounded)
                                 ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ),
-                   Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> TestPage()));
-                      },
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Container(
-                          color: Colors.white,
-                          height: 50,
-                          width: MediaQuery.of(context).size.width,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text("Test"),
-                                    Spacer(),
-                                    Icon(Icons.arrow_forward_rounded)
-                                  ],
-                                ),
+                  SizedBox(height: 10,),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => UiTest()));
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        color: Colors.white,
+                        height: 50,
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text("forms"),
+                                  Spacer(),
+                                  Icon(Icons.arrow_forward_rounded)
+                                ],
                               ),
-                              
-                              
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ),
-                   Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> UiTest()));
-                      },
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Container(
-                          color: Colors.white,
-                          height: 50,
-                          width: MediaQuery.of(context).size.width,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text("uiTest"),
-                                    Spacer(),
-                                    Icon(Icons.arrow_forward_rounded)
-                                  ],
-                                ),
+                  SizedBox(height: 10,),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ForAdmin()));
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        color: Colors.white,
+                        height: 50,
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text("View"),
+                                  Spacer(),
+                                  Icon(Icons.arrow_forward_rounded)
+                                ],
                               ),
-                              
-                              
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ),
-                   Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> UiTest()));
-                      },
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Container(
-                          color: Colors.white,
-                          height: 50,
-                          width: MediaQuery.of(context).size.width,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text("forms"),
-                                    Spacer(),
-                                    Icon(Icons.arrow_forward_rounded)
-                                  ],
-                                ),
-                              ),
-                              
-                              
-                            ],
-                          ),
-                        ),
-                      ),
+                      ],
                     ),
-                  ),
-                     Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> 
-                        ForAdmin()));
-                      },
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Container(
-                          color: Colors.white,
-                          height: 50,
-                          width: MediaQuery.of(context).size.width,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text("View"),
-                                    Spacer(),
-                                    Icon(Icons.arrow_forward_rounded)
-                                  ],
-                                ),
-                              ),
-                              
-                              
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                    
                   ),
                   
                 ],
+                
               ),
             ),
           ),
@@ -311,6 +305,4 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
-
-  
 }

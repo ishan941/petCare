@@ -8,6 +8,8 @@ import 'package:project_petcare/service/petcareserivce.dart';
 class PetCareProvider extends ChangeNotifier {
   PetCareService petCareService = PetCareImpl();
 
+  
+
   String? errorMessage;
   String? name, phone, email, password;
   String? contactNumber, code, emailVerify;
@@ -17,10 +19,19 @@ class PetCareProvider extends ChangeNotifier {
   bool showPassword = false;
   bool confirmPassword = false;
 
-  StatusUtil _statusUtil = StatusUtil.idle, _verificationUtil = StatusUtil.idle;
+  StatusUtil _statusUtil = StatusUtil.idle, 
+  _verificationUtil = StatusUtil.idle;
 
   StatusUtil get dataStatusUtil => _statusUtil;
   StatusUtil get verificationUtil => _verificationUtil;
+
+  int _selectedIndex = 0;
+  int get selecedIndex => _selectedIndex;
+
+  void setIndex(int index){
+    _selectedIndex = index;
+    notifyListeners(); 
+  }
 
   setStatusUtil(StatusUtil statusUtil) {
     _statusUtil = statusUtil;

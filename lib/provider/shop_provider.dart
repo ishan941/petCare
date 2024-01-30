@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -9,13 +10,34 @@ import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/response/response.dart';
 import 'package:project_petcare/service/petcareimpl.dart';
 import 'package:project_petcare/service/petcareserivce.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ShopProvider extends ChangeNotifier {
+  PetCareService petCareService = PetCareImpl();
+
   String? errorMessage, imageUrl;
   String? product, condition, location, price, description, images, negotiable;
   XFile? image;
-  PetCareService petCareService = PetCareImpl();
+
   List<Shop> shopItemsList = [];
+  List<Shop> _cartItemsList = [];
+  List<int> _cartIndices = [];
+
+  Set<int> _favouriteIndices = {};
+  
+  Set<int> get favouriteIndices => _favouriteIndices;
+  List<Shop> get cartItemsList => _cartItemsList;
+  List<int> get cartIndices => _cartIndices;
+
+
+
+  bool isFavourite(int index) {
+    return favouriteIndices.contains(index);
+  }
+
+  bool isCart(Shop item) {
+    return _cartItemsList.contains(item);
+  }
 
   double _per = 0.0;
   double get per => _per;
@@ -23,6 +45,14 @@ class ShopProvider extends ChangeNotifier {
     _per = value;
     notifyListeners();
   }
+
+  late SharedPreferences _prefs;
+
+  ShopProvider() {
+    _initPreferences();
+    _loadCartData();
+  }
+  
 
   StatusUtil _shopItems = StatusUtil.idle;
   StatusUtil _uploadImageForShop = StatusUtil.idle;
@@ -46,42 +76,96 @@ class ShopProvider extends ChangeNotifier {
     _getshopItemsUtil = statusUtil;
     notifyListeners();
   }
+  void _loadCartData() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? cartData = prefs.getString('cartData');
 
-  Future<void> shopItemDetails(Shop shop) async {
-    if (_shopItems != StatusUtil.loading) {
-      setShopItemsUtil(StatusUtil.loading);
+  if (cartData != null) {
+    List<Map<String, dynamic>> cartList = List<Map<String, dynamic>>.from(json.decode(cartData));
+    _cartItemsList = cartList.map((jsonMap) => Shop.fromJson(jsonMap)).toList();
+    _cartIndices = List.generate(_cartItemsList.length, (index) => index);
+    notifyListeners();
+  }
+}
+ void _saveCartData() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  List<Map<String, dynamic>> cartList = _cartItemsList.map((item) => item.toJson()).toList();
+  prefs.setString('cartData', json.encode(cartList));
+}
+
+
+  Future<void> _initPreferences() async {
+    _prefs = await SharedPreferences.getInstance();
+    _loadFavouriteFromPrefs();
+    
+  }
+
+  void _saveFavouriteToPrefs() {
+    List<String> favouriteList =
+        _favouriteIndices.map((index) => index.toString()).toList();
+    _prefs.setStringList("favouriteIndices", favouriteList);
+  }
+
+ 
+
+  Future<void> _loadFavouriteFromPrefs() async {
+    List<String>? savedFavourites = _prefs.getStringList("favouriteIndices");
+    if (savedFavourites != null) {
+      _favouriteIndices = savedFavourites.map((str) => int.parse(str)).toSet();
     }
-    try {
-      FireResponse response = await petCareService.shopItemDetails(shop);
-      if (response.statusUtil == StatusUtil.success) {
-        setShopItemsUtil(StatusUtil.success);
-      } else if (response.statusUtil == StatusUtil.error) {
-        errorMessage = response.errorMessage;
-        setShopItemsUtil(StatusUtil.error);
-      }
-    } catch (e) {
-      errorMessage = "$e";
-      setShopItemsUtil(
-        StatusUtil.error,
-      );
+    notifyListeners();
+  }
+
+  
+ void addToCart(Shop shop) {
+    if (!_cartIndices.contains(shop)) {
+      _cartItemsList.add(shop);
+      _cartIndices.add(_cartItemsList.length - 1);
+      notifyListeners();
+      _saveCartData(); // Save the cart data after modification
     }
+  }
+   void removeFromCart(Shop shop) {
+    
+      _cartItemsList.remove(shop);
+      
+      notifyListeners();
+      _saveCartData(); // Save the cart data after modification
+    
+  }
+    
+
+   
+
+  void toggleFavouriteStatus(int index) {
+    if (favouriteIndices.contains(index)) {
+      favouriteIndices.remove(index);
+    } else {
+      favouriteIndices.add(index);
+    }
+    _saveFavouriteToPrefs();
+    notifyListeners();
   }
 
   Future<void> itemDetails() async {
     if (_getshopItemsUtil != StatusUtil.loading) {
+      print("Fetching shop items - Setting loading status");
       setgetShopItemsUtil(StatusUtil.loading);
     }
     try {
-      FireResponse response = await petCareService.getShopItems();
+      var response = await petCareService.getShopItems();
       if (response.statusUtil == StatusUtil.success) {
         shopItemsList = response.data;
-        setShopItemsUtil(StatusUtil.success);
+        print("Shop items fetched successfully");
+        setgetShopItemsUtil(StatusUtil.success);
       } else if (response.statusUtil == StatusUtil.error) {
         errorMessage = response.errorMessage;
+        print("Error fetching shop items: $errorMessage");
         setgetShopItemsUtil(StatusUtil.error);
       }
     } catch (e) {
       errorMessage = "$e";
+      print("Exception while fetching shop items: $errorMessage");
       setgetShopItemsUtil(StatusUtil.error);
     }
   }
@@ -97,8 +181,6 @@ class ShopProvider extends ChangeNotifier {
   }
 
   uploadImageForShop() async {
-    setShopItemsUtil(StatusUtil.loading);
-
     if (image != null) {
       // List<String>extension=image!.name.split(".");
       final storageRef = FirebaseStorage.instance.ref();
@@ -107,16 +189,14 @@ class ShopProvider extends ChangeNotifier {
         await mountainRef.putFile(File(image!.path));
         final downloadUrl = await mountainRef.getDownloadURL();
         imageUrl = downloadUrl;
-        setShopItemsUtil(StatusUtil.success);
+        setUploadImageInFireBaseUtil(StatusUtil.success);
       } catch (e) {
-        setShopItemsUtil(StatusUtil.error);
+        setUploadImageInFireBaseUtil(StatusUtil.error);
       }
     }
   }
 
   Future<void> sendValueToFireBase() async {
-    setShopItemsUtil(StatusUtil.loading);
-
     await uploadImageForShop();
     Shop shop = Shop(
       product: product,
