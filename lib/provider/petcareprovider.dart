@@ -8,8 +8,6 @@ import 'package:project_petcare/service/petcareserivce.dart';
 class PetCareProvider extends ChangeNotifier {
   PetCareService petCareService = PetCareImpl();
 
-  
-
   String? errorMessage;
   String? name, phone, email, password;
   String? contactNumber, code, emailVerify;
@@ -19,8 +17,10 @@ class PetCareProvider extends ChangeNotifier {
   bool showPassword = false;
   bool confirmPassword = false;
 
-  StatusUtil _statusUtil = StatusUtil.idle, 
-  _verificationUtil = StatusUtil.idle;
+  String _greeting = "";
+  String get greeting => _greeting;
+
+  StatusUtil _statusUtil = StatusUtil.idle, _verificationUtil = StatusUtil.idle;
 
   StatusUtil get dataStatusUtil => _statusUtil;
   StatusUtil get verificationUtil => _verificationUtil;
@@ -28,9 +28,25 @@ class PetCareProvider extends ChangeNotifier {
   int _selectedIndex = 0;
   int get selecedIndex => _selectedIndex;
 
-  void setIndex(int index){
+  void setIndex(int index) {
     _selectedIndex = index;
-    notifyListeners(); 
+    notifyListeners();
+  }
+
+   updateGreeting() {
+    DateTime now = DateTime.now();
+    DateTime localTime = now.toLocal();
+    int hour = localTime.hour;
+    print("Current hour : $hour");
+    if (hour >= 5 && hour < 12) {
+      _greeting = "Good Morning";
+    } else if (hour >= 12 && hour < 17) {
+      _greeting = "Good Afternoon";
+    } else {
+      _greeting = "Good Evening";
+    }
+    print("Geeting: $_greeting");
+    notifyListeners();
   }
 
   setStatusUtil(StatusUtil statusUtil) {

@@ -7,7 +7,7 @@ import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/view/customs/customform.dart';
-import 'package:project_petcare/view/dashboard/buttomnav.dart';
+import 'package:project_petcare/view/buttomnav.dart';
 import 'package:project_petcare/view/googleAuth.dart';
 import 'package:project_petcare/view/logins/signup.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         SizedBox(
                           child: Image.asset(
-                              "assets/images/Screenshot_2023-12-15_at_18.50.26-removebg-preview.png"),
+                              "assets/images/splash.png"),
                           height: 100,
                         ),
                         Text(
@@ -126,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                                     if (signUpProvider.loginUtil ==
                                         StatusUtil.success) {
                                       SaveValueToSharedPreference();
-                                      if (signUpProvider.isUserLoggedIn) {
+                                      if (signUpProvider.userName.isNotEmpty) {
                                         Navigator.of(context)
                                             .pushAndRemoveUntil(
                                                 MaterialPageRoute(

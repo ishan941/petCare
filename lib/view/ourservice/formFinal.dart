@@ -4,7 +4,7 @@ import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
-import 'package:project_petcare/view/dashboard/buttomnav.dart';
+import 'package:project_petcare/view/buttomnav.dart';
 import 'package:provider/provider.dart';
 
 class FormFinalProfession extends StatefulWidget {

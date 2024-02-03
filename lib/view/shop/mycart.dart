@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
-import 'package:project_petcare/view/dashboard/buttomnav.dart';
+import 'package:project_petcare/view/buttomnav.dart';
 import 'package:project_petcare/view/shop/shopall.dart';
 import 'package:project_petcare/view/shop/shopdetails.dart';
 import 'package:provider/provider.dart';

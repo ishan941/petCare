@@ -4,7 +4,8 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
-import 'package:project_petcare/view/profile/profile.dart';
+import 'package:project_petcare/view/profile/account.dart';
+import 'package:project_petcare/view/profile/settingsAndPrivacy.dart';
 import 'package:provider/provider.dart';
 
 class TestConfirmVerification extends StatefulWidget {
@@ -85,7 +86,7 @@ class _TestConfirmVerificationState extends State<TestConfirmVerification> {
                             "Your Account has been Verified", context);
                         Navigator.pushAndRemoveUntil(
                             context,
-                            MaterialPageRoute(builder: (context) => Profile()),
+                            MaterialPageRoute(builder: (context) => Account()),
                             (route) => false);
                       } else if (petCareProvider.verificationUtil ==
                           StatusUtil.error) {
@@ -98,7 +99,7 @@ class _TestConfirmVerificationState extends State<TestConfirmVerification> {
 
                       Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => Profile()),
+                          MaterialPageRoute(builder: (context) => Account()),
                           (route) => false);
                     } catch (e) {
                       return Helper.snackBar("Invalid code", context);

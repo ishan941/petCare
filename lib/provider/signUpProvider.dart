@@ -13,15 +13,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SignUpProvider extends ChangeNotifier {
   String? errorMessage;
   String? name, phone, email, password;
-
-  String? userName, userEmail;
+  bool isUserLoggedIn = false;
 
   List<SignUp> userSignInDataList = [];
 
-  bool isUserLoggedIn = false;
   bool isGoogleLoggedIn = false;
   bool googleLogIn = false;
-
+  String userName = "";
+  String fullName = "";
+  String userEmail = "";
+  String userPhone = "";
   PetCareService petCareService = PetCareImpl();
 
   StatusUtil _signUpUtil = StatusUtil.idle,
@@ -78,33 +79,32 @@ class SignUpProvider extends ChangeNotifier {
     }
   }
 
- Future<void> userData() async {
-  if (userDetailsStatus != StatusUtil.loading) {
-    setUserDetailsStatus(StatusUtil.loading);
-  }
+//  Future<void> userData() async {
+//   if (userDetailsStatus != StatusUtil.loading) {
+//     setUserDetailsStatus(StatusUtil.loading);
+//   }
 
-  try {
-    FireResponse response = await petCareService.getUserLoginData();
+//   try {
+//     FireResponse response = await petCareService.getUserLoginData();
 
-    if (response.statusUtil == StatusUtil.success) {
-      if (response.data != null && response.data is SignUp) {
-        userName = response.data.name;
-        userEmail = response.data.email;
-        setUserDetailsStatus(StatusUtil.success);
-      } else {
-        errorMessage = "Invalid data structure from Firestore";
-        setUserDetailsStatus(StatusUtil.error);
-      }
-    } else if (response.statusUtil == StatusUtil.error) {
-      errorMessage = response.errorMessage;
-      setUserDetailsStatus(StatusUtil.error);
-    }
-  } catch (e) {
-    errorMessage = "$e";
-    setUserDetailsStatus(StatusUtil.error);
-  }
-}
-
+//     if (response.statusUtil == StatusUtil.success) {
+//       if (response.data != null && response.data is SignUp) {
+//         userName = response.data.name;
+//         userEmail = response.data.email;
+//         setUserDetailsStatus(StatusUtil.success);
+//       } else {
+//         errorMessage = "Invalid data structure from Firestore";
+//         setUserDetailsStatus(StatusUtil.error);
+//       }
+//     } else if (response.statusUtil == StatusUtil.error) {
+//       errorMessage = response.errorMessage;
+//       setUserDetailsStatus(StatusUtil.error);
+//     }
+//   } catch (e) {
+//     errorMessage = "$e";
+//     setUserDetailsStatus(StatusUtil.error);
+//   }
+// }
 
   checkUserLoginFromFireBase() async {
     if (_loginUtil != StatusUtil.loading) {
@@ -114,7 +114,11 @@ class SignUpProvider extends ChangeNotifier {
     try {
       FireResponse response = await petCareService.isUserLoggedIn(signUp);
       if (response.statusUtil == StatusUtil.success) {
-        isUserLoggedIn = response.data;
+        userName = response.data['name'];
+        fullName = response.data['name'];
+        userEmail = response.data['email'];
+        userPhone = response.data['phone'];
+        saveUserToSharedPreferences();
         setLoginUtil(StatusUtil.success);
         notifyListeners();
       } else if (response.statusUtil == StatusUtil.error) {
@@ -134,11 +138,12 @@ class SignUpProvider extends ChangeNotifier {
     await prefs.setBool("isGoogleLoggedIn", true);
   }
 
-  Future<void> saveUserToSharedPreferences(SignUp signUp) async {
+  Future<void> saveUserToSharedPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('userName', signUp.name ?? 'User');
-    prefs.setString('userEmail', signUp.email ?? '');
-    prefs.setString("userPhone", signUp.phone ?? '');
+    prefs.setString('userName', userName);
+    prefs.setString("fullName", fullName);
+    prefs.setString('userEmail', userEmail);
+    prefs.setString("userPhone", userPhone ?? '');
   }
 
   Future<void> initilizedProvider() async {
@@ -147,9 +152,11 @@ class SignUpProvider extends ChangeNotifier {
 
   Future<void> readUserFromSharedPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    userName = prefs.getString('userName') ?? 'User';
-    userEmail = prefs.getString('userEmail') ?? '';
-    phone = prefs.getString("userPhone") ?? "";
+     fullName = prefs.getString('userName') ?? 'User';
+    List<String> nameParts = fullName.split(' ');
+    userName = nameParts.isNotEmpty ? nameParts.first : 'User';
+    userEmail = prefs.getString('userEmail') ?? 'Email';
+    userPhone = prefs.getString("userPhone") ?? "Phone";
     notifyListeners();
   }
 

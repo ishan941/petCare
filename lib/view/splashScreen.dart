@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
-import 'package:project_petcare/view/dashboard/buttomnav.dart';
+import 'package:project_petcare/view/buttomnav.dart';
 import 'package:project_petcare/view/logins/loginpage.dart';
 import 'package:provider/provider.dart';
 

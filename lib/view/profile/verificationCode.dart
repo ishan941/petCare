@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
-import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:provider/provider.dart';
 

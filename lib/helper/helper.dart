@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/helper/textStyle_const.dart';
 
 
 class Helper {

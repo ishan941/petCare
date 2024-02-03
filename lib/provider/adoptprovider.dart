@@ -3,8 +3,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project_petcare/core/statusutil.dart';
-import 'package:project_petcare/helper/helper.dart';
-import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/model/adopt.dart';
 import 'package:project_petcare/response/response.dart';
 import 'package:project_petcare/service/petcareimpl.dart';
@@ -14,12 +12,7 @@ class AdoptProvider extends ChangeNotifier {
   String? errorMessage, imageUrl;
   XFile? image;
 
-  String? petname, name;
-
-  String? petweight;
-  String? petage, petageclc;
-  String? gender, phone, location;
-  String? petbread;
+  String? id, petGender, petBread, petAgeTime;
 
   double _per = 0.0;
   double get per => _per;
@@ -27,6 +20,17 @@ class AdoptProvider extends ChangeNotifier {
     _per = value;
     notifyListeners();
   }
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController petnameController = TextEditingController();
+  TextEditingController petAgeController = TextEditingController();
+  TextEditingController petweightController = TextEditingController();
+  // TextEditingController petBreadController = TextEditingController();
+  // TextEditingController petAgeTimeController = TextEditingController();
+  TextEditingController ownerNameController = TextEditingController();
+  TextEditingController ownerPhoneController = TextEditingController();
+  TextEditingController ownerLocationController = TextEditingController();
+  TextEditingController imageUrlConroller = TextEditingController();
 
   List<Adopt> adoptDetailsList = [];
 
@@ -41,6 +45,18 @@ class AdoptProvider extends ChangeNotifier {
   StatusUtil get uploadImageUtil => _uploadImageUtil;
   StatusUtil get getAdoptDetails => _getAdoptDetails;
   StatusUtil get deleteAdoptDetails => _deleteAdoptDetails;
+
+  setPetGender(String value) {
+    petGender = value;
+  }
+
+  setPetBread(String value) {
+    petBread = value;
+  }
+
+  setPetAgeTime(String value) {
+    petAgeTime = value;
+  }
 
   setGetAdoptDetails(StatusUtil statusUtil) {
     _getAdoptDetails = statusUtil;
@@ -70,6 +86,10 @@ class AdoptProvider extends ChangeNotifier {
   setImageUrl(String? imageUrl) {
     this.imageUrl = imageUrl;
     notifyListeners();
+  }
+
+  setId(String id) {
+    this.id = id;
   }
 
   Future<void> deleteAdoptData(String id) async {
@@ -125,26 +145,43 @@ class AdoptProvider extends ChangeNotifier {
     }
   }
 
+  checkAdoptRegistationStatus(Adopt adopt) async {
+    late FireResponse response;
+    try {
+      if (adopt.id != null) {
+        response = await petCareService.updateAdoptDetails(adopt);
+      } else {
+        response = await petCareService.adoptDetails(adopt);
+      }
+      if (response.statusUtil == StatusUtil.success) {
+        setAdoptUtil(StatusUtil.success);
+      } else if (response.statusUtil == StatusUtil.error) {
+        errorMessage = response.errorMessage;
+        setAdoptUtil(StatusUtil.error);
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+      setAdoptUtil(StatusUtil.error);
+    }
+  }
+
   sendAdoptValueToFireBase(BuildContext context) async {
     await uploadAdoptImageInFireBase();
     Adopt adopt = Adopt(
-      petname: petname,
-      petage: petage,
+      id: id,
+      petname: petnameController.text,
+      petage: petAgeController.text,
+      petAgeTime: petAgeTime,
+      gender: petGender,
       imageUrl: imageUrl,
-      petbread: petbread,
-      petweight: petweight,
-      phone: phone,
-      name: name,
-      location: location,
-      gender: gender,
+      petbread: petBread,
+      petweight: petweightController.text,
+      phone: ownerPhoneController.text,
+      name: ownerNameController.text,
+      location: ownerLocationController.text,
     );
-    await petCareService.adoptDetails(adopt).then((value) {
-      if (adoptUtil == StatusUtil.success) {
-        Helper.snackBar(successfullySavedStr, context);
-      } else {
-        Helper.snackBar(failedToSaveStr, context);
-      }
-    });
+
+    await checkAdoptRegistationStatus(adopt);
   }
 
   Future<void> getAdoptdata() async {

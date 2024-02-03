@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_petcare/core/smooth_scrollable.dart';
 import 'package:project_petcare/core/statusutil.dart';
-import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/provider/adoptprovider.dart';
@@ -17,7 +17,7 @@ import 'package:project_petcare/view/categories.dart/categoriesDetails.dart';
 import 'package:project_petcare/view/dashboard/categories.dart';
 import 'package:project_petcare/view/ourservice/ourserviceSeeMore.dart';
 import 'package:project_petcare/view/ourservice/ourservices.dart';
-import 'package:project_petcare/view/profile/profile.dart';
+import 'package:project_petcare/view/profile/account.dart';
 import 'package:project_petcare/view/dashboard/search.dart';
 import 'package:provider/provider.dart';
 
@@ -36,6 +36,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
+      getGreeting();
       getUserName();
       getCategories();
       getdata();
@@ -45,6 +46,10 @@ class _HomePageState extends State<HomePage> {
 
     super.initState();
   }
+  getGreeting()async{
+    var petCareProvider = Provider.of<PetCareProvider>(context, listen: false);
+    await petCareProvider.updateGreeting();
+  }
 
   getdata() async {
     var donateProvider = Provider.of<DonateProvider>(context, listen: false);
@@ -53,7 +58,7 @@ class _HomePageState extends State<HomePage> {
 
   getUserName() async {
     var signUpProvider = Provider.of<SignUpProvider>(context, listen: false);
-    await signUpProvider.userData();
+   await signUpProvider.readUserFromSharedPreferences();
   }
 
   getDashServiceDetailsinUi() async {
@@ -117,7 +122,7 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Column(
                                 children: [
-                                  dashHead(signUpProvider, context),
+                                  dashHead(signUpProvider, context, petCareProvider),
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(40),
                                     child: Container(
@@ -167,7 +172,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget dashHead(SignUpProvider signUpProvider, BuildContext context) {
+  Widget dashHead(SignUpProvider signUpProvider, BuildContext context, PetCareProvider petCareProvider) {
     return Container(
       height: 190,
       child: Column(
@@ -180,12 +185,12 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      goodMorningStr,
-                      style: TextStyle(fontSize: 16),
+                     "Hello ${signUpProvider.userName},",
+                      style: TextStyle(fontSize: 20),
                     ),
                     Text(
-                      signUpProvider.userName ?? userStr,
-                      style: TextStyle(fontSize: 20),
+                      petCareProvider.greeting,
+                     
                     ),
                   ],
                 ),
@@ -193,7 +198,7 @@ class _HomePageState extends State<HomePage> {
                 GestureDetector(
                   onTap: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Profile()));
+                        MaterialPageRoute(builder: (context) => Account()));
                   },
                   child: const CircleAvatar(
                     radius: 25,
@@ -252,7 +257,7 @@ class _HomePageState extends State<HomePage> {
               InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Profile()));
+                      MaterialPageRoute(builder: (context) => Account()));
                 },
                 child: const Text(
                   categoriesStr,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/model/adopt.dart';
 import 'package:project_petcare/provider/adoptprovider.dart';

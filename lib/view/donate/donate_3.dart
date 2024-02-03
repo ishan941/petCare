@@ -1,20 +1,41 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/core/statusutil.dart';
+import 'package:project_petcare/helper/helper.dart';
+import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/string_const.dart';
+import 'package:project_petcare/model/adopt.dart';
 import 'package:project_petcare/provider/adoptprovider.dart';
-import 'package:project_petcare/view/dashboard/buttomnav.dart';
+import 'package:project_petcare/view/buttomnav.dart';
 import 'package:provider/provider.dart';
 
 class DonateThird extends StatefulWidget {
-  const DonateThird({super.key});
+   final Adopt? adopt;
+  DonateThird({Key? key, this.adopt}) : super(key: key);
 
   @override
   State<DonateThird> createState() => _DonateThirdState();
 }
 
 class _DonateThirdState extends State<DonateThird> {
+  @override
+  void initState() {
+     var adoptProvider = Provider.of<AdoptProvider>(context, listen: false);
+    if (widget.adopt != null) {
+      adoptProvider.petnameController.text = widget.adopt!.petname!;
+      adoptProvider.petAgeController.text = widget.adopt!.petage!;
+      adoptProvider.petweightController.text = widget.adopt!.petweight!;
+      adoptProvider.setPetGender(widget.adopt!.gender!);
+      adoptProvider.setPetBread(widget.adopt!.petbread!);
+      adoptProvider.setImageUrl(widget.adopt!.imageUrl);
+      adoptProvider.setPetAgeTime(widget.adopt!.petAgeTime!);
+      adoptProvider.ownerLocationController.text = widget.adopt!.location!;
+      adoptProvider.ownerNameController.text = widget.adopt!.name!;
+      adoptProvider.ownerPhoneController.text = widget.adopt!.phone!;
+    }
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,29 +96,47 @@ class _DonateThirdState extends State<DonateThird> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
+                 
                   Container(
                     height: 300,
                     width: MediaQuery.of(context).size.width,
-                    child: Image.file(
+                    child:
+                   
+                    
+                     Image.file(
                       File(adoptProvider.image!.path),
                       fit: BoxFit.cover,
-                    ),
+                    )
                   ),
-                  Text(adoptProvider.petname ?? ""),
-                  Text(adoptProvider.petweight ?? ""),
-                  Text(adoptProvider.petbread ?? ""),
-                  Text(adoptProvider.phone ?? ""),
-                  Text(adoptProvider.petage ?? ""),
-                  Text(adoptProvider.name ?? ""),
-                  Text(adoptProvider.phone ?? ""),
-                  Text(adoptProvider.location ?? ""),
+                  Text(adoptProvider.petnameController.text),
+                  Text(adoptProvider.petweightController.text  ),
+                  Text(adoptProvider.petBread ?? ""),
+                  Text(adoptProvider.petAgeTime ?? ""),
+                  Text(adoptProvider.petGender ?? ""),
+                  Text(adoptProvider.ownerPhoneController.text),
+                  Text(adoptProvider.petAgeController.text  ),
+                  Text(adoptProvider.ownerNameController.text),
+                  Text(adoptProvider.ownerLocationController.text ),
+                  Text(adoptProvider.ownerPhoneController.text ),
+
+                  //widget
+                
                   ElevatedButton(
-                      onPressed: () {
-                        adoptProvider.sendAdoptValueToFireBase(context);
-                        Navigator.of(context).pushAndRemoveUntil(
+                      onPressed: () async {
+                        await adoptProvider.sendAdoptValueToFireBase(context);
+                        if(adoptProvider.adoptUtil == StatusUtil.success){
+                          Helper.snackBar(successfullySavedStr, context);
+                            Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                                 builder: (context) => BottomNavBar()),
                             (Route<dynamic> route) => false);
+                             adoptProvider.formKey.currentState!.reset();
+                        }else{
+                          Helper.snackBar(adoptProvider.errorMessage!, context);
+                        }
+                       
+                       
+                      
                       },
                       child: Text(submitStr))
                 ],
@@ -107,5 +146,13 @@ class _DonateThirdState extends State<DonateThird> {
         ),
       ),
     );
+  }
+  reset(AdoptProvider adoptProvider){
+    adoptProvider.petAgeController.clear();
+    adoptProvider.petnameController.clear();
+    adoptProvider.petweightController.clear();
+    adoptProvider.ownerLocationController.clear();
+    adoptProvider.ownerNameController.clear();
+    adoptProvider.ownerPhoneController.clear();
   }
 }

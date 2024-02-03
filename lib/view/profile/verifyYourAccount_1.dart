@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_number_field/flutter_phone_number_field.dart';
-import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/practice/pincodefeld.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';

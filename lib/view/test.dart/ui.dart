@@ -1,20 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/helper/textStyle_const.dart';
+import 'package:project_petcare/view/categories.dart/forms/categoriesForms.dart';
 import 'package:project_petcare/view/donate/donate_1.dart';
-import 'package:project_petcare/view/forms/categoriesForms.dart';
 import 'package:project_petcare/view/ourservice/profession.dart';
+import 'package:project_petcare/view/ourservice/service_form.dart';
 
-class UiTest extends StatefulWidget {
-  const UiTest({super.key});
+class FormCollection extends StatefulWidget {
+  const FormCollection({super.key});
 
   @override
-  State<UiTest> createState() => _UiTestState();
+  State<FormCollection> createState() => _UiTestState();
 }
 
-class _UiTestState extends State<UiTest> {
+class _UiTestState extends State<FormCollection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: ColorUtil.primaryColor,
+        actionsIconTheme: IconThemeData.fallback(),
+        elevation: 0,
+        title: Text(
+          "Forms",
+          style: appBarTitle,
+        ),
+      ),
       backgroundColor: ColorUtil.primaryColor,
       body: SingleChildScrollView(
         child: Column(
@@ -24,7 +34,7 @@ class _UiTestState extends State<UiTest> {
                 Column(
                   children: [
                     SizedBox(
-                      height: 200,
+                      height: 100,
                     ),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(40),
@@ -37,7 +47,7 @@ class _UiTestState extends State<UiTest> {
                 Column(
                   children: [
                     SizedBox(
-                      height: 160,
+                      height: 60,
                     ),
                     Center(
                       child: Container(
@@ -57,159 +67,196 @@ class _UiTestState extends State<UiTest> {
                       ),
                     ),
                     Text('Forms'),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 5),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CategoriesForms()));
-                        },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Container(
-                            color: Colors.white,
-                            height: 50,
-                            width: MediaQuery.of(context).size.width,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text("Add Categories"),
-                                      Spacer(),
-                                      Icon(Icons.arrow_forward_rounded)
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 5),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DonateFirstPage()));
-                        },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Container(
-                            color: Colors.white,
-                            height: 50,
-                            width: MediaQuery.of(context).size.width,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text("Form for add Adopt"),
-                                      Spacer(),
-                                      Icon(Icons.arrow_forward_rounded)
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                      Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 5),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => YourProfession()));
-                        },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Container(
-                            color: Colors.white,
-                            height: 50,
-                            width: MediaQuery.of(context).size.width,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text("Form for add profession on service"),
-                                      Spacer(),
-                                      Icon(Icons.arrow_forward_rounded)
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 5),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => YourProfession()));
-                        },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Container(
-                            color: Colors.white,
-                            height: 50,
-                            width: MediaQuery.of(context).size.width,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text("Form for add shop item"),
-                                      Spacer(),
-                                      Icon(Icons.arrow_forward_rounded)
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                    categoriesForm(context),
+                    adoptForm(context),
+                    professionServiceForm(context),
+                    shopItemForm(context),
+                    serviceDash(context),
                   ],
                 ),
               ],
             )
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget categoriesForm(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => CategoriesForms()));
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            color: Colors.white,
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("Add Categories"),
+                      Spacer(),
+                      Icon(Icons.arrow_forward_rounded)
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget adoptForm(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => DonateFirstPage()));
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            color: Colors.white,
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("Form for add Adopt"),
+                      Spacer(),
+                      Icon(Icons.arrow_forward_rounded)
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget professionServiceForm(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => YourProfession()));
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            color: Colors.white,
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("Form for add profession on service"),
+                      Spacer(),
+                      Icon(Icons.arrow_forward_rounded)
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget shopItemForm(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => YourProfession()));
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            color: Colors.white,
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("Form for add shop item"),
+                      Spacer(),
+                      Icon(Icons.arrow_forward_rounded)
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget serviceDash(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => ServiceForm()));
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            color: Colors.white,
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("Service in dash"),
+                      Spacer(),
+                      Icon(Icons.arrow_forward_rounded)
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

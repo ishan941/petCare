@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:project_petcare/core/smooth_scrollable.dart';
 import 'package:project_petcare/core/statusutil.dart';
-import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/simmer.dart';
 import 'package:project_petcare/helper/string_const.dart';

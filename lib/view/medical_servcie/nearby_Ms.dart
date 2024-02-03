@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/helper/textStyle_const.dart';
 
 class Nearby_MedicalServices extends StatefulWidget {
   const Nearby_MedicalServices({super.key});

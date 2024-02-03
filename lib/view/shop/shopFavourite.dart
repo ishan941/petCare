@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
 import 'package:project_petcare/view/shop/shopdetails.dart';

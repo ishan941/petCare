@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:project_petcare/core/statusutil.dart';
-import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/provider/adoptprovider.dart';
 import 'package:project_petcare/provider/donateprovider.dart';
 import 'package:project_petcare/view/adopt/adoptDetails.dart';
+import 'package:project_petcare/view/donate/donate_1.dart';
 import 'package:provider/provider.dart';
 
 class ForAdmin extends StatefulWidget {
@@ -200,7 +201,9 @@ class _ForAdminState extends State<ForAdmin> {
                                             color: Colors.red,
                                           )),
                                       IconButton(
-                                          onPressed: () async {},
+                                          onPressed: () async {
+                                            Navigator.push(context, MaterialPageRoute(builder: (context)=> DonateFirstPage(adopt: adoptProvider.adoptDetailsList[index],)));
+                                          },
                                           icon: Icon(
                                             Icons.edit,
                                             color: Colors.red,

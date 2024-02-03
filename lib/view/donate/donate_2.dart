@@ -1,20 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/string_const.dart';
+import 'package:project_petcare/model/adopt.dart';
 import 'package:project_petcare/provider/adoptprovider.dart';
 import 'package:project_petcare/view/donate/donate_3.dart';
 import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
 
 class DonateSecond extends StatefulWidget {
-  const DonateSecond({super.key});
+  Adopt? adopt;
+   DonateSecond({super.key, this.adopt});
 
   @override
   State<DonateSecond> createState() => _DonateSecondState();
 }
 
 class _DonateSecondState extends State<DonateSecond> {
+  @override
+  void initState() {
+      var adoptProvider = Provider.of<AdoptProvider>(context, listen: false);
+    if (adoptProvider != null) {
+      adoptProvider.petnameController.text = widget.adopt!.petname!;
+      adoptProvider.petAgeController.text = widget.adopt!.petage!;
+      adoptProvider.petweightController.text = widget.adopt!.petweight!;
+     
+    }
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,27 +91,21 @@ class _DonateSecondState extends State<DonateSecond> {
                     ),
                     const Text("Your Name"),
                     ShopTextForm(
-                      onChanged: (val) {
-                        adoptProvider.name = val;
-                      },
+                      controller: adoptProvider.ownerNameController,
                     ),
                     const SizedBox(
                       height: 20,
                     ),
                     const Text(contactNumberStr),
                     ShopTextForm(
-                      onChanged: (val) {
-                        adoptProvider.phone = val;
-                      },
+                     controller: adoptProvider.ownerPhoneController,
                     ),
                     const SizedBox(
                       height: 20,
                     ),
                     const Text(locationStr),
                     ShopTextForm(
-                      onChanged: (val) {
-                        adoptProvider.location = val;
-                      },
+                     controller: adoptProvider.ownerLocationController,
                     ),
                     const SizedBox(
                       height: 10,
@@ -115,7 +122,7 @@ class _DonateSecondState extends State<DonateSecond> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => DonateThird()));
+                                    builder: (context) => DonateThird(adopt: adoptProvider.adoptDetailsList.first, )));
                           },
                           child: const Text(nextStr)),
                     )),

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/view/dashboard/homepage.dart';
+import 'package:project_petcare/view/profile/account.dart';
 import 'package:project_petcare/view/shop/mycart.dart';
-import 'package:project_petcare/view/profile/profile.dart';
+import 'package:project_petcare/view/profile/settingsAndPrivacy.dart';
 import 'package:project_petcare/view/shop/shopFavourite.dart';
 import 'package:project_petcare/view/shop/shopall.dart';
 import 'package:provider/provider.dart';
@@ -24,11 +25,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
           index: petcareProvider.selecedIndex,
           height: 60.0,
           items: [
-            _buildNavItem(Icons.home, 'Home'),
-            _buildNavItem(Icons.shopping_bag_outlined, 'Shop'),
-            _buildNavItem(Icons.shopping_cart_outlined, 'Cart'),
-            _buildNavItem(Icons.favorite, 'Favourite'),
-            _buildNavItem(Icons.person, 'Profile'),
+            _buildNavItem(Icons.home, 'Home', 0),
+            _buildNavItem(Icons.shopping_bag_outlined, 'Shop', 1),
+            _buildNavItem(Icons.shopping_cart_outlined, 'Cart', 2),
+            _buildNavItem(Icons.favorite, 'Favourite', 3),
+            _buildNavItem(Icons.person, 'Profile', 4),
             //Icon(Icons.perm_identity, size: 30, color: Colors.white,),
           ],
           color: ColorUtil.primaryColor,
@@ -56,11 +57,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
         return ShopFavourite();
 
       default:
-        return Profile();
+        return Account();
     }
   }
 
-  Widget _buildNavItem(IconData icon, String label) {
+  Widget _buildNavItem(IconData icon, String label, int currentIndex) {
+    var petcareProvider = Provider.of<PetCareProvider>(context);
+    var isSelected  = petcareProvider.selecedIndex == currentIndex;
     return Align(
       alignment: Alignment.topCenter,
       child: Column(
@@ -69,13 +72,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
           Icon(
             icon,
             size: 30,
-            color: Colors.white,
+            color: isSelected ? ColorUtil.BackGroundColorColor : Colors.white
           ),
           Text(
             label,
             style: TextStyle(
               fontSize: 12,
-              color: Colors.white,
+            color: isSelected ? ColorUtil.BackGroundColorColor : Colors.white
             ),
           ),
         ],

@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:project_petcare/helper/constBread.dart';
-import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/customDropMenu.dart';
 import 'package:project_petcare/helper/string_const.dart';
+import 'package:project_petcare/model/adopt.dart';
 import 'package:project_petcare/provider/adoptprovider.dart';
 import 'package:project_petcare/view/donate/donate_2.dart';
 import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
 
 class DonateFirstPage extends StatefulWidget {
-  const DonateFirstPage({super.key});
+  Adopt? adopt;
+  DonateFirstPage({super.key, this.adopt});
 
   @override
   State<DonateFirstPage> createState() => _DonateFirstPageState();
@@ -21,16 +23,33 @@ class DonateFirstPage extends StatefulWidget {
 class _DonateFirstPageState extends State<DonateFirstPage> {
   String? gender;
   Object? value;
-  // late SingleValueDropDownController _cnt;
   FocusNode textFieldFocusNode = FocusNode();
   FocusNode searchFocusNode = FocusNode();
-  List<String> petAgeCalcList =["Days","Months","Year"];
+  List<String> petAgeCalcList = ["Days", "Months", "Year"];
   List<String> petBreadList = List.from(dogBreedList);
-  List<String> petGenderList =["Male","Female","Others"];
-
- 
+  List<String> petGenderList = ["Male", "Female", "Others"];
 
   // List of items in our dropdown menu
+  @override
+  void initState() {
+    Future.delayed(Duration.zero, () {
+      var adoptProvider = Provider.of<AdoptProvider>(context, listen: false);
+      if (widget.adopt != null) {
+        adoptProvider.petnameController.text = widget.adopt!.petname!;
+        adoptProvider.petAgeController.text = widget.adopt!.petage!;
+        adoptProvider.petweightController.text = widget.adopt!.petweight!;
+        adoptProvider.setPetGender(widget.adopt!.gender!);
+        adoptProvider.setPetBread(widget.adopt!.petbread!);
+        adoptProvider.setImageUrl(widget.adopt!.imageUrl);
+        adoptProvider.setPetAgeTime(widget.adopt!.petAgeTime!);
+        adoptProvider.ownerLocationController.text = widget.adopt!.location!;
+        adoptProvider.ownerNameController.text = widget.adopt!.name!;
+        adoptProvider.ownerPhoneController.text = widget.adopt!.phone!;
+      }
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +67,7 @@ class _DonateFirstPageState extends State<DonateFirstPage> {
       ),
       body: SingleChildScrollView(
         child: Consumer<AdoptProvider>(
-          builder: (context, adoptProvider, child) => 
-          Column(
+          builder: (context, adoptProvider, child) => Column(
             children: [
               SizedBox(
                 height: 100,
@@ -57,16 +75,17 @@ class _DonateFirstPageState extends State<DonateFirstPage> {
                   const SizedBox(
                     width: 20,
                   ),
-                  CircularPercentIndicator(radius: 30,
-                   animation: true,
-                   animateFromLastPercent: true,
-                   percent: adoptProvider.per,
-                   center: Text("1 to 3"),
-                   progressColor: ColorUtil.primaryColor,
-                   onAnimationEnd: () {
-                     adoptProvider.updatePercent(0.333);
-                   },
-                   ),
+                  CircularPercentIndicator(
+                    radius: 30,
+                    animation: true,
+                    animateFromLastPercent: true,
+                    percent: adoptProvider.per,
+                    center: Text("1 to 3"),
+                    progressColor: ColorUtil.primaryColor,
+                    onAnimationEnd: () {
+                      adoptProvider.updatePercent(0.333);
+                    },
+                  ),
                   const SizedBox(
                     width: 20,
                   ),
@@ -95,10 +114,8 @@ class _DonateFirstPageState extends State<DonateFirstPage> {
                     ),
                     const Text(petNameStr),
                     ShopTextForm(
-                      onChanged: (val) {
-                        adoptProvider.petname = val;
-                      },
-                    ),
+                         controller: adoptProvider.petnameController
+                        ),
                     const SizedBox(
                       height: 20,
                     ),
@@ -106,51 +123,51 @@ class _DonateFirstPageState extends State<DonateFirstPage> {
                     Row(
                       children: [
                         Container(
-                          width: MediaQuery.of(context).size.width*.6,
+                          width: MediaQuery.of(context).size.width * .6,
                           child: ShopTextForm(
-                            onChanged: (val) {
-                              adoptProvider.petage = val;
-                            },
+                            controller: adoptProvider.petAgeController,
                           ),
                         ),
-                        SizedBox(width: 10,),
+                        SizedBox(
+                          width: 10,
+                        ),
                         Expanded(
                           child: CustomDropDown(
-                            onChanged: (value){
-                              adoptProvider.petageclc = value;
-                            },
-                            itemlist: petAgeCalcList),
+                              onChanged: (value) {
+                                adoptProvider.petAgeTime = value;
+                              },
+                              value: adoptProvider.petAgeTime,
+                              itemlist: petAgeCalcList),
                         )
                       ],
                     ),
                     const SizedBox(
                       height: 20,
                     ),
-                     const Text(petWeightStr),
+                    const Text(petWeightStr),
                     ShopTextForm(
-                      onChanged: (val) {
-                        adoptProvider.petweight = val;
-                      },
+                      controller: adoptProvider.petweightController,
                     ),
                     const SizedBox(
                       height: 20,
                     ),
-
-                     const Text(petSexStr),
-                   CustomDropDown(
-                    onChanged: (value){
-                      adoptProvider.gender = value;
-                    },
-                    itemlist: petGenderList),
+                    const Text(petSexStr),
+                    CustomDropDown(
+                        onChanged: (value) {
+                          adoptProvider.petGender = value;
+                        },
+                        value: adoptProvider.petGender,
+                        itemlist: petGenderList),
                     const SizedBox(
                       height: 20,
                     ),
                     const Text(petBreadStr),
                     CustomDropDown(
-                      onChanged: (value){
-                        adoptProvider.petbread = value;
-                      },
-                      itemlist: dogBreedList ),
+                        onChanged: (value) {
+                          adoptProvider.petBread = value;
+                        },
+                        value:  adoptProvider.petBread,
+                        itemlist: dogBreedList),
                     const SizedBox(
                       height: 10,
                     ),
@@ -169,11 +186,15 @@ class _DonateFirstPageState extends State<DonateFirstPage> {
                             adoptProvider.image != null
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
-                                    child: Image.file(
-                                      File(adoptProvider.image!.path),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )
+                                    child: adoptProvider.imageUrl != null &&
+                                            adoptProvider.image != null
+                                        ? Image.network(adoptProvider.imageUrl!)
+                                        : adoptProvider.image != null
+                                            ? Image.file(
+                                                File(adoptProvider.image!.path),
+                                                fit: BoxFit.cover,
+                                              )
+                                            : SizedBox())
                                 : Icon(
                                     Icons.photo_library_outlined,
                                     size: 70,
@@ -190,8 +211,12 @@ class _DonateFirstPageState extends State<DonateFirstPage> {
                       width: MediaQuery.of(context).size.width * .9,
                       child: ElevatedButton(
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> DonateSecond()));
-                          }, child: const Text(nextStr)),
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DonateSecond(adopt: adoptProvider.adoptDetailsList.first,)));
+                          },
+                          child: const Text(nextStr)),
                     )),
                     const SizedBox(
                       height: 80,

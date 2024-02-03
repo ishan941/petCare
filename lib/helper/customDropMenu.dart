@@ -27,6 +27,7 @@ class CustomDropDown extends StatelessWidget {
         value: e,
         child: Text(e),
       )).toList(),
+      
       value: value,
       onChanged: onChanged,
       validator: validator,

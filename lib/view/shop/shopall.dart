@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:project_petcare/core/smooth_scrollable.dart';
-import 'package:project_petcare/helper/constant.dart';
+import 'package:project_petcare/core/statusutil.dart';
+import 'package:project_petcare/helper/simmer.dart';
+import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
 import 'package:project_petcare/view/customs/consttextform.dart';
@@ -27,7 +29,10 @@ class _ShopAllState extends State<ShopAll> {
 
   @override
   void initState() {
-    getShopData();
+    Future.delayed(Duration.zero, () {
+      getShopData();
+    });
+
     super.initState();
   }
 
@@ -77,72 +82,73 @@ class _ShopAllState extends State<ShopAll> {
               builder: (context, shopProvider, child) => Stack(
                     children: [
                       Column(
-                        children: [ui(), _buildShopItems(shopProvider)],
+                        children: [
+                          ui(shopProvider),
+                          _buildShopItems(shopProvider)
+                        ],
                       ),
                     ],
                   ))),
     );
   }
 
-  Widget ui() {
-    return Consumer<ShopProvider>(
-      builder: (context, shopProvider, child) => Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      ConstTextForm(
-                        hintText: searchHereStr,
-                        suffixIcon: Icon(Icons.search),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Column(
+  Widget ui(ShopProvider shopProvider) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ConfirmationShopItem()));
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white,
-                        ),
-                        width: 55,
-                        height: 55,
-                        child: Icon(Icons.sort),
-                      ),
-                    )
+                    ConstTextForm(
+                      hintText: searchHereStr,
+                      suffixIcon: Icon(Icons.search),
+                    ),
                   ],
                 ),
-              ],
-            ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ConfirmationShopItem()));
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                      ),
+                      width: 55,
+                      height: 55,
+                      child: Icon(Icons.sort),
+                    ),
+                  )
+                ],
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _buildShopItems(ShopProvider shopProvider) {
     return
-        //  shopProvider.getshopIemsUtil == StatusUtil.loading
-        //   ? SimmerEffect.simmerEffect(context)
-        //   : shopProvider.shopItemsList.isEmpty
-        //   ? Center(
-        //     child: Text("No Data available"),
-        //   )
-        //    :
+         shopProvider.getshopIemsUtil == StatusUtil.loading
+          ? SimmerEffect.simmerEffect(context)
+          : shopProvider.shopItemsList.isEmpty
+          ? Center(
+            child: Text("No Data available"),
+          )
+           :
         Expanded(
       child: Padding(
         padding: const EdgeInsets.all(10),

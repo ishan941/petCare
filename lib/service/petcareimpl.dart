@@ -89,9 +89,21 @@ class PetCareImpl extends PetCareService {
             .where("password", isEqualTo: signUp.password)
             .get();
         if (querySnapshot.docs.isNotEmpty) {
-          return FireResponse(statusUtil: StatusUtil.success, data: true);
+          String? name = (querySnapshot.docs.first.data()
+              as Map<String, dynamic>?)?['name'];
+          String? email = (querySnapshot.docs.first.data()
+              as Map<String, dynamic>?)?['email'];
+          String? phone = (querySnapshot.docs.first.data()
+              as Map<String, dynamic>?)?['phone'];
+          Map<String, dynamic> userData = {
+            'name': name,
+            'email': email,
+            'phone': phone
+          };
+
+          return FireResponse(statusUtil: StatusUtil.success, data: userData);
         } else {
-          return FireResponse(statusUtil: StatusUtil.success, data: false);
+          return FireResponse(statusUtil: StatusUtil.success, data: "");
         }
       } catch (e) {
         return FireResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
@@ -439,5 +451,24 @@ class PetCareImpl extends PetCareService {
       return FireResponse(
           statusUtil: StatusUtil.error, errorMessage: e.toString());
     }
+  }
+
+  @override
+  Future<FireResponse> updateAdoptDetails(Adopt adopt) async {
+    if (await Helper.checkInterNetConnection()) {
+      try {
+        await FirebaseFirestore.instance
+            .collection("AdoptDetails")
+            .doc(adopt.id)
+            .update(adopt.toJson());
+
+        return FireResponse(statusUtil: StatusUtil.success);
+      } catch (e) {
+        return FireResponse(
+            statusUtil: StatusUtil.error, errorMessage: e.toString());
+      }
+    }
+    return FireResponse(
+        statusUtil: StatusUtil.error, errorMessage: noInternetStr);
   }
 }
