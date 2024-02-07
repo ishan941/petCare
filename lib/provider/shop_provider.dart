@@ -4,40 +4,43 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project_petcare/core/statusutil.dart';
-import 'package:project_petcare/helper/helper.dart';
-import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/model/shop.dart';
+import 'package:project_petcare/model/signUp.dart';
 import 'package:project_petcare/response/response.dart';
 import 'package:project_petcare/service/petcareimpl.dart';
 import 'package:project_petcare/service/petcareserivce.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ShopProvider extends ChangeNotifier {
   PetCareService petCareService = PetCareImpl();
 
   String? errorMessage, imageUrl;
-  String? product, condition, location, price, description, images, negotiable;
+  String? product,
+      condition,
+      location,
+      price,
+      description,
+      images,
+      negotiable,
+      id;
   XFile? image;
+bool isFromFav=false;
+  SignUp? signUp;
+  List<Shop> favouriteList=[];
 
   List<Shop> shopItemsList = [];
-  List<Shop> _cartItemsList = [];
-  List<int> _cartIndices = [];
-
-  Set<int> _favouriteIndices = {};
   
-  Set<int> get favouriteIndices => _favouriteIndices;
-  List<Shop> get cartItemsList => _cartItemsList;
-  List<int> get cartIndices => _cartIndices;
+  // List<Shop> shopFavouriteList = [];
 
+  // Set<int> _favouriteIndices = {};
 
+  // Set<int> get favouriteIndices => _favouriteIndices;
+  
 
-  bool isFavourite(int index) {
-    return favouriteIndices.contains(index);
-  }
+  // bool isFavourite(int index) {
+  //   return favouriteIndices.contains(index);
+  // }
 
-  bool isCart(Shop item) {
-    return _cartItemsList.contains(item);
-  }
+  
 
   double _per = 0.0;
   double get per => _per;
@@ -46,24 +49,31 @@ class ShopProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  late SharedPreferences _prefs;
 
-  ShopProvider() {
-    _initPreferences();
-    _loadCartData();
-  }
-  
+
+ 
 
   StatusUtil _shopItems = StatusUtil.idle;
   StatusUtil _uploadImageForShop = StatusUtil.idle;
   StatusUtil _getshopItemsUtil = StatusUtil.idle;
+  StatusUtil _shopFavouriteUtil = StatusUtil.idle;
+  StatusUtil _deleteFavouriteUtil = StatusUtil.idle;
+  StatusUtil _getUserStatus = StatusUtil.idle;
+
 
   StatusUtil get shopIetms => _shopItems;
   StatusUtil get uploadImageInFireBase => _uploadImageForShop;
   StatusUtil get getshopIemsUtil => _getshopItemsUtil;
+  StatusUtil get shopFavouriteUtil => _shopFavouriteUtil;
+  StatusUtil get deleteFavouriteUtil => _deleteFavouriteUtil;
+  StatusUtil get getUserStatus => _getUserStatus;
 
   setShopItemsUtil(StatusUtil statusUtil) {
     _shopItems = statusUtil;
+    notifyListeners();
+  }
+   setUserStatus(StatusUtil statusUtil) {
+    _getUserStatus = statusUtil;
     notifyListeners();
   }
 
@@ -76,79 +86,149 @@ class ShopProvider extends ChangeNotifier {
     _getshopItemsUtil = statusUtil;
     notifyListeners();
   }
-  void _loadCartData() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? cartData = prefs.getString('cartData');
 
-  if (cartData != null) {
-    List<Map<String, dynamic>> cartList = List<Map<String, dynamic>>.from(json.decode(cartData));
-    _cartItemsList = cartList.map((jsonMap) => Shop.fromJson(jsonMap)).toList();
-    _cartIndices = List.generate(_cartItemsList.length, (index) => index);
+  setShopFavouriteUtil(StatusUtil statusUtil) {
+    _shopFavouriteUtil = statusUtil;
     notifyListeners();
   }
-}
- void _saveCartData() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  List<Map<String, dynamic>> cartList = _cartItemsList.map((item) => item.toJson()).toList();
-  prefs.setString('cartData', json.encode(cartList));
-}
 
-
-  Future<void> _initPreferences() async {
-    _prefs = await SharedPreferences.getInstance();
-    _loadFavouriteFromPrefs();
-    
+  setDeleteFavourite(StatusUtil statusUtil) {
+    _deleteFavouriteUtil = statusUtil;
+    notifyListeners();
   }
 
-  void _saveFavouriteToPrefs() {
-    List<String> favouriteList =
-        _favouriteIndices.map((index) => index.toString()).toList();
-    _prefs.setStringList("favouriteIndices", favouriteList);
+  setFavourite(bool value){
+isFromFav=value;
+notifyListeners();
+  }
+  
+
+  setId(String id) {
+    this.id = id;
   }
 
  
 
-  Future<void> _loadFavouriteFromPrefs() async {
-    List<String>? savedFavourites = _prefs.getStringList("favouriteIndices");
-    if (savedFavourites != null) {
-      _favouriteIndices = savedFavourites.map((str) => int.parse(str)).toSet();
+  Future<void> getUser()async{
+     if (_getUserStatus != StatusUtil.loading) {
+      setUserStatus(StatusUtil.loading);
     }
-    notifyListeners();
+    try {
+      var response = await petCareService.getUserByEmail();
+      if (response.statusUtil == StatusUtil.success) {
+        signUp = response.data;
+        if(signUp?.favourite!=null){
+          List<dynamic> decodedList =jsonDecode(signUp!.favourite ?? "");
+          favouriteList=decodedList.map((e) =>Shop.fromJson(e)).toList();
+        }
+        setUserStatus(StatusUtil.success);
+      } else if (response.statusUtil == StatusUtil.error) {
+        errorMessage = response.errorMessage;
+        print("Error fetching shop items: $errorMessage");
+        setUserStatus(StatusUtil.error);
+      }
+    } catch (e) {
+      errorMessage = "$e";
+      print("Exception while fetching shop items: $errorMessage");
+      setUserStatus(StatusUtil.error);
+    }
+
   }
 
-  
- void addToCart(Shop shop) {
-    if (!_cartIndices.contains(shop)) {
-      _cartItemsList.add(shop);
-      _cartIndices.add(_cartItemsList.length - 1);
+ 
+
+bool  checkFavourite(Shop shop){
+ return favouriteList.contains(shop);
+}
+
+  Future<void> updateFavouriteList(Shop shop) async{
+     FireResponse response;
+     String? favoriteToJson;
+     print(checkFavourite(shop));
+    if(checkFavourite(shop)){
+      favouriteList.remove(shop);
       notifyListeners();
-      _saveCartData(); // Save the cart data after modification
+     favoriteToJson=jsonEncode(favouriteList.map((e) =>e.toJson()).toList());
+
+    }else{
+      favouriteList.add(shop);
+      favoriteToJson=jsonEncode(favouriteList.map((e) =>e.toJson()).toList());
+    }
+      signUp?.favourite=favoriteToJson;
+
+   response = await petCareService.updateFavourite(signUp!);
+   if(response.statusUtil==StatusUtil.success){
+    setFavourite(true);
+   await  itemDetails();
+
+   }
+     
+  }
+
+
+  Future<void> deleteFavourite(String id) async {
+    if (_deleteFavouriteUtil != StatusUtil.loading) {
+      setDeleteFavourite(StatusUtil.loading);
+    }
+    try {
+      FireResponse response = await petCareService.removeShopFavourite(id);
+      if (response.statusUtil == StatusUtil.success) {
+        setDeleteFavourite(StatusUtil.success);
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+      setDeleteFavourite(StatusUtil.error);
     }
   }
-   void removeFromCart(Shop shop) {
-    
-      _cartItemsList.remove(shop);
-      
-      notifyListeners();
-      _saveCartData(); // Save the cart data after modification
-    
-  }
-    
 
-   
+  // void toggleFavouriteStatus(int index) async {
+  //   String id = shopItemsList[index].id!;
 
-  void toggleFavouriteStatus(int index) {
-    if (favouriteIndices.contains(index)) {
-      favouriteIndices.remove(index);
-    } else {
-      favouriteIndices.add(index);
+  //   try {
+  //     if (favouriteIndices.contains(index)) {
+  //       await petCareService.removeShopFavourite(id);
+  //     } else {
+  //       await petCareService.saveShopFavourite(shopItemsList[index]);
+  //     }
+
+  //     favouriteIndices.contains(index)
+  //         ? favouriteIndices.remove(index)
+  //         : favouriteIndices.add(index);
+
+  //     setShopFavouriteUtil(StatusUtil.success);
+  //     setDeleteFavourite(StatusUtil.success);
+  //   } catch (e) {
+  //     errorMessage = e.toString();
+  //     setShopFavouriteUtil(StatusUtil.error);
+  //     setDeleteFavourite(StatusUtil.error);
+  //   }
+
+  //   notifyListeners();
+  // }
+
+
+  Future<void> getFavoriteItemsFromFirebase() async {
+    try {
+      FireResponse response = await petCareService.getShopFavourite();
+      if (response.statusUtil == StatusUtil.success) {
+       favouriteList = response.data;
+      } else {
+        errorMessage = response.errorMessage;
+        setShopFavouriteUtil(StatusUtil.error);
+        // or handle the error accordingly
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+      setShopFavouriteUtil(StatusUtil.error);
+
     }
-    _saveFavouriteToPrefs();
-    notifyListeners();
   }
+
+
+
 
   Future<void> itemDetails() async {
-    if (_getshopItemsUtil != StatusUtil.loading) {
+    if (_getshopItemsUtil != StatusUtil.loading && !isFromFav) {
       print("Fetching shop items - Setting loading status");
       setgetShopItemsUtil(StatusUtil.loading);
     }
@@ -199,6 +279,7 @@ class ShopProvider extends ChangeNotifier {
   Future<void> sendValueToFireBase() async {
     await uploadImageForShop();
     Shop shop = Shop(
+      id: id,
       product: product,
       condition: condition,
       location: location,

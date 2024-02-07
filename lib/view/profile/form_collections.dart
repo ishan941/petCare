@@ -4,6 +4,7 @@ import 'package:project_petcare/view/categories.dart/forms/categoriesForms.dart'
 import 'package:project_petcare/view/donate/donate_1.dart';
 import 'package:project_petcare/view/ourservice/profession.dart';
 import 'package:project_petcare/view/ourservice/service_form.dart';
+import 'package:project_petcare/view/shop/shope_sale.dart';
 
 class FormCollection extends StatefulWidget {
   const FormCollection({super.key});
@@ -196,7 +197,7 @@ class _UiTestState extends State<FormCollection> {
       child: InkWell(
         onTap: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => YourProfession()));
+              MaterialPageRoute(builder: (context) => ShopSale()));
         },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),

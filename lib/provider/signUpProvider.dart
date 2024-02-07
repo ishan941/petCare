@@ -51,21 +51,8 @@ class SignUpProvider extends ChangeNotifier {
     if (_signUpUtil != StatusUtil.loading) {
       setSignUpUtil(StatusUtil.loading);
     }
-    try {
-      SignUp signUp =
-          SignUp(name: name, password: password, email: email, phone: phone);
-      await userLoginDetails(signUp);
-    } catch (e) {
-      setSignUpUtil(
-        StatusUtil.error,
-      );
-    }
-  }
-
-  Future<void> userLoginDetails(SignUp signUp) async {
-    if (_signUpUtil != StatusUtil.loading) {
-      setSignUpUtil(StatusUtil.loading);
-    }
+    SignUp signUp =
+        SignUp(name: name, password: password, email: email, phone: phone);
     try {
       FireResponse response = await petCareService.userLoginDetails(signUp);
       if (response.statusUtil == StatusUtil.success) {
@@ -75,36 +62,11 @@ class SignUpProvider extends ChangeNotifier {
         setSignUpUtil(StatusUtil.error);
       }
     } catch (e) {
-      errorMessage = "$e";
+      setSignUpUtil(
+        StatusUtil.error,
+      );
     }
   }
-
-//  Future<void> userData() async {
-//   if (userDetailsStatus != StatusUtil.loading) {
-//     setUserDetailsStatus(StatusUtil.loading);
-//   }
-
-//   try {
-//     FireResponse response = await petCareService.getUserLoginData();
-
-//     if (response.statusUtil == StatusUtil.success) {
-//       if (response.data != null && response.data is SignUp) {
-//         userName = response.data.name;
-//         userEmail = response.data.email;
-//         setUserDetailsStatus(StatusUtil.success);
-//       } else {
-//         errorMessage = "Invalid data structure from Firestore";
-//         setUserDetailsStatus(StatusUtil.error);
-//       }
-//     } else if (response.statusUtil == StatusUtil.error) {
-//       errorMessage = response.errorMessage;
-//       setUserDetailsStatus(StatusUtil.error);
-//     }
-//   } catch (e) {
-//     errorMessage = "$e";
-//     setUserDetailsStatus(StatusUtil.error);
-//   }
-// }
 
   checkUserLoginFromFireBase() async {
     if (_loginUtil != StatusUtil.loading) {
@@ -143,7 +105,7 @@ class SignUpProvider extends ChangeNotifier {
     prefs.setString('userName', userName);
     prefs.setString("fullName", fullName);
     prefs.setString('userEmail', userEmail);
-    prefs.setString("userPhone", userPhone ?? '');
+    prefs.setString("userPhone", userPhone);
   }
 
   Future<void> initilizedProvider() async {
@@ -152,7 +114,7 @@ class SignUpProvider extends ChangeNotifier {
 
   Future<void> readUserFromSharedPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-     fullName = prefs.getString('userName') ?? 'User';
+    fullName = prefs.getString('userName') ?? 'User';
     List<String> nameParts = fullName.split(' ');
     userName = nameParts.isNotEmpty ? nameParts.first : 'User';
     userEmail = prefs.getString('userEmail') ?? 'Email';

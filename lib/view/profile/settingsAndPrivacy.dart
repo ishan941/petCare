@@ -10,7 +10,7 @@ import 'package:project_petcare/view/profile/personalDetails.dart';
 import 'package:project_petcare/view/profile/verifyYourAccount_1.dart';
 import 'package:project_petcare/view/test.dart/foradmin.dart';
 import 'package:project_petcare/view/test.dart/testPage.dart';
-import 'package:project_petcare/view/test.dart/ui.dart';
+import 'package:project_petcare/view/profile/form_collections.dart';
 import 'package:project_petcare/view/test.dart/verificationTest.dart';
 import 'package:provider/provider.dart';
 

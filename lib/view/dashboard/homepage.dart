@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:project_petcare/core/smooth_scrollable.dart';
 import 'package:project_petcare/core/statusutil.dart';
+import 'package:project_petcare/helper/constSearch.dart';
+import 'package:project_petcare/helper/simmer.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
-import 'package:project_petcare/helper/helper.dart';
+// import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
+// import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/provider/adoptprovider.dart';
 import 'package:project_petcare/provider/categoryprovider.dart';
 import 'package:project_petcare/provider/donateprovider.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
+import 'package:project_petcare/provider/shop_provider.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/view/adopt/adoptDetails.dart';
 import 'package:project_petcare/view/adopt/donateData.dart';
@@ -18,7 +22,9 @@ import 'package:project_petcare/view/dashboard/categories.dart';
 import 'package:project_petcare/view/ourservice/ourserviceSeeMore.dart';
 import 'package:project_petcare/view/ourservice/ourservices.dart';
 import 'package:project_petcare/view/profile/account.dart';
-import 'package:project_petcare/view/dashboard/search.dart';
+// import 'package:project_petcare/view/dashboard/search.dart';
+// import 'package:project_petcare/view/shop/shopFavourite.dart';
+import 'package:project_petcare/view/shop/shopdetails.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -31,11 +37,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  
-
+  late ScrollController _scrollController;
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
+      // getFavourite();
       getGreeting();
       getUserName();
       getCategories();
@@ -45,8 +51,10 @@ class _HomePageState extends State<HomePage> {
     });
 
     super.initState();
+    _scrollController = ScrollController();
   }
-  getGreeting()async{
+
+  getGreeting() async {
     var petCareProvider = Provider.of<PetCareProvider>(context, listen: false);
     await petCareProvider.updateGreeting();
   }
@@ -58,7 +66,7 @@ class _HomePageState extends State<HomePage> {
 
   getUserName() async {
     var signUpProvider = Provider.of<SignUpProvider>(context, listen: false);
-   await signUpProvider.readUserFromSharedPreferences();
+    await signUpProvider.readUserFromSharedPreferences();
   }
 
   getDashServiceDetailsinUi() async {
@@ -78,34 +86,81 @@ class _HomePageState extends State<HomePage> {
     await categoriesProvider.getCategoriesData();
   }
 
+  // getFavourite() async {
+  //   var shopProvider = Provider.of<ShopProvider>(context, listen: false);
+  //   await shopProvider.getFavoriteItemsFromFirebase();
+  // }
+
   @override
   Widget build(BuildContext context) {
+    // var shopProvider = Provider.of<ShopProvider>(context);
+    // // List<int> shopFavouriteList = shopProvider.favouriteIndices.toList();
+    // List<Shop> favouriteItems = shopProvider.shopItemsList
+    //     .where(
+    //       (item) => shopProvider
+    //           .isFavourite(shopProvider.shopItemsList.indexOf(item)),
+    //     )
+    //     .toList();
     return Scaffold(
-        backgroundColor: ColorUtil.primaryColor,
-        body: Consumer<OurServiceProvider>(
-          builder: (context, ourServiceProvider, child) => Stack(
-            children: [
-              ui(),
-              loader(ourServiceProvider),
-            ],
-          ),
-        ));
-  }
-
-  loader(OurServiceProvider ourServiceProvider) {
-    if (ourServiceProvider.dashServiceUtil == StatusUtil.loading) {
-      return Helper.backdropFilter(context);
-    } else {
-      return SizedBox();
-    }
+      backgroundColor: ColorUtil.primaryColor,
+      body: SafeArea(
+        child: CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            SliverAppBar(
+              backgroundColor: ColorUtil.primaryColor,
+              // expandedHeight: favouriteItems.isNotEmpty
+                  // ? MediaQuery.of(context).size.height * .49
+                  // : 130,
+              pinned: true,
+              elevation: 0,
+              snap: true,
+              floating: true,
+              flexibleSpace: FlexibleSpaceBar(
+                centerTitle: false,
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "Hello ${Provider.of<SignUpProvider>(context).userName}"),
+                    Text(
+                      Provider.of<PetCareProvider>(context).greeting,
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ],
+                ),
+                // background: dashHead(
+                //     Provider.of<SignUpProvider>(context),
+                //     context,
+                //     Provider.of<ShopProvider>(context),
+                //     Provider.of<PetCareProvider>(
+                //       context,
+                //     )),
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  Consumer<OurServiceProvider>(
+                    builder: (context, ourServiceProvider, child) => ui(),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget ui() {
+   
     return ScrollConfiguration(
       behavior: MyBehavior(),
-      child: SafeArea(
-        child: SingleChildScrollView(
-          child: Consumer<CategoriesProvider>(
+      child: SingleChildScrollView(
+        child: Consumer<ShopProvider>(
+          builder: (context, shopProvider, child) =>
+              Consumer<CategoriesProvider>(
             builder: (context, categoriesProvider, child) =>
                 Consumer<SignUpProvider>(
               builder: (context, signUpProvider, child) =>
@@ -118,44 +173,61 @@ class _HomePageState extends State<HomePage> {
                         Consumer<AdoptProvider>(
                       builder: (context, adoptProvider, child) => Column(
                         children: [
-                          Stack(
+                          Column(
                             children: [
-                              Column(
-                                children: [
-                                  dashHead(signUpProvider, context, petCareProvider),
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(40),
-                                    child: Container(
-                                      color: Color(0XFFE5E8FF),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                              // dashHead(signUpProvider, context,
+                              //     petCareProvider),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(40),
+                                child: Container(
+                                  color: Color(0XFFE5E8FF),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        // favouriteItems.isNotEmpty
+                                        //     ? Column(
+                                        //         children: [
+                                        //           myFavourite(
+                                        //               shopProvider),
+                                        //           categories(
+                                        //               categoriesProvider),
+                                        //           ourservice(context),
+                                        //           adoptdetails(
+                                        //               adoptProvider),
+                                        //         ],
+                                        //       )
+                                        //     :
+                                        ourServiceProvider.dashServiceUtil ==
+                                                StatusUtil.loading
+                                            ? SimmerEffect.shimmerEffect()
+                                            : Column(
+                                                children: [
+                                                  categories(
+                                                      categoriesProvider),
+                                                  ourservice(context),
+                                                  adoptdetails(adoptProvider),
+                                                ],
+                                              ),
+                                        Column(
                                           children: [
-                                            const SizedBox(
-                                              height: 15,
-                                            ),
-                                            categories(categoriesProvider),
-                                            ourservice(context),
-                                            
-                                            adoptdetails(adoptProvider),
-                                            Column(
-                                              children: [
-                                                Image.asset(
-                                                    "assets/images/streetpets.png"),
-                                                SizedBox(
-                                                  height: 10,
-                                                )
-                                              ],
-                                            ),
+                                            Image.asset(
+                                                "assets/images/streetpets.png"),
+                                            SizedBox(
+                                              height: 10,
+                                            )
                                           ],
                                         ),
-                                      ),
+                                      ],
                                     ),
                                   ),
-                                ],
+                                ),
                               ),
                             ],
                           ),
@@ -172,78 +244,319 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget dashHead(SignUpProvider signUpProvider, BuildContext context, PetCareProvider petCareProvider) {
-    return Container(
-      height: 190,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                     "Hello ${signUpProvider.userName},",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      petCareProvider.greeting,
-                     
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Account()));
-                  },
-                  child: const CircleAvatar(
-                    radius: 25,
-                    backgroundImage: AssetImage("assets/images/emptypp.png"),
+  // Widget myFavourite(ShopProvider shopProvider) {
+  //   // var shopProvider = Provider.of<ShopProvider>(context);
+  //   // List<int> shopFavouriteList = shopProvider.favouriteIndices.toList();
+  //   // List<Shop> favouriteItems = shopProvider.shopItemsList
+  //   //     .where(
+  //   //       (item) => shopProvider
+  //   //           .isFavourite(shopProvider.shopItemsList.indexOf(item)),
+  //   //     )
+  //   //     .toList();
+  //   return shopProvider.getshopIemsUtil == StatusUtil.loading
+  //       ? SimmerEffect.shimemrForShop()
+  //       : Container(
+  //           height: MediaQuery.of(context).size.height * .325,
+  //           width: MediaQuery.of(context).size.width,
+  //           child: Padding(
+  //             padding: const EdgeInsets.symmetric(horizontal: 20),
+  //             child: Column(
+  //               children: [
+  //                 Row(
+  //                   children: [
+  //                     Text(
+  //                       "My Favourite",
+  //                       style: subTitleText,
+  //                     ),
+  //                     Spacer(),
+  //                     Text(
+  //                       "View All",
+  //                       style: TextStyle(color: ColorUtil.BackGroundColorColor),
+  //                     ),
+  //                   ],
+  //                 ),
+  //                 Expanded(
+  //                   child: Padding(
+  //                     padding: const EdgeInsets.symmetric(vertical: 5),
+  //                     child: ClipRRect(
+  //                       borderRadius: BorderRadius.circular(12),
+  //                       child: Container(
+  //                         // color: Colors.red,
+  //                         child: ListView.builder(
+  //                             scrollDirection: Axis.horizontal,
+  //                             // itemCount: shopFavouriteList.length,
+  //                             itemBuilder: (BuildContext context, int index) {
+  //                               // int itemIndex = shopProvider.shopItemsList
+  //                               //     .indexOf(favouriteItems[index]);
+  //                               return GestureDetector(
+  //                                 onTap: () {
+  //                                   Navigator.push(
+  //                                       context,
+  //                                       MaterialPageRoute(
+  //                                           builder: (context) => ShopDetails(
+  //                                                 // shop: favouriteItems[index],
+  //                                               )));
+  //                                 },
+  //                                 child: Padding(
+  //                                   padding: const EdgeInsets.only(
+  //                                     right: 25,
+  //                                   ),
+  //                                   child: ClipRRect(
+  //                                     borderRadius: BorderRadius.circular(12),
+  //                                     child: Container(
+  //                                       // height: MediaQuery.of(context).size.height*.2,
+  //                                       width:
+  //                                           MediaQuery.of(context).size.width *
+  //                                               .45,
+  //                                       color: Colors.white,
+  //                                       child: Stack(
+  //                                         children: [
+  //                                           Column(
+  //                                             crossAxisAlignment:
+  //                                                 CrossAxisAlignment.start,
+  //                                             children: [
+  //                                               Container(
+  //                                                 height: MediaQuery.of(context)
+  //                                                         .size
+  //                                                         .height *
+  //                                                     .134,
+  //                                                 width: MediaQuery.of(context)
+  //                                                     .size
+  //                                                     .width,
+  //                                                 child: ClipRRect(
+  //                                                   borderRadius:
+  //                                                       BorderRadius.circular(
+  //                                                           10),
+  //                                                   // child: Image.network(
+  //                                                   //   // favouriteItems[index]
+  //                                                   //   //     .images!,
+  //                                                   //   // fit: BoxFit.cover,
+  //                                                   // ),
+  //                                                 ),
+  //                                               ),
+  //                                               Padding(
+  //                                                 padding:
+  //                                                     const EdgeInsets.all(10),
+  //                                                 child: Container(
+  //                                                   height:
+  //                                                       MediaQuery.of(context)
+  //                                                               .size
+  //                                                               .height *
+  //                                                           .1191,
+  //                                                   // color: Colors.red,
+  //                                                   child: Column(
+  //                                                     crossAxisAlignment:
+  //                                                         CrossAxisAlignment
+  //                                                             .start,
+  //                                                     children: [
+  //                                                       Text(
+  //                                                         " ",
+  //                                                         // favouriteItems[index]
+  //                                                         //     .product!,
+  //                                                         maxLines: 1,
+  //                                                         overflow: TextOverflow
+  //                                                             .ellipsis,
+  //                                                         style: titleText,
+  //                                                       ),
+  //                                                       SizedBox(
+  //                                                         height: 5,
+  //                                                       ),
+  //                                                       Text(
+  //                                                         '',
+  //                                                         // favouriteItems[index]
+  //                                                         //     .description!,
+  //                                                         maxLines: 2,
+  //                                                         overflow: TextOverflow
+  //                                                             .ellipsis,
+  //                                                         style: textStyleMini,
+  //                                                       ),
+  //                                                       Spacer(),
+  //                                                       Row(
+  //                                                         children: [
+  //                                                           Text(
+  //                                                      '',
+  //                                                             // "Rs. ${favouriteItems[index].price!}",
+  //                                                             maxLines: 1,
+  //                                                             overflow:
+  //                                                                 TextOverflow
+  //                                                                     .ellipsis,
+  //                                                             style: titleText,
+  //                                                           ),
+  //                                                           Spacer(),
+  //                                                           ClipRRect(
+  //                                                             borderRadius:
+  //                                                                 BorderRadius
+  //                                                                     .circular(
+  //                                                                         5),
+  //                                                             child: Container(
+  //                                                               color: ColorUtil
+  //                                                                   .primaryColor,
+  //                                                               width: MediaQuery.of(
+  //                                                                           context)
+  //                                                                       .size
+  //                                                                       .width *
+  //                                                                   .06,
+  //                                                               height: MediaQuery.of(
+  //                                                                           context)
+  //                                                                       .size
+  //                                                                       .height *
+  //                                                                   .03,
+  //                                                               child: Icon(
+  //                                                                 Icons.add,
+  //                                                                 color: Colors
+  //                                                                     .white,
+  //                                                               ),
+  //                                                             ),
+  //                                                           )
+  //                                                         ],
+  //                                                       ),
+  //                                                     ],
+  //                                                   ),
+  //                                                 ),
+  //                                               ),
+  //                                             ],
+  //                                           ),
+  //                                           Positioned(
+  //                                             top: 90,
+  //                                             left: 120,
+  //                                             child: ClipRRect(
+  //                                               borderRadius:
+  //                                                   BorderRadius.circular(100),
+  //                                               child: Container(
+  //                                                 decoration: BoxDecoration(
+  //                                                     color: Colors.white,
+  //                                                     boxShadow: [
+  //                                                       BoxShadow(
+  //                                                         color: Colors.black
+  //                                                             .withOpacity(
+  //                                                                 0.9), // Shadow color
+  //                                                         offset: Offset(6,
+  //                                                             0), // Offset in x and y directions
+  //                                                         blurRadius:
+  //                                                             10, // Blur radius
+  //                                                         spreadRadius: 6,
+  //                                                       )
+  //                                                     ]),
+  //                                                 height: 30,
+  //                                                 width: 30,
+  //                                                 // child: Align(
+  //                                                 //   alignment: Alignment.center,
+  //                                                 //   child: Transform.translate(
+  //                                                 //     offset: Offset(-5, -5),
+  //                                                 //     child: IconButton(
+  //                                                 //         onPressed: () {
+  //                                                 //           shopProvider
+  //                                                 //               .toggleFavouriteStatus(
+  //                                                 //                   itemIndex);
+  //                                                 //         },
+  //                                                 //         icon: Icon(
+  //                                                 //             shopProvider.isFavourite(
+  //                                                 //                     itemIndex)
+  //                                                 //                 ? Icons
+  //                                                 //                     .favorite
+  //                                                 //                 : Icons
+  //                                                 //                     .favorite_border_rounded,
+  //                                                 //             color: shopProvider
+  //                                                 //                     .isFavourite(
+  //                                                 //                         itemIndex)
+  //                                                 //                 ? Colors.red
+  //                                                 //                 : Colors
+  //                                                 //                     .white)),
+  //                                                 //   ),
+  //                                                 // ),
+  //                                               ),
+  //                                             ),
+  //                                           ),
+  //                                         ],
+  //                                       ),
+  //                                     ),
+  //                                   ),
+  //                                 ),
+  //                               );
+  //                             }),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 )
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  // }
+
+  // Widget dashHead(SignUpProvider signUpProvider, BuildContext context,
+  //     ShopProvider shopProvider, PetCareProvider petCareProvider) {
+  //   // var shopProvider = Provider.of<ShopProvider>(context);
+  //   // // List<int> shopFavouriteList = shopProvider.favouriteIndices.toList();
+  //   // List<Shop> favouriteItems = shopProvider.shopItemsList
+  //   //     .where(
+  //   //       (item) => shopProvider
+  //   //           .isFavourite(shopProvider.shopItemsList.indexOf(item)),
+  //   //     )
+  //   //     .toList();
+  //   return Container(
+  //       // height: 190,
+  //       child: favouriteItems.isNotEmpty
+  //           ? Column(
+  //               children: [
+  //                 dashAppBar(
+  //                     signUpProvider, petCareProvider, context, shopProvider),
+  //                 SizedBox(
+  //                   height: 15,
+  //                 ),
+  //                 myFavourite(shopProvider)
+  //               ],
+  //             )
+  //           : dashAppBar(
+  //               signUpProvider, petCareProvider, context, shopProvider));
+  // }
+
+  Widget dashAppBar(
+      SignUpProvider signUpProvider,
+      PetCareProvider petCareProvider,
+      BuildContext context,
+      ShopProvider shopProvider) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(15),
+          child: Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Hello ${signUpProvider.userName},",
+                    style: TextStyle(fontSize: 20),
                   ),
-                )
-              ],
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width * .9,
-            decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    spreadRadius: 0,
-                    blurRadius: 3,
-                    color: Colors.grey.withOpacity(0.5),
-                    offset: Offset(2, 4),
+                  Text(
+                    petCareProvider.greeting,
                   ),
                 ],
-                borderRadius: BorderRadius.circular(10),
-                color: Color(0XFFE6E8FF).withOpacity(0.8)),
-            height: 50,
-            child: TextFormField(
-              keyboardType: TextInputType.text,
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Search(),
-                    ));
-              },
-              readOnly: true,
-              textAlignVertical: TextAlignVertical.center,
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.search),
-                hintText: searchHereStr,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
               ),
-            ),
+              const Spacer(),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Account()));
+                },
+                child: const CircleAvatar(
+                  radius: 25,
+                  backgroundImage: AssetImage("assets/images/emptypp.png"),
+                ),
+              )
+            ],
           ),
-        ],
-      ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: ConstSearch(
+            hintText: searchHereStr,
+            prefixIcon: Icon(Icons.search),
+          ),
+        ),
+        // myFavourite(shopProvider)
+      ],
     );
   }
 
@@ -293,15 +606,12 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: Stack(children: [
                   categoriesUi(context, categoriesProvider, index),
-                
                 ])),
           ),
         ),
       ],
     );
   }
-
- 
 
   Widget categoriesUi(
       BuildContext context, CategoriesProvider categoriesProvider, int index) {
@@ -350,7 +660,6 @@ class _HomePageState extends State<HomePage> {
   Widget adoptdetails(AdoptProvider adoptProvider) {
     return Column(
       children: [
-       
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Row(
@@ -358,7 +667,9 @@ class _HomePageState extends State<HomePage> {
               const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Text(
                     adoptStr,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
@@ -383,102 +694,112 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-         adoptProvider.adoptDetailsList.isEmpty?
-        Center(child: Text("No Data available for adopt")):
-        Container(
-          height: 150,
-          // width: double.infinity,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: adoptProvider.adoptDetailsList.length,
-            itemBuilder: (context, index) => GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AdoptDetails(
-                              adopt: adoptProvider.adoptDetailsList[index],
-                            )));
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          spreadRadius: 0,
-                          blurRadius: 3,
-                          color: Colors.grey.withOpacity(0.5),
-                          offset: Offset(2, 4),
-                        ),
-                      ]),
-                  // height: MediaQuery.of(context).size.height * .18,
-                  // width: MediaQuery.of(context).size.width*0.8,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Container(
-                            height: MediaQuery.of(context).size.height,
-                            width: MediaQuery.of(context).size.width * 0.36,
-                            child: Image.network(
-                              adoptProvider.adoptDetailsList[index].imageUrl ??
-                                  "",
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * .4,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+        adoptProvider.adoptDetailsList.isEmpty
+            ? Center(child: Text("No Data available for adopt"))
+            : Container(
+                height: 150,
+                // width: double.infinity,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: adoptProvider.adoptDetailsList.length,
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AdoptDetails(
+                                    adopt:
+                                        adoptProvider.adoptDetailsList[index],
+                                  )));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                spreadRadius: 0,
+                                blurRadius: 3,
+                                color: Colors.grey.withOpacity(0.5),
+                                offset: Offset(2, 4),
+                              ),
+                            ]),
+                        // height: MediaQuery.of(context).size.height * .18,
+                        // width: MediaQuery.of(context).size.width*0.8,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
                             children: [
-                              Text(
-                                adoptProvider
-                                        .adoptDetailsList[index].petbread ??
-                                    "",
-                                style: const TextStyle(
-                                    overflow: TextOverflow.ellipsis,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Container(
+                                  height: MediaQuery.of(context).size.height,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.36,
+                                  child: Image.network(
+                                    adoptProvider
+                                            .adoptDetailsList[index].imageUrl ??
+                                        "",
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
                               const SizedBox(
-                                height: 5,
+                                width: 20,
                               ),
-                              Text(
-                                adoptProvider.adoptDetailsList[index].petname ??
-                                    "",
-                                style: const TextStyle(
-                                    fontSize: 17, fontWeight: FontWeight.w500),
-
-                                overflow: TextOverflow
-                                    .ellipsis, // Handle overflow gracefully
-                              ),
-                              const SizedBox(height: 5),
                               Container(
-                                width: MediaQuery.of(context).size.width * .7,
-                                child: Row(
+                                width: MediaQuery.of(context).size.width * .4,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Icon(Icons.location_on_outlined,
-                                        size: 15,
-                                        color: ColorUtil.primaryColor),
-                                    const SizedBox(
-                                      width: 2,
+                                    Text(
+                                      adoptProvider.adoptDetailsList[index]
+                                              .petbread ??
+                                          "",
+                                      style: const TextStyle(
+                                          overflow: TextOverflow.ellipsis,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w500),
                                     ),
-                                    Flexible(
-                                      child: Text(
-                                        adoptProvider.adoptDetailsList[index]
-                                                .location ??
-                                            "",
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      adoptProvider.adoptDetailsList[index]
+                                              .petname ??
+                                          "",
+                                      style: const TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w500),
+
+                                      overflow: TextOverflow
+                                          .ellipsis, // Handle overflow gracefully
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          .7,
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.location_on_outlined,
+                                              size: 15,
+                                              color: ColorUtil.primaryColor),
+                                          const SizedBox(
+                                            width: 2,
+                                          ),
+                                          Flexible(
+                                            child: Text(
+                                              adoptProvider
+                                                      .adoptDetailsList[index]
+                                                      .location ??
+                                                  "",
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
@@ -487,14 +808,11 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ),
-        ),
       ],
     );
   }
@@ -793,5 +1111,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-

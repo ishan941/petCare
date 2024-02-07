@@ -4,15 +4,18 @@ class SignUp {
   String? phone;
   String? email;
   String? password;
-  
+  String? favourite;
+  String? id;
 
-  SignUp({this.name, this.phone, this.email, this.password});
+  SignUp({this.name, this.phone, this.email, this.password,this.favourite,this.id});
 
   SignUp.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     phone = json['phone'];
     email = json['email'];
     password = json['password'];
+    favourite=json['favourite'];
+    id=json["id"];
   }
 
   Map<String, dynamic> toJson() {
@@ -21,6 +24,8 @@ class SignUp {
     data['phone'] = this.phone;
     data['email'] = this.email;
     data['password'] = this.password;
+    data['favourite']=this.favourite;
+    data['id']=this.id;
     return data;
   }
 }

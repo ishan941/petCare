@@ -1,4 +1,9 @@
-class Shop {
+import 'dart:convert';
+
+import 'package:equatable/equatable.dart';
+
+class Shop extends Equatable{
+  String? id;
   String? product;
   String? condition;
   String? location;
@@ -14,6 +19,7 @@ class Shop {
       this.images,
       this.description,
       this.price,
+      this.id,
       this.negotiable});
 
   Shop.fromJson(Map<String, dynamic> json) {
@@ -24,6 +30,7 @@ class Shop {
     description = json['description'];
     price = json['price'];
     negotiable = json['negotiable'];
+    id = json['id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -35,6 +42,11 @@ class Shop {
     data['description'] = this.description;
     data['price'] = this.price;
     data['negotiable'] = this.negotiable;
+    data['id'] = this.id;
     return data;
   }
+  
+@override
+  List<Object?> get props => [product, id,condition,location,images,description,price,negotiable];
+ 
 }

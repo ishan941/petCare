@@ -151,7 +151,7 @@ class _AccountState extends State<Account> {
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: InkWell(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context)=> ForAdmin()));
+          Navigator.push(context, MaterialPageRoute(builder: (context)=> SettingsAndPrivacy()));
         },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),

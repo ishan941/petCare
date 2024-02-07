@@ -4,6 +4,7 @@ import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/view/dashboard/homepage.dart';
 import 'package:project_petcare/view/profile/account.dart';
+import 'package:project_petcare/view/profile/personalDetails.dart';
 import 'package:project_petcare/view/shop/mycart.dart';
 import 'package:project_petcare/view/profile/settingsAndPrivacy.dart';
 import 'package:project_petcare/view/shop/shopFavourite.dart';
@@ -20,10 +21,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
   Widget build(BuildContext context) {
     var petcareProvider = Provider.of<PetCareProvider>(context);
     return Scaffold(
-      
         bottomNavigationBar: CurvedNavigationBar(
           index: petcareProvider.selecedIndex,
-          height: 60.0,
+          height: 50.0,
           items: [
             _buildNavItem(Icons.home, 'Home', 0),
             _buildNavItem(Icons.shopping_bag_outlined, 'Shop', 1),
@@ -32,9 +32,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
             _buildNavItem(Icons.person, 'Profile', 4),
             //Icon(Icons.perm_identity, size: 30, color: Colors.white,),
           ],
-          color: ColorUtil.primaryColor,
+          color: Colors.white,
           buttonBackgroundColor: ColorUtil.primaryColor,
-          backgroundColor: Color(0XFFE5E8FF),
+          backgroundColor: ColorUtil.BackGroundColorColor,
           animationCurve: Curves.fastEaseInToSlowEaseOut,
           animationDuration: Duration(milliseconds: 600),
           onTap: (value) {
@@ -52,7 +52,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       case 1:
         return ShopAll();
       case 2:
-        return MyCart();
+        return Account();
       case 3:
         return ShopFavourite();
 
@@ -63,23 +63,24 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   Widget _buildNavItem(IconData icon, String label, int currentIndex) {
     var petcareProvider = Provider.of<PetCareProvider>(context);
-    var isSelected  = petcareProvider.selecedIndex == currentIndex;
+    var isSelected = petcareProvider.selecedIndex == currentIndex;
     return Align(
       alignment: Alignment.topCenter,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: 30,
-            color: isSelected ? ColorUtil.BackGroundColorColor : Colors.white
-          ),
+          Icon(icon,
+              size: 30,
+              color: isSelected
+                  ? ColorUtil.BackGroundColorColor
+                  : ColorUtil.primaryColor),
           Text(
             label,
             style: TextStyle(
-              fontSize: 12,
-            color: isSelected ? ColorUtil.BackGroundColorColor : Colors.white
-            ),
+                fontSize: 12,
+                color: isSelected
+                    ? ColorUtil.BackGroundColorColor
+                    : ColorUtil.primaryColor),
           ),
         ],
       ),

@@ -140,33 +140,7 @@ class _LoginPageState extends State<LoginPage> {
                                       Helper.snackBar("Sorry", context);
                                     }
 
-                                    // if (_formKey.currentState!.validate())
-                                    //  {
-                                    //   PetCare petCare =
-                                    //       PetCare(phone: phone, password: password);
-                                    //   await petcareProvider
-                                    //       .checkUserExistance(petCare)
-                                    //       .then((value) {
-                                    //     if (petcareProvider.loginStatusUtil ==
-                                    //         StatusUtil.success) {
-                                    //       SaveValueToSharedPreference();
-                                    //       if (petcareProvider.isUserLogin) {
-                                    //         Navigator.of(context)
-                                    //             .pushAndRemoveUntil(
-                                    //                 MaterialPageRoute(
-                                    //                     builder:
-                                    //                         (context) =>
-                                    //                             BottomNavBar()),
-                                    //                 (Route<dynamic> route) =>
-                                    //                     false);
-                                    //       } else {
-                                    //         _showAlertDialog(context);
-                                    //       }
-                                    //     } else {
-                                    //       Helper.snackBar("Sorry :(", context);
-                                    //     }
-                                    //   });
-                                    // }
+                                   
                                   },
                                   child: Text("Login"))),
                         )

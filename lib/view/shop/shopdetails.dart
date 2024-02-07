@@ -4,7 +4,6 @@ import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/provider/donateprovider.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
-import 'package:project_petcare/view/shop/mycart.dart';
 import 'package:project_petcare/view/shop/shopBuyNow.dart';
 import 'package:project_petcare/view/shop/shopall.dart';
 import 'package:provider/provider.dart';
@@ -255,16 +254,16 @@ class _ShopDetailsState extends State<ShopDetails> {
                               backgroundColor: MaterialStatePropertyAll(
                                   ColorUtil.primaryColor)),
                           onPressed: () {
-                            if (shopProvider.isCart(widget.shop!)) {
-                              Helper.snackBar(
-                                  "The item is already on cart", context);
-                            } else {
-                              shopProvider.addToCart(widget.shop!);
-                              Helper.snackBar(
-                                "Your item has been successfully saved to your cart. Please visit My Cart.",
-                                context,
-                              );
-                            }
+                            // if (shopProvider.isCart(widget.shop!)) {
+                            //   Helper.snackBar(
+                            //       "The item is already on cart", context);
+                            // } else {
+                            //   // shopProvider.addToCart(widget.shop!);
+                            //   Helper.snackBar(
+                            //     "Your item has been successfully saved to your cart. Please visit My Cart.",
+                            //     context,
+                            //   );
+                            // }
                           },
                           child: Text('Add to cart'),
                         ),
@@ -304,7 +303,7 @@ class _ShopDetailsState extends State<ShopDetails> {
             ),
             ElevatedButton(
               onPressed: () {
-                shopProvider.addToCart(widget.shop!);
+                // shopProvider.addToCart(widget.shop!);
                 Navigator.of(context).pop();
                 Helper.snackBar(
                   "Your item has been successfully saved to your cart. Please visit My Cart.",
