@@ -23,7 +23,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     return Scaffold(
         bottomNavigationBar: CurvedNavigationBar(
           index: petcareProvider.selecedIndex,
-          height: 50.0,
+          height: 65.0,
           items: [
             _buildNavItem(Icons.home, 'Home', 0),
             _buildNavItem(Icons.shopping_bag_outlined, 'Shop', 1),
@@ -52,7 +52,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       case 1:
         return ShopAll();
       case 2:
-        return Account();
+        return MyCart();
       case 3:
         return ShopFavourite();
 

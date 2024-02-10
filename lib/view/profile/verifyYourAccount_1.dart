@@ -24,124 +24,137 @@ class _VerifyYourAccountState extends State<VerifyYourAccount> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorUtil.BackGroundColorColor,
+      appBar: AppBar(
+        title: Text("Verify your account"),
+      ),
       body: SafeArea(
         child: Consumer<PetCareProvider>(
-          builder: (context, petCareProvider, child) => Form(
+          builder: (context, petCareProvider, child) => 
+          Form(
             key: _formKey,
-            child: Column(
-              children: [
-                Container(
-                  child: Row(
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(Icons.arrow_back_ios_new)),
-                    ],
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                children: [
+                  Container(
+                      width: MediaQuery.of(context).size.width * .9,
+                      child: ShopTextForm(
+                        prefixIcon: Icon(Icons.mail_outline_sharp),
+                        labelText: "Email",
+                        onChanged: (value) {
+                          petCareProvider.emailVerify = value;
+                        },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return valiEmailStr;
+                          }
+            
+                          return null;
+                        },
+                      )),
+                  Container(
+                      width: MediaQuery.of(context).size.width * .9,
+                      child: ShopTextForm(
+                        prefixIcon: Icon(Icons.mail_outline_sharp),
+                        labelText: "Email",
+                        onChanged: (value) {
+                          petCareProvider.emailVerify = value;
+                        },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return valiEmailStr;
+                          }
+            
+                          return null;
+                        },
+                      )),
+                  Container(
+                      width: MediaQuery.of(context).size.width * .9,
+                      child: ShopTextForm(
+                        prefixIcon: Icon(Icons.mail_outline_sharp),
+                        labelText: "Email",
+                        onChanged: (value) {
+                          petCareProvider.emailVerify = value;
+                        },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return valiEmailStr;
+                          }
+            
+                          return null;
+                        },
+                      )),
+                  SizedBox(
+                    height: 20,
                   ),
-                ),
-                Container(
+                  Container(
                     width: MediaQuery.of(context).size.width * .9,
-                    child: ShopTextForm(
-                      prefixIcon: Icon(Icons.mail_outline_sharp),
-                      labelText: "Email",
-                      onChanged: (value) {
-                        petCareProvider.emailVerify = value;
-                      },
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return valiEmailStr;
+                    child: FlutterPhoneNumberField(
+                      focusNode: focusNode,
+                      initialCountryCode: "NP",
+                      pickerDialogStyle: PickerDialogStyle(
+                        countryFlagStyle: const TextStyle(fontSize: 17),
+                      ),
+                      decoration: InputDecoration(
+                        hintText: 'Phone Number',
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(),
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                      languageCode: "NP",
+                      onChanged: (phone) {
+                        print(phone);
+                        phoneNumber = phone.countryCode + phone.number;
+                        print(phoneNumber);
+                        if (kDebugMode) {
+                          print(phone.completeNumber);
                         }
-
-                        return null;
                       },
-                    )),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * .9,
-                  child: FlutterPhoneNumberField(
-                    focusNode: focusNode,
-                    initialCountryCode: "NP",
-                    pickerDialogStyle: PickerDialogStyle(
-                      countryFlagStyle: const TextStyle(fontSize: 17),
+                      onCountryChanged: (country) {
+                        if (kDebugMode) {
+                          print('Country changed to: ${country.name}');
+                        }
+                      },
                     ),
-                    decoration: InputDecoration(
-                      hintText: 'Phone Number',
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(),
-                          borderRadius: BorderRadius.circular(10)),
-                    ),
-                    languageCode: "NP",
-                    onChanged: (phone) {
-                      print(phone);
-                      phoneNumber = phone.countryCode + phone.number;
-                      print(phoneNumber);
-                      if (kDebugMode) {
-                        print(phone.completeNumber);
-                      }
-                    },
-                    onCountryChanged: (country) {
-                      if (kDebugMode) {
-                        print('Country changed to: ${country.name}');
-                      }
-                    },
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                  height: 50,
-                  width: MediaQuery.of(context).size.width * .9,
-                  child: ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          await FirebaseAuth.instance.verifyPhoneNumber(
-                            phoneNumber: phoneNumber,
-                            verificationCompleted:
-                                (PhoneAuthCredential credential) {},
-                            verificationFailed: (FirebaseAuthException e) {},
-                            codeSent:
-                                (String verificationId, int? resendToken) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => pinCodeTEst(
-                                            phoneNumber: phoneNumber,
-                                            verificationCode: verificationId,
-                                          )));
-                            },
-                            codeAutoRetrievalTimeout:
-                                (String verificationId) {},
-                          );
-
-                          //          showDialog(
-                          //     context: context,
-                          //     builder: (context){
-                          //     return AlertDialog(
-                          //         title: Text("Verification Code"),
-                          //         content: Text('Code entered is $verificationCode'),
-                          //     );
-                          //     }
-                          // );
-
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => VerificationCode()));
-                        }
-                      },
-                      child: Text("Verify")),
-                ),
-              ],
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                    height: 50,
+                    width: MediaQuery.of(context).size.width * .9,
+                    child: ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            await FirebaseAuth.instance.verifyPhoneNumber(
+                              phoneNumber: phoneNumber,
+                              verificationCompleted:
+                                  (PhoneAuthCredential credential) {},
+                              verificationFailed: (FirebaseAuthException e) {},
+                              codeSent:
+                                  (String verificationId, int? resendToken) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => pinCodeTEst(
+                                              phoneNumber: phoneNumber,
+                                              verificationCode: verificationId,
+                                            )));
+                              },
+                              codeAutoRetrievalTimeout:
+                                  (String verificationId) {},
+                            );
+                          }
+                        },
+                        child: Text("Verify")),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

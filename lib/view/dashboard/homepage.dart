@@ -4,9 +4,7 @@ import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/constSearch.dart';
 import 'package:project_petcare/helper/simmer.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
-// import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
-// import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/provider/adoptprovider.dart';
 import 'package:project_petcare/provider/categoryprovider.dart';
 import 'package:project_petcare/provider/donateprovider.dart';
@@ -22,8 +20,6 @@ import 'package:project_petcare/view/dashboard/categories.dart';
 import 'package:project_petcare/view/ourservice/ourserviceSeeMore.dart';
 import 'package:project_petcare/view/ourservice/ourservices.dart';
 import 'package:project_petcare/view/profile/account.dart';
-// import 'package:project_petcare/view/dashboard/search.dart';
-// import 'package:project_petcare/view/shop/shopFavourite.dart';
 import 'package:project_petcare/view/shop/shopdetails.dart';
 import 'package:provider/provider.dart';
 
@@ -57,6 +53,7 @@ class _HomePageState extends State<HomePage> {
   getGreeting() async {
     var petCareProvider = Provider.of<PetCareProvider>(context, listen: false);
     await petCareProvider.updateGreeting();
+    await petCareProvider.getProfilePicture();
   }
 
   getdata() async {
@@ -86,75 +83,71 @@ class _HomePageState extends State<HomePage> {
     await categoriesProvider.getCategoriesData();
   }
 
-  // getFavourite() async {
-  //   var shopProvider = Provider.of<ShopProvider>(context, listen: false);
-  //   await shopProvider.getFavoriteItemsFromFirebase();
-  // }
+  getFavourite() async {
+    var shopProvider = Provider.of<ShopProvider>(context, listen: false);
+    await shopProvider.getUser();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // var shopProvider = Provider.of<ShopProvider>(context);
-    // // List<int> shopFavouriteList = shopProvider.favouriteIndices.toList();
-    // List<Shop> favouriteItems = shopProvider.shopItemsList
-    //     .where(
-    //       (item) => shopProvider
-    //           .isFavourite(shopProvider.shopItemsList.indexOf(item)),
-    //     )
-    //     .toList();
     return Scaffold(
       backgroundColor: ColorUtil.primaryColor,
       body: SafeArea(
-        child: CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            SliverAppBar(
-              backgroundColor: ColorUtil.primaryColor,
-              // expandedHeight: favouriteItems.isNotEmpty
-                  // ? MediaQuery.of(context).size.height * .49
-                  // : 130,
-              pinned: true,
-              elevation: 0,
-              snap: true,
-              floating: true,
-              flexibleSpace: FlexibleSpaceBar(
-                centerTitle: false,
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                        "Hello ${Provider.of<SignUpProvider>(context).userName}"),
-                    Text(
-                      Provider.of<PetCareProvider>(context).greeting,
-                      style: TextStyle(fontSize: 12),
+        child: Consumer<ShopProvider>(
+          builder: (
+            context,
+            shopProvider,
+            child,
+          ) =>
+              CustomScrollView(
+            controller: _scrollController,
+            slivers: [
+              SliverAppBar(
+                backgroundColor: ColorUtil.primaryColor,
+                expandedHeight: shopProvider.favouriteList.isNotEmpty
+                    ? MediaQuery.of(context).size.height * .49
+                    : 130,
+                pinned: true,
+                elevation: 0,
+                snap: true,
+                floating: true,
+                flexibleSpace: FlexibleSpaceBar(
+                    centerTitle: false,
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                            "Hello ${Provider.of<SignUpProvider>(context).userName}"),
+                        Text(
+                          Provider.of<PetCareProvider>(context).greeting,
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ],
+                    ),
+                    background: dashHead(
+                      Provider.of<SignUpProvider>(context),
+                      context,
+                      shopProvider,
+                      Provider.of<PetCareProvider>(context),
+                    )),
+              ),
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    Consumer<OurServiceProvider>(
+                      builder: (context, ourServiceProvider, child) => ui(),
                     ),
                   ],
                 ),
-                // background: dashHead(
-                //     Provider.of<SignUpProvider>(context),
-                //     context,
-                //     Provider.of<ShopProvider>(context),
-                //     Provider.of<PetCareProvider>(
-                //       context,
-                //     )),
               ),
-            ),
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  Consumer<OurServiceProvider>(
-                    builder: (context, ourServiceProvider, child) => ui(),
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget ui() {
-   
     return ScrollConfiguration(
       behavior: MyBehavior(),
       child: SingleChildScrollView(
@@ -191,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                                         const SizedBox(
                                           height: 15,
                                         ),
-                                        // favouriteItems.isNotEmpty
+                                        // shopProvider.favouriteList.isNotEmpty
                                         //     ? Column(
                                         //         children: [
                                         //           myFavourite(
@@ -217,8 +210,16 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                         Column(
                                           children: [
-                                            Image.asset(
-                                                "assets/images/streetpets.png"),
+                                            petCareProvider.profilePicture !=
+                                                    null
+                                                ? Image.network(petCareProvider
+                                                    .profilePicture!,
+                                                    fit: BoxFit.cover,
+                                                    )
+                                                : Image.asset(
+                                                    "assets/images/streetpets.png",
+                                                     fit: BoxFit.cover,
+                                                    ),
                                             SizedBox(
                                               height: 10,
                                             )
@@ -244,272 +245,270 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Widget myFavourite(ShopProvider shopProvider) {
-  //   // var shopProvider = Provider.of<ShopProvider>(context);
-  //   // List<int> shopFavouriteList = shopProvider.favouriteIndices.toList();
-  //   // List<Shop> favouriteItems = shopProvider.shopItemsList
-  //   //     .where(
-  //   //       (item) => shopProvider
-  //   //           .isFavourite(shopProvider.shopItemsList.indexOf(item)),
-  //   //     )
-  //   //     .toList();
-  //   return shopProvider.getshopIemsUtil == StatusUtil.loading
-  //       ? SimmerEffect.shimemrForShop()
-  //       : Container(
-  //           height: MediaQuery.of(context).size.height * .325,
-  //           width: MediaQuery.of(context).size.width,
-  //           child: Padding(
-  //             padding: const EdgeInsets.symmetric(horizontal: 20),
-  //             child: Column(
-  //               children: [
-  //                 Row(
-  //                   children: [
-  //                     Text(
-  //                       "My Favourite",
-  //                       style: subTitleText,
-  //                     ),
-  //                     Spacer(),
-  //                     Text(
-  //                       "View All",
-  //                       style: TextStyle(color: ColorUtil.BackGroundColorColor),
-  //                     ),
-  //                   ],
-  //                 ),
-  //                 Expanded(
-  //                   child: Padding(
-  //                     padding: const EdgeInsets.symmetric(vertical: 5),
-  //                     child: ClipRRect(
-  //                       borderRadius: BorderRadius.circular(12),
-  //                       child: Container(
-  //                         // color: Colors.red,
-  //                         child: ListView.builder(
-  //                             scrollDirection: Axis.horizontal,
-  //                             // itemCount: shopFavouriteList.length,
-  //                             itemBuilder: (BuildContext context, int index) {
-  //                               // int itemIndex = shopProvider.shopItemsList
-  //                               //     .indexOf(favouriteItems[index]);
-  //                               return GestureDetector(
-  //                                 onTap: () {
-  //                                   Navigator.push(
-  //                                       context,
-  //                                       MaterialPageRoute(
-  //                                           builder: (context) => ShopDetails(
-  //                                                 // shop: favouriteItems[index],
-  //                                               )));
-  //                                 },
-  //                                 child: Padding(
-  //                                   padding: const EdgeInsets.only(
-  //                                     right: 25,
-  //                                   ),
-  //                                   child: ClipRRect(
-  //                                     borderRadius: BorderRadius.circular(12),
-  //                                     child: Container(
-  //                                       // height: MediaQuery.of(context).size.height*.2,
-  //                                       width:
-  //                                           MediaQuery.of(context).size.width *
-  //                                               .45,
-  //                                       color: Colors.white,
-  //                                       child: Stack(
-  //                                         children: [
-  //                                           Column(
-  //                                             crossAxisAlignment:
-  //                                                 CrossAxisAlignment.start,
-  //                                             children: [
-  //                                               Container(
-  //                                                 height: MediaQuery.of(context)
-  //                                                         .size
-  //                                                         .height *
-  //                                                     .134,
-  //                                                 width: MediaQuery.of(context)
-  //                                                     .size
-  //                                                     .width,
-  //                                                 child: ClipRRect(
-  //                                                   borderRadius:
-  //                                                       BorderRadius.circular(
-  //                                                           10),
-  //                                                   // child: Image.network(
-  //                                                   //   // favouriteItems[index]
-  //                                                   //   //     .images!,
-  //                                                   //   // fit: BoxFit.cover,
-  //                                                   // ),
-  //                                                 ),
-  //                                               ),
-  //                                               Padding(
-  //                                                 padding:
-  //                                                     const EdgeInsets.all(10),
-  //                                                 child: Container(
-  //                                                   height:
-  //                                                       MediaQuery.of(context)
-  //                                                               .size
-  //                                                               .height *
-  //                                                           .1191,
-  //                                                   // color: Colors.red,
-  //                                                   child: Column(
-  //                                                     crossAxisAlignment:
-  //                                                         CrossAxisAlignment
-  //                                                             .start,
-  //                                                     children: [
-  //                                                       Text(
-  //                                                         " ",
-  //                                                         // favouriteItems[index]
-  //                                                         //     .product!,
-  //                                                         maxLines: 1,
-  //                                                         overflow: TextOverflow
-  //                                                             .ellipsis,
-  //                                                         style: titleText,
-  //                                                       ),
-  //                                                       SizedBox(
-  //                                                         height: 5,
-  //                                                       ),
-  //                                                       Text(
-  //                                                         '',
-  //                                                         // favouriteItems[index]
-  //                                                         //     .description!,
-  //                                                         maxLines: 2,
-  //                                                         overflow: TextOverflow
-  //                                                             .ellipsis,
-  //                                                         style: textStyleMini,
-  //                                                       ),
-  //                                                       Spacer(),
-  //                                                       Row(
-  //                                                         children: [
-  //                                                           Text(
-  //                                                      '',
-  //                                                             // "Rs. ${favouriteItems[index].price!}",
-  //                                                             maxLines: 1,
-  //                                                             overflow:
-  //                                                                 TextOverflow
-  //                                                                     .ellipsis,
-  //                                                             style: titleText,
-  //                                                           ),
-  //                                                           Spacer(),
-  //                                                           ClipRRect(
-  //                                                             borderRadius:
-  //                                                                 BorderRadius
-  //                                                                     .circular(
-  //                                                                         5),
-  //                                                             child: Container(
-  //                                                               color: ColorUtil
-  //                                                                   .primaryColor,
-  //                                                               width: MediaQuery.of(
-  //                                                                           context)
-  //                                                                       .size
-  //                                                                       .width *
-  //                                                                   .06,
-  //                                                               height: MediaQuery.of(
-  //                                                                           context)
-  //                                                                       .size
-  //                                                                       .height *
-  //                                                                   .03,
-  //                                                               child: Icon(
-  //                                                                 Icons.add,
-  //                                                                 color: Colors
-  //                                                                     .white,
-  //                                                               ),
-  //                                                             ),
-  //                                                           )
-  //                                                         ],
-  //                                                       ),
-  //                                                     ],
-  //                                                   ),
-  //                                                 ),
-  //                                               ),
-  //                                             ],
-  //                                           ),
-  //                                           Positioned(
-  //                                             top: 90,
-  //                                             left: 120,
-  //                                             child: ClipRRect(
-  //                                               borderRadius:
-  //                                                   BorderRadius.circular(100),
-  //                                               child: Container(
-  //                                                 decoration: BoxDecoration(
-  //                                                     color: Colors.white,
-  //                                                     boxShadow: [
-  //                                                       BoxShadow(
-  //                                                         color: Colors.black
-  //                                                             .withOpacity(
-  //                                                                 0.9), // Shadow color
-  //                                                         offset: Offset(6,
-  //                                                             0), // Offset in x and y directions
-  //                                                         blurRadius:
-  //                                                             10, // Blur radius
-  //                                                         spreadRadius: 6,
-  //                                                       )
-  //                                                     ]),
-  //                                                 height: 30,
-  //                                                 width: 30,
-  //                                                 // child: Align(
-  //                                                 //   alignment: Alignment.center,
-  //                                                 //   child: Transform.translate(
-  //                                                 //     offset: Offset(-5, -5),
-  //                                                 //     child: IconButton(
-  //                                                 //         onPressed: () {
-  //                                                 //           shopProvider
-  //                                                 //               .toggleFavouriteStatus(
-  //                                                 //                   itemIndex);
-  //                                                 //         },
-  //                                                 //         icon: Icon(
-  //                                                 //             shopProvider.isFavourite(
-  //                                                 //                     itemIndex)
-  //                                                 //                 ? Icons
-  //                                                 //                     .favorite
-  //                                                 //                 : Icons
-  //                                                 //                     .favorite_border_rounded,
-  //                                                 //             color: shopProvider
-  //                                                 //                     .isFavourite(
-  //                                                 //                         itemIndex)
-  //                                                 //                 ? Colors.red
-  //                                                 //                 : Colors
-  //                                                 //                     .white)),
-  //                                                 //   ),
-  //                                                 // ),
-  //                                               ),
-  //                                             ),
-  //                                           ),
-  //                                         ],
-  //                                       ),
-  //                                     ),
-  //                                   ),
-  //                                 ),
-  //                               );
-  //                             }),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 )
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  // }
+  Widget myFavourite(ShopProvider shopProvider) {
 
-  // Widget dashHead(SignUpProvider signUpProvider, BuildContext context,
-  //     ShopProvider shopProvider, PetCareProvider petCareProvider) {
-  //   // var shopProvider = Provider.of<ShopProvider>(context);
-  //   // // List<int> shopFavouriteList = shopProvider.favouriteIndices.toList();
-  //   // List<Shop> favouriteItems = shopProvider.shopItemsList
-  //   //     .where(
-  //   //       (item) => shopProvider
-  //   //           .isFavourite(shopProvider.shopItemsList.indexOf(item)),
-  //   //     )
-  //   //     .toList();
-  //   return Container(
-  //       // height: 190,
-  //       child: favouriteItems.isNotEmpty
-  //           ? Column(
-  //               children: [
-  //                 dashAppBar(
-  //                     signUpProvider, petCareProvider, context, shopProvider),
-  //                 SizedBox(
-  //                   height: 15,
-  //                 ),
-  //                 myFavourite(shopProvider)
-  //               ],
-  //             )
-  //           : dashAppBar(
-  //               signUpProvider, petCareProvider, context, shopProvider));
-  // }
+
+    return shopProvider.getshopIemsUtil == StatusUtil.loading
+        ? SimmerEffect.shimemrForShop()
+        : Container(
+            height: MediaQuery.of(context).size.height * .325,
+            width: MediaQuery.of(context).size.width,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        "My Favourite",
+                        style: subTitleText,
+                      ),
+                      Spacer(),
+                      Text(
+                        "View All",
+                        style: TextStyle(color: ColorUtil.BackGroundColorColor),
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Container(
+                          // color: Colors.red,
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: shopProvider.favouriteList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                // int itemIndex = shopProvider.shopItemsList
+                                //     .indexOf(favouriteItems[index]);
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => ShopDetails(
+                                                  shop: shopProvider
+                                                      .favouriteList[index],
+                                                )));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      right: 25,
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Container(
+                                        // height: MediaQuery.of(context).size.height*.2,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .45,
+                                        color: Colors.white,
+                                        child: Stack(
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      .134,
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    child: Image.network(
+                                                      shopProvider
+                                                          .favouriteList[index]
+                                                          .images!,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(10),
+                                                  child: Container(
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            .1191,
+                                                    // color: Colors.red,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          // " ",
+                                                          shopProvider
+                                                              .favouriteList[
+                                                                  index]
+                                                              .product!,
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: titleText,
+                                                        ),
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          '',
+                                                          // favouriteItems[index]
+                                                          //     .description!,
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: textStyleMini,
+                                                        ),
+                                                        Spacer(),
+                                                        Row(
+                                                          children: [
+                                                            Text(
+                                                              "Rs. ${shopProvider.favouriteList[index].price!}",
+                                                              maxLines: 1,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: titleText,
+                                                            ),
+                                                            Spacer(),
+                                                            ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5),
+                                                              child: Container(
+                                                                color: ColorUtil
+                                                                    .primaryColor,
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    .06,
+                                                                height: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .height *
+                                                                    .03,
+                                                                child: Icon(
+                                                                  Icons.add,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Positioned(
+                                              top: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  .3,
+                                              left: 120,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(100),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.black
+                                                              .withOpacity(
+                                                                  0.9), // Shadow color
+                                                          offset: Offset(6,
+                                                              0), // Offset in x and y directions
+                                                          blurRadius:
+                                                              10, // Blur radius
+                                                          spreadRadius: 6,
+                                                        )
+                                                      ]),
+                                                  height: 30,
+                                                  width: 30,
+                                                  child: Align(
+                                                    alignment: Alignment.center,
+                                                    child: Transform.translate(
+                                                      offset: Offset(-5, -5),
+                                                      child: IconButton(
+                                                          onPressed: () async {
+                                                            shopProvider
+                                                                .updateFavouriteList(
+                                                                    shopProvider
+                                                                            .favouriteList[
+                                                                        index]);
+                                                          },
+                                                          icon: Icon(
+                                                              shopProvider.checkFavourite(
+                                                                      shopProvider.favouriteList[
+                                                                          index])
+                                                                  ? Icons
+                                                                      .favorite
+                                                                  : Icons
+                                                                      .favorite_border_rounded,
+                                                              color: shopProvider.checkFavourite(
+                                                                      shopProvider
+                                                                              .favouriteList[
+                                                                          index])
+                                                                  ? Colors.red
+                                                                  : Colors
+                                                                      .white)),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+  }
+
+  Widget dashHead(SignUpProvider signUpProvider, BuildContext context,
+      ShopProvider shopProvider, PetCareProvider petCareProvider) {
+    return Container(
+        // height: 190,
+        child: shopProvider.favouriteList.isNotEmpty
+            ? Column(
+                children: [
+                  dashAppBar(
+                      signUpProvider, petCareProvider, context, shopProvider),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  myFavourite(
+                    shopProvider,
+                  )
+                ],
+              )
+            : dashAppBar(
+                signUpProvider, petCareProvider, context, shopProvider));
+  }
 
   Widget dashAppBar(
       SignUpProvider signUpProvider,
@@ -540,9 +539,20 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => Account()));
                 },
-                child: const CircleAvatar(
-                  radius: 25,
-                  backgroundImage: AssetImage("assets/images/emptypp.png"),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: Container(
+                    height: 55,
+                    width: 55,
+                    child: petCareProvider.profilePicture != null
+                        ? Image.network(
+                            petCareProvider.profilePicture!,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.asset("assets/images/emptypp.png",
+                         fit: BoxFit.cover,
+                        ),
+                  ),
                 ),
               )
             ],

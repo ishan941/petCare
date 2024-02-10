@@ -23,6 +23,7 @@ class YourProfession extends StatefulWidget {
 class _YourProfessionState extends State<YourProfession> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<String> professionList = ["Shop", "Medical", "Trainer"];
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +67,7 @@ class _YourProfessionState extends State<YourProfession> {
                             return null;
                           },
                           onChanged: (val) {
-                            ourServiceProvider.fullname = val;
+                            ourServiceProvider.userName = val;
                           },
                         ),
                         SizedBox(

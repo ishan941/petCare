@@ -65,7 +65,7 @@ class _OurServicesMoreState extends State<OurServicesMore>
             backgroundColor: ColorUtil.BackGroundColorColor,
             iconTheme: const IconThemeData.fallback(),
             title: Text(
-              (widget.dashService!.service!),
+              (widget.dashService!.service ?? ""),
               style: const TextStyle(color: Colors.black),
             ),
             centerTitle: true,
@@ -293,7 +293,7 @@ class _OurServicesMoreState extends State<OurServicesMore>
                                                     size: 15,
                                                   ),
                                                   Text(
-                                                    " -  ${filteredList[index].phone!}",
+                                                    " -  ${filteredList[index].phone ?? ""}",
                                                     style: textStyleSmallSized,
                                                   ),
                                                 ],
@@ -305,7 +305,7 @@ class _OurServicesMoreState extends State<OurServicesMore>
                                                     size: 15,
                                                   ),
                                                   Text(
-                                                      " -  ${filteredList[index].email!}",
+                                                      " -  ${filteredList[index].email ??""}",
                                                       style:
                                                           textStyleSmallSized),
                                                 ],

@@ -18,7 +18,7 @@ class ShopDetails extends StatefulWidget {
 }
 
 class _ShopDetailsState extends State<ShopDetails> {
-  int _currentIndex = 0;
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -254,16 +254,9 @@ class _ShopDetailsState extends State<ShopDetails> {
                               backgroundColor: MaterialStatePropertyAll(
                                   ColorUtil.primaryColor)),
                           onPressed: () {
-                            // if (shopProvider.isCart(widget.shop!)) {
-                            //   Helper.snackBar(
-                            //       "The item is already on cart", context);
-                            // } else {
-                            //   // shopProvider.addToCart(widget.shop!);
-                            //   Helper.snackBar(
-                            //     "Your item has been successfully saved to your cart. Please visit My Cart.",
-                            //     context,
-                            //   );
-                            // }
+                            // shopProvider.updateCartList(
+                            //    widget.shop!);
+                            _showAlertDialog(context, shopProvider);
                           },
                           child: Text('Add to cart'),
                         ),
@@ -279,7 +272,10 @@ class _ShopDetailsState extends State<ShopDetails> {
     );
   }
 
-  void _showAlertDialog(BuildContext context, ShopProvider shopProvider) {
+  void _showAlertDialog(
+    BuildContext context,
+    ShopProvider shopProvider,
+  ) {
     showDialog(
       context: context,
       builder: (
@@ -303,12 +299,17 @@ class _ShopDetailsState extends State<ShopDetails> {
             ),
             ElevatedButton(
               onPressed: () {
-                // shopProvider.addToCart(widget.shop!);
-                Navigator.of(context).pop();
-                Helper.snackBar(
-                  "Your item has been successfully saved to your cart. Please visit My Cart.",
-                  context,
-                );
+                if (shopProvider.shopCartList.contains(widget.shop)) {
+                  Helper.snackBar("Already on the Cart", context);
+                  Navigator.pop(context);
+                } else {
+                  shopProvider.updateCartList(widget.shop!);
+                  Navigator.of(context).pop();
+                  Helper.snackBar(
+                    "Your item has been successfully saved to your cart. Please visit My Cart.",
+                    context,
+                  );
+                }
               },
               child: Text("Add to Cart"),
             ),

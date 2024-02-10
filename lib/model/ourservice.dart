@@ -1,3 +1,6 @@
+import 'package:project_petcare/provider/petcareprovider.dart';
+import 'package:project_petcare/provider/signUpProvider.dart';
+
 class OurService {
   String? profession;
   String? fullname;
@@ -12,7 +15,10 @@ class OurService {
   String? shopLocation;
   String? shopName;
 
-  OurService({this.profession, this.location, this.description, this.shopName, this.shopLocation, this.profilePicture, this.fullname, this.phone, this.email, this.medical, this.shop,this.trainner});
+  OurService({this.profession, this.location, this.description, this.shopName, this.shopLocation, this.profilePicture, this.fullname, this.phone, this.email, this.medical, this.shop,this.trainner,
+  SignUpProvider? signUpProvider,
+  PetCareProvider? petCareProvider
+  });
 
   OurService.fromJson(Map<String, dynamic> json) {
     profession = json['profession'];

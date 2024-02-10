@@ -27,7 +27,7 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                     Navigator.pop(context);
                   },
                   icon: Icon(Icons.arrow_back_ios_new)),
-                  Text(widget.ourService!.fullname!,
+                  Text(widget.ourService!.fullname ?? "",
                 style: subTitleText,
                 ),
             ],
@@ -38,7 +38,7 @@ class _ServiceDetailsState extends State<ServiceDetails> {
               borderRadius: BorderRadius.circular(12),
               child: Container(
                 child: Image.network(
-                  widget.ourService!.profilePicture!,
+                  widget.ourService!.profilePicture ?? "Image Not available",
                   fit: BoxFit.cover,
                 ),
                 height: MediaQuery.of(context).size.height * .4,
@@ -53,7 +53,7 @@ class _ServiceDetailsState extends State<ServiceDetails> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 
-                Text(widget.ourService!.profession!),
+                Text(widget.ourService!.profession ?? ""),
                 SizedBox(height: 15,),
                 Text("About",
                 style: mainTitleText,

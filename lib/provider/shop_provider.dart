@@ -23,24 +23,13 @@ class ShopProvider extends ChangeNotifier {
       negotiable,
       id;
   XFile? image;
-bool isFromFav=false;
+  bool isFromFav = false;
+  bool isFromCart = false;
   SignUp? signUp;
-  List<Shop> favouriteList=[];
+  List<Shop> favouriteList = [];
+  List<Shop> shopCartList = [];
 
   List<Shop> shopItemsList = [];
-  
-  // List<Shop> shopFavouriteList = [];
-
-  // Set<int> _favouriteIndices = {};
-
-  // Set<int> get favouriteIndices => _favouriteIndices;
-  
-
-  // bool isFavourite(int index) {
-  //   return favouriteIndices.contains(index);
-  // }
-
-  
 
   double _per = 0.0;
   double get per => _per;
@@ -49,17 +38,12 @@ bool isFromFav=false;
     notifyListeners();
   }
 
-
-
- 
-
   StatusUtil _shopItems = StatusUtil.idle;
   StatusUtil _uploadImageForShop = StatusUtil.idle;
   StatusUtil _getshopItemsUtil = StatusUtil.idle;
   StatusUtil _shopFavouriteUtil = StatusUtil.idle;
   StatusUtil _deleteFavouriteUtil = StatusUtil.idle;
   StatusUtil _getUserStatus = StatusUtil.idle;
-
 
   StatusUtil get shopIetms => _shopItems;
   StatusUtil get uploadImageInFireBase => _uploadImageForShop;
@@ -72,7 +56,8 @@ bool isFromFav=false;
     _shopItems = statusUtil;
     notifyListeners();
   }
-   setUserStatus(StatusUtil statusUtil) {
+
+  setUserStatus(StatusUtil statusUtil) {
     _getUserStatus = statusUtil;
     notifyListeners();
   }
@@ -97,29 +82,35 @@ bool isFromFav=false;
     notifyListeners();
   }
 
-  setFavourite(bool value){
-isFromFav=value;
-notifyListeners();
+  setFavourite(bool value) {
+    isFromFav = value;
+    notifyListeners();
   }
-  
+
+  setShopCart(bool value) {
+    isFromCart = value;
+    notifyListeners();
+  }
 
   setId(String id) {
     this.id = id;
   }
 
- 
-
-  Future<void> getUser()async{
-     if (_getUserStatus != StatusUtil.loading) {
+  Future<void> getUser() async {
+    if (_getUserStatus != StatusUtil.loading) {
       setUserStatus(StatusUtil.loading);
     }
     try {
       var response = await petCareService.getUserByEmail();
       if (response.statusUtil == StatusUtil.success) {
         signUp = response.data;
-        if(signUp?.favourite!=null){
-          List<dynamic> decodedList =jsonDecode(signUp!.favourite ?? "");
-          favouriteList=decodedList.map((e) =>Shop.fromJson(e)).toList();
+        if (signUp?.favourite != null) {
+          List<dynamic> decodedList = jsonDecode(signUp!.favourite ?? "");
+          favouriteList = decodedList.map((e) => Shop.fromJson(e)).toList();
+        }
+        if (signUp?.shopCart != null) {
+          List<dynamic> decodedList = jsonDecode(signUp!.shopCart ?? "");
+          shopCartList = decodedList.map((e) => Shop.fromJson(e)).toList();
         }
         setUserStatus(StatusUtil.success);
       } else if (response.statusUtil == StatusUtil.error) {
@@ -132,100 +123,83 @@ notifyListeners();
       print("Exception while fetching shop items: $errorMessage");
       setUserStatus(StatusUtil.error);
     }
-
   }
 
- 
+  bool checkFavourite(Shop shop) {
+    return favouriteList.contains(shop);
+  }
 
-bool  checkFavourite(Shop shop){
- return favouriteList.contains(shop);
-}
-
-  Future<void> updateFavouriteList(Shop shop) async{
-     FireResponse response;
-     String? favoriteToJson;
-     print(checkFavourite(shop));
-    if(checkFavourite(shop)){
+  Future<void> updateFavouriteList(Shop shop) async {
+    FireResponse response;
+    String? favoriteToJson;
+    print(checkFavourite(shop));
+    if (checkFavourite(shop)) {
       favouriteList.remove(shop);
       notifyListeners();
-     favoriteToJson=jsonEncode(favouriteList.map((e) =>e.toJson()).toList());
-
-    }else{
+      favoriteToJson =
+          jsonEncode(favouriteList.map((e) => e.toJson()).toList());
+    } else {
       favouriteList.add(shop);
-      favoriteToJson=jsonEncode(favouriteList.map((e) =>e.toJson()).toList());
+      favoriteToJson =
+          jsonEncode(favouriteList.map((e) => e.toJson()).toList());
     }
-      signUp?.favourite=favoriteToJson;
+    signUp?.favourite = favoriteToJson;
 
-   response = await petCareService.updateFavourite(signUp!);
-   if(response.statusUtil==StatusUtil.success){
-    setFavourite(true);
-   await  itemDetails();
-
-   }
-     
-  }
-
-
-  Future<void> deleteFavourite(String id) async {
-    if (_deleteFavouriteUtil != StatusUtil.loading) {
-      setDeleteFavourite(StatusUtil.loading);
-    }
-    try {
-      FireResponse response = await petCareService.removeShopFavourite(id);
-      if (response.statusUtil == StatusUtil.success) {
-        setDeleteFavourite(StatusUtil.success);
-      }
-    } catch (e) {
-      errorMessage = e.toString();
-      setDeleteFavourite(StatusUtil.error);
+    response = await petCareService.updateFavourite(signUp!);
+    if (response.statusUtil == StatusUtil.success) {
+      setFavourite(true);
+      await itemDetails();
     }
   }
 
-  // void toggleFavouriteStatus(int index) async {
-  //   String id = shopItemsList[index].id!;
+  bool checkCart(Shop shop) {
+    return shopCartList.contains(shop);
+  }
 
-  //   try {
-  //     if (favouriteIndices.contains(index)) {
-  //       await petCareService.removeShopFavourite(id);
-  //     } else {
-  //       await petCareService.saveShopFavourite(shopItemsList[index]);
-  //     }
+  Future<void> updateCartList(Shop shop) async {
+    FireResponse response;
+    String? shopCartToJson;
 
-  //     favouriteIndices.contains(index)
-  //         ? favouriteIndices.remove(index)
-  //         : favouriteIndices.add(index);
+    shopCartList.add(shop);
+    shopCartToJson = jsonEncode(shopCartList.map((e) => e.toJson()).toList());
 
-  //     setShopFavouriteUtil(StatusUtil.success);
-  //     setDeleteFavourite(StatusUtil.success);
-  //   } catch (e) {
-  //     errorMessage = e.toString();
-  //     setShopFavouriteUtil(StatusUtil.error);
-  //     setDeleteFavourite(StatusUtil.error);
-  //   }
-
-  //   notifyListeners();
-  // }
-
-
-  Future<void> getFavoriteItemsFromFirebase() async {
-    try {
-      FireResponse response = await petCareService.getShopFavourite();
-      if (response.statusUtil == StatusUtil.success) {
-       favouriteList = response.data;
-      } else {
-        errorMessage = response.errorMessage;
-        setShopFavouriteUtil(StatusUtil.error);
-        // or handle the error accordingly
-      }
-    } catch (e) {
-      errorMessage = e.toString();
-      setShopFavouriteUtil(StatusUtil.error);
-
+    signUp?.shopCart = shopCartToJson;
+    response = await petCareService.updateCart(signUp!);
+    if (response.statusUtil == StatusUtil.success) {
+      setShopCart(true);
+      await itemDetails();
     }
   }
 
+  Future<void> removeCart(Shop shop) async {
+    String shopCartToJson;
+    shopCartList.remove(shop);
+    notifyListeners();
+    shopCartToJson = jsonEncode(shopCartList.map((e) => e.toJson()).toList());
+    signUp?.shopCart = shopCartToJson;
 
+    FireResponse response = await petCareService.updateCart(signUp!);
+    if (response.statusUtil == StatusUtil.success) {
+      setShopCart(true);
+      await itemDetails();
+    }
+  }
 
+  Future<void> removeFavourite(Shop shop) async {
+    String? favoriteToJson;
+
+    favouriteList.remove(shop);
+    notifyListeners();
+
+    favoriteToJson = jsonEncode(favouriteList.map((e) => e.toJson()).toList());
+    signUp?.shopCart = favoriteToJson;
+
+    FireResponse response = await petCareService.updateFavourite(signUp!);
+    if (response.statusUtil == StatusUtil.success) {
+      setFavourite(true);
+      await itemDetails();
+    }
+  }
 
   Future<void> itemDetails() async {
     if (_getshopItemsUtil != StatusUtil.loading && !isFromFav) {

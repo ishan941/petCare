@@ -5,45 +5,55 @@ import 'package:image_picker/image_picker.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/model/dashservice.dart';
 import 'package:project_petcare/model/ourservice.dart';
+import 'package:project_petcare/provider/petcareprovider.dart';
+import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/response/response.dart';
 import 'package:project_petcare/service/petcareimpl.dart';
 import 'package:project_petcare/service/petcareserivce.dart';
+import 'package:provider/provider.dart';
 
 class OurServiceProvider extends ChangeNotifier {
+  SignUpProvider signUpProvider = SignUpProvider();
+  PetCareProvider petCareProvider = PetCareProvider();
   String? errorMessage;
   String? service;
   String? medical, shop, trainner;
   String? shopLocation, shopName;
   String? cpimageUrl, ppimageUrl, profilePictureUrl;
-  String? profession, fullname, phone, email, description;
+  String? profession, phone, email, description;
   String? chosenProfession;
   XFile? cpimage, ppimage, profilePicture;
   List<DashService> dashServiceList = [];
   List<OurService> professionDataList = [];
-  
+
+  String? userName;
+
   List<OurService> filterByProfession(String chosenProfession) {
-    return professionDataList.where((data) => data.profession == chosenProfession).toList();
+    return professionDataList
+        .where((data) => data.profession == chosenProfession)
+        .toList();
   }
-  
-List<OurService> _filteredProfessionData =[];
 
-List<OurService> get filteredProfessionData => _filteredProfessionData;
+  List<OurService> _filteredProfessionData = [];
 
-setFilteredProfessionData(List<OurService> filteredData){
-  _filteredProfessionData =filteredData;
-  notifyListeners();
-}
-setChosenProfession(String profession){
-  chosenProfession = profession;
-  notifyListeners();
-}
+  List<OurService> get filteredProfessionData => _filteredProfessionData;
+
+  setFilteredProfessionData(List<OurService> filteredData) {
+    _filteredProfessionData = filteredData;
+    notifyListeners();
+  }
+
+  setChosenProfession(String profession) {
+    chosenProfession = profession;
+    notifyListeners();
+  }
+
   PetCareService petCareService = PetCareImpl();
 
   StatusUtil _dashServiceUtil = StatusUtil.idle;
   StatusUtil _profilePictureUtil = StatusUtil.idle;
   StatusUtil _professionUtil = StatusUtil.idle;
   StatusUtil _getProfessionUtil = StatusUtil.idle;
-  
 
   StatusUtil get dashServiceUtil => _dashServiceUtil;
   StatusUtil get profilePictureUtil => _profilePictureUtil;
@@ -78,18 +88,19 @@ setChosenProfession(String profession){
     try {
       await uploadProfilePictureInFireBase();
       OurService ourService = OurService(
+        signUpProvider: signUpProvider,
+        petCareProvider: petCareProvider,
         profession: profession,
-        fullname: fullname,
-        email: email,
-        phone: phone,
+        fullname: signUpProvider.fullName,
+        email: signUpProvider.userEmail,
+        phone: signUpProvider.userPhone,
         medical: medical,
         shop: shop,
         shopLocation: shopLocation,
         shopName: shopName,
         trainner: trainner,
-        profilePicture: profilePictureUrl,
-        description:description,
-        
+        profilePicture: petCareProvider.profilePicture ?? profilePictureUrl,
+        description: description,
       );
 
       FireResponse response =

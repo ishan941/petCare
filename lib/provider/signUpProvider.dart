@@ -23,6 +23,7 @@ class SignUpProvider extends ChangeNotifier {
   String fullName = "";
   String userEmail = "";
   String userPhone = "";
+  // String userImage = "";
   PetCareService petCareService = PetCareImpl();
 
   StatusUtil _signUpUtil = StatusUtil.idle,
@@ -80,6 +81,7 @@ class SignUpProvider extends ChangeNotifier {
         fullName = response.data['name'];
         userEmail = response.data['email'];
         userPhone = response.data['phone'];
+        // userImage = response.data['userImage'];
         saveUserToSharedPreferences();
         setLoginUtil(StatusUtil.success);
         notifyListeners();
@@ -106,6 +108,8 @@ class SignUpProvider extends ChangeNotifier {
     prefs.setString("fullName", fullName);
     prefs.setString('userEmail', userEmail);
     prefs.setString("userPhone", userPhone);
+    // prefs.setString("userImage", userImage);
+
   }
 
   Future<void> initilizedProvider() async {
@@ -119,6 +123,8 @@ class SignUpProvider extends ChangeNotifier {
     userName = nameParts.isNotEmpty ? nameParts.first : 'User';
     userEmail = prefs.getString('userEmail') ?? 'Email';
     userPhone = prefs.getString("userPhone") ?? "Phone";
+    // userImage = prefs.getString("userImage") ?? "userImage";
+
     notifyListeners();
   }
 

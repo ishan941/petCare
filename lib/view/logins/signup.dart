@@ -30,165 +30,164 @@ class _SignUpPageState extends State<SignUpPage> {
           builder: (context, petcareProvider, child) => SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(
-                  height: 90,
-                ),
                 Form(
                   key: _formKey,
                   child: Column(
                     children: [
-                      Column(
-                        children: [
-                          Center(
-                            child: SizedBox(
-                                height: 120,
-                                child: Image.asset(
-                                    "assets/images/Screenshot_2023-12-15_at_18.50.26-removebg-preview.png")),
-                          ),
-                          Text(
-                            "Create an account",
-                            style: TextStyle(fontSize: 25),
-                          ),
+                      SizedBox(height: MediaQuery.of(context).size.height*.1,),
+                      SizedBox(
+                          height:
+                              MediaQuery.of(context).size.height * .2,
+                          child: Image.asset(
+                              "assets/images/petcareLogi.png")),
+                      Text(
+                        "Create an account",
+                        style: TextStyle(fontSize: 25),
+                      ),
 
-                          //name
-                          CustomForm(
-                            onChanged: (value) {
-                              signUpProvider.name = value;
-                            },
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Please enter your name";
+                      //name
+                      CustomForm(
+                        onChanged: (value) {
+                          signUpProvider.name = value;
+                        },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Please enter your name";
+                          }
+                          return null;
+                        },
+                        prefixIcon: Icon(Icons.person),
+                        hintText: "Full Name",
+                      ),
+                      //phone
+                      CustomForm(
+                        onChanged: (value) {
+                          signUpProvider.phone = value;
+                        },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Please enter your contact number";
+                          }
+                          return null;
+                        },
+                        prefixIcon: Icon(Icons.phone),
+                        hintText: "Contact Number",
+                      ),
+                      //email
+                      CustomForm(
+                        onChanged: (value) {
+                          signUpProvider.email = value;
+                        },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Please enter your email";
+                          }
+                          return null;
+                        },
+                        prefixIcon: Icon(Icons.email),
+                        hintText: "Email",
+                      ),
+                      //password
+                      CustomForm(
+                        onChanged: (value) {
+                          signUpProvider.password = value;
+                        },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Please enter your password";
+                          }
+                          return null;
+                        },
+                        obscureText:
+                            petcareProvider.showPassword ? true : false,
+                        prefixIcon: Icon(Icons.lock),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              if (petcareProvider.showPassword) {
+                                petcareProvider
+                                    .setPasswordVisibility(false);
+                              } else {
+                                petcareProvider
+                                    .setPasswordVisibility(true);
                               }
-                              return null;
                             },
-                            prefixIcon: Icon(Icons.person),
-                            hintText: "Full Name",
-                          ),
-                          //phone
-                          CustomForm(
-                            onChanged: (value) {
-                              signUpProvider.phone = value;
-                            },
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Please enter your contact number";
+                            icon: Icon(petcareProvider.showPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility)),
+                        hintText: "Password",
+                      ),
+                      //confirm password
+                      CustomForm(
+                        obscureText: petcareProvider.confirmPassword
+                            ? true
+                            : false,
+                        onChanged: (value) {
+                          signUpProvider.password = value;
+                        },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Please enter your Password";
+                          }
+                          // else if (value == password){
+                          //   return "Password doesn't match";
+                          // }
+                          return null;
+                        },
+                        prefixIcon: Icon(Icons.lock),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              if (petcareProvider.confirmPassword) {
+                                petcareProvider
+                                    .setPasswordVisibility2(false);
+                              } else {
+                                petcareProvider
+                                    .setPasswordVisibility2(true);
                               }
-                              return null;
                             },
-                            prefixIcon: Icon(Icons.phone),
-                            hintText: "Contact Number",
-                          ),
-                          //email
-                          CustomForm(
-                            onChanged: (value) {
-                              signUpProvider.email = value;
-                            },
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Please enter your email";
-                              }
-                              return null;
-                            },
-                            prefixIcon: Icon(Icons.email),
-                            hintText: "Email",
-                          ),
-                          //password
-                          CustomForm(
-                            onChanged: (value) {
-                              signUpProvider.password = value;
-                            },
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Please enter your password";
-                              }
-                              return null;
-                            },
-                            obscureText:
-                                petcareProvider.showPassword ? true : false,
-                            prefixIcon: Icon(Icons.lock),
-                            suffixIcon: IconButton(
-                                onPressed: () {
-                                  if (petcareProvider.showPassword) {
-                                    petcareProvider
-                                        .setPasswordVisibility(false);
-                                  } else {
-                                    petcareProvider.setPasswordVisibility(true);
-                                  }
-                                },
-                                icon: Icon(petcareProvider.showPassword
-                                    ? Icons.visibility_off
-                                    : Icons.visibility)),
-                            hintText: "Password",
-                          ),
-                          //confirm password
-                          CustomForm(
-                            obscureText:
-                                petcareProvider.confirmPassword ? true : false,
-                            onChanged: (value) {
-                              signUpProvider.password = value;
-                            },
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Please enter your Password";
-                              }
-                              // else if (value == password){
-                              //   return "Password doesn't match";
-                              // }
-                              return null;
-                            },
-                            prefixIcon: Icon(Icons.lock),
-                            suffixIcon: IconButton(
-                                onPressed: () {
-                                  if (petcareProvider.confirmPassword) {
-                                    petcareProvider
-                                        .setPasswordVisibility2(false);
-                                  } else {
-                                    petcareProvider
-                                        .setPasswordVisibility2(true);
-                                  }
-                                },
-                                icon: Icon(petcareProvider.confirmPassword
-                                    ? Icons.visibility_off_outlined
-                                    : Icons.visibility)),
-                            hintText: "Confirm Password",
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Container(
-                              decoration: BoxDecoration(boxShadow: [
-                                BoxShadow(
-                                  // spreadRadius: 5,
-                                  color: Colors.grey.withOpacity(0.5),
-                                  blurRadius: 10,
-                                  offset: Offset(6, 6),
-                                ),
-                              ]),
-                              height: 60,
-                              width: MediaQuery.of(context).size.width * 0.9,
-                              child: ElevatedButton(
-                                  onPressed: () async {
-                                    await signUpProvider
-                                        .sendUserLoginValueToFireBase();
-                                    if (signUpProvider.signUpUtil ==
-                                        StatusUtil.success) {
-                                      Helper.snackBar(
-                                          successfullySavedStr, context);
-                                      Navigator.of(context).pushAndRemoveUntil(
+                            icon: Icon(petcareProvider.confirmPassword
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility)),
+                        hintText: "Confirm Password",
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          decoration: BoxDecoration(boxShadow: [
+                            BoxShadow(
+                              // spreadRadius: 5,
+                              color: Colors.grey.withOpacity(0.5),
+                              blurRadius: 10,
+                              offset: Offset(6, 6),
+                            ),
+                          ]),
+                          height: 60,
+                          width:
+                              MediaQuery.of(context).size.width * 0.9,
+                          child: ElevatedButton(
+                              onPressed: () async {
+                                await signUpProvider
+                                    .sendUserLoginValueToFireBase();
+                                if (signUpProvider.signUpUtil ==
+                                    StatusUtil.success) {
+                                  Helper.snackBar(
+                                      successfullySavedStr, context);
+                                  Navigator.of(context)
+                                      .pushAndRemoveUntil(
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   LoginPage()),
-                                          (Route<dynamic> route) => false);
-                                    } else {
-                                      Helper.snackBar(failedToSaveStr, context);
-                                    }
-                                  },
-                                  child: Text('Submit')),
-                            ),
-                          ),
-                        ],
+                                          (Route<dynamic> route) =>
+                                              false);
+                                } else {
+                                  Helper.snackBar(
+                                      failedToSaveStr, context);
+                                }
+                              },
+                              child: Text('Submit')),
+                        ),
                       ),
                       Row(
                         mainAxisSize: MainAxisSize.min,

@@ -79,12 +79,12 @@ class _VerificationTestState extends State<VerificationTest> {
                         SizedBox(
                           height: 15,
                         ),
-                        ShopTextForm(
-                          hintText: "Image",
-                          onChanged: (value) {
-                            petCareProvider.userImage = value;
-                          },
-                        ),
+                        // ShopTextForm(
+                        //   hintText: "Image",
+                        //   onChanged: (value) {
+                        //     petCareProvider.userImage = value;
+                        //   },
+                        // ),
                         SizedBox(
                           height: 15,
                         ),

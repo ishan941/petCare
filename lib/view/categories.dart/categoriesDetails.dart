@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:project_petcare/helper/constBread.dart';
+import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/model/categories.dart';
-import 'package:project_petcare/provider/categoryprovider.dart';
-import 'package:provider/provider.dart';
+
+enum PetCategory {
+  Dog,
+  Cat,
+  Fish,
+  Parrot,
+}
 
 class CategoriesDetails extends StatefulWidget {
   final Categories? categories;
@@ -14,41 +20,71 @@ class CategoriesDetails extends StatefulWidget {
 }
 
 class _CategoriesDetailsState extends State<CategoriesDetails> {
-  String? selectedCatBreed, selectedDogBreed, selectedFishBreed;
+  String? selectedBreed;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<CategoriesProvider>(
-        builder: (context, categoriesProvider, child) => Column(
-          children: [
-            Container(
-              height: 100,
-            ),
-            Container(
-              child: Column(
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 300.0,
+            floating: false,
+            pinned: true,
+            backgroundColor: Colors.white,
+            elevation: 0,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(
+                widget.categories!.categoriesName!,
+                style: TextStyle(fontSize: 16, color: ColorUtil.primaryColor),
+              ),
+              background: Stack(
+                fit: StackFit.expand,
                 children: [
-                  Image.network(widget.categories!.categoriesImage!),
-                  Text(widget.categories!.categoriesName!),
-                  _buildCategoryContent(widget.categories!.categoriesName!),
+                  Image.network(
+                    widget.categories!.categoriesImage!,
+                    fit: BoxFit.cover,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.7),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            )
-          ],
-        ),
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                _buildCategoryContent(),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildCategoryContent(String category) {
-    if (category == "Dog") {
-      return _categoryDog();
-    } else if (category == "Cat") {
-      return _categoryCat();
-    } else if (category == "Fish") {
-      return _categoryFish();
-    } else {
-      return Text("Unknown category");
+  Widget _buildCategoryContent() {
+    switch (widget.categories!.categoriesName) {
+      case "Dog":
+        return _categoryDog();
+      case "Cat":
+        return _categoryCat();
+      case "Fish":
+        return _categoryFish();
+      case "Parrot":
+        return _categoryParrot();
+      default:
+        return Text("Unknown category");
     }
   }
 
@@ -56,21 +92,7 @@ class _CategoriesDetailsState extends State<CategoriesDetails> {
     return Column(
       children: [
         Text("Dog-specific content"),
-        DropdownButton<String>(
-          hint: Text("Select a dog breed"),
-          value: selectedDogBreed,
-          onChanged: (value) {
-            setState(() {
-              selectedDogBreed = value!;
-            });
-          },
-          items: dogBreedList.map((breed) {
-            return DropdownMenuItem<String>(
-              value: breed,
-              child: Text(breed),
-            );
-          }).toList(),
-        ),
+        _buildBreedDropdown(dogBreedList),
       ],
     );
   }
@@ -79,21 +101,7 @@ class _CategoriesDetailsState extends State<CategoriesDetails> {
     return Column(
       children: [
         Text("Cat-specific content"),
-        DropdownButton<String>(
-          hint: Text("Select a cat breed"),
-          value: selectedCatBreed,
-          onChanged: (value) {
-            setState(() {
-              selectedCatBreed = value!;
-            });
-          },
-          items: catBreedList.map((breed) {
-            return DropdownMenuItem<String>(
-              value: breed,
-              child: Text(breed),
-            );
-          }).toList(),
-        ),
+        _buildBreedDropdown(catBreedList),
       ],
     );
   }
@@ -101,22 +109,39 @@ class _CategoriesDetailsState extends State<CategoriesDetails> {
   Widget _categoryFish() {
     return Column(
       children: [
-        DropdownButton<String>(
-          hint: Text("Select a fish breed"),
-          value: selectedFishBreed,
-          onChanged: (value) {
-            setState(() {
-              selectedFishBreed = value!;
-            });
-          },
-          items: fishBreedList.map((breed) {
-            return DropdownMenuItem<String>(
-              value: breed,
-              child: Text(breed),
-            );
-          }).toList(),
-        ),
+        Text("Fish-specific content"),
+        _buildBreedDropdown(fishBreedList),
+        Container(
+          height: 1000,
+        )
       ],
+    );
+  }
+
+  Widget _categoryParrot() {
+    return Column(
+      children: [
+        Text("Parrot-specific content"),
+        _buildBreedDropdown(fishBreedList),
+      ],
+    );
+  }
+
+  Widget _buildBreedDropdown(List<String> breedList) {
+    return DropdownButton<String>(
+      hint: Text("Select a breed"),
+      value: selectedBreed,
+      onChanged: (value) {
+        setState(() {
+          selectedBreed = value!;
+        });
+      },
+      items: breedList.map((breed) {
+        return DropdownMenuItem<String>(
+          value: breed,
+          child: Text(breed),
+        );
+      }).toList(),
     );
   }
 }

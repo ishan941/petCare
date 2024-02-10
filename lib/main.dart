@@ -125,7 +125,10 @@ class _MyAppState extends State<MyApp> {
                 },
               ),
             ),
-            home: SplashScreen()),
+            home: SplashScreen()
+            // home: MyProfile(),
+            
+            ),
       ),
     );
   }
