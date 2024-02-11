@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:project_petcare/core/smooth_scrollable.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/sharedpref.dart';
@@ -24,183 +25,189 @@ class Account extends StatefulWidget {
 class _AccountState extends State<Account> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: ColorUtil.primaryColor,
-        actionsIconTheme: IconThemeData.fallback(),
-        elevation: 0,
-        title: Text(
-          "Account",
-          style: appBarTitle,
+    return ScrollConfiguration(
+      behavior: MyBehavior(),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: ColorUtil.primaryColor,
+          actionsIconTheme: IconThemeData.fallback(),
+          elevation: 0,
+          title: Text(
+            "Account",
+            style: appBarTitle,
+          ),
         ),
-      ),
-      backgroundColor: ColorUtil.primaryColor,
-      body: SingleChildScrollView(
-        child: Consumer<PetCareProvider>(
-          builder: (context, petCareProvider, child) =>
-              Consumer<SignUpProvider>(
-            builder: (context, signUpProvider, child) => Column(
-              children: [
-                Stack(
-                  children: [
-                    Column(
-                      children: [
-                        SizedBox(
-                          height: 100,
-                        ),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(40),
-                          child: Container(
-                              color: ColorUtil.BackGroundColorColor,
-                              height: MediaQuery.of(context).size.height),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        SizedBox(
-                          height: 40,
-                        ),
-                        Center(
-                          child: GestureDetector(
-                            onTap: () {
-                              // _showAlertDialog(context, petCareProvider);
-                              // pickImageFromGallery(petCareProvider);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MyProfile()));
-                            },
+        backgroundColor: ColorUtil.primaryColor,
+        body: SingleChildScrollView(
+          child: Consumer<PetCareProvider>(
+            builder: (context, petCareProvider, child) =>
+                Consumer<SignUpProvider>(
+              builder: (context, signUpProvider, child) => Column(
+                children: [
+                  Stack(
+                    children: [
+                      Column(
+                        children: [
+                          SizedBox(
+                            height: 100,
+                          ),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(40),
                             child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      offset: Offset(6, 6),
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 0,
-                                      blurRadius: 3,
-                                    )
-                                  ]),
-                              width: MediaQuery.of(context).size.width * .9,
-                              height: MediaQuery.of(context).size.height * .1,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 10,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color: Colors.red,
-                                              shape: BoxShape.circle),
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              .1,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              .2,
-                                          child: Stack(
-                                            children: [
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  image: DecorationImage(
-                                                    fit: BoxFit.cover,
-                                                    image: petCareProvider
-                                                                .profilePicture !=
-                                                            null
-                                                        ? NetworkImage(
-                                                            petCareProvider
-                                                                .profilePicture!)
-                                                        : AssetImage(
-                                                                "assets/images/emptypp.png")
-                                                            as ImageProvider,
+                                color: ColorUtil.BackGroundColorColor,
+                                height: MediaQuery.of(context).size.height),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          SizedBox(
+                            height: 40,
+                          ),
+                          Center(
+                            child: GestureDetector(
+                              onTap: () {
+                                // _showAlertDialog(context, petCareProvider);
+                                // pickImageFromGallery(petCareProvider);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MyProfile()));
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        offset: Offset(6, 6),
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 0,
+                                        blurRadius: 3,
+                                      )
+                                    ]),
+                                width: MediaQuery.of(context).size.width * .9,
+                                height: MediaQuery.of(context).size.height * .1,
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 10,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(12),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                .1,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                .2,
+                                            child: Stack(
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    image: DecorationImage(
+                                                      fit: BoxFit.cover,
+                                                      image: petCareProvider
+                                                                  .profilePicture !=
+                                                              null
+                                                          ? NetworkImage(
+                                                              petCareProvider
+                                                                  .profilePicture!)
+                                                          : AssetImage(
+                                                                  "assets/images/emptypp.png")
+                                                              as ImageProvider,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              Positioned(
-                                                right: 4,
-                                                top: 39,
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    petCareProvider
-                                                                .profilePicture !=
-                                                            null
-                                                        ? _showAlertDialog(
-                                                            context,
-                                                            petCareProvider)
-                                                        : _showAlertDialogNOProfile(
-                                                            context,
-                                                            petCareProvider);
-                                                  },
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.blue,
-                                                        shape: BoxShape.circle),
-                                                    child: Center(
-                                                        child: Icon(
-                                                      Icons.add,
-                                                      color: Colors.white,
-                                                      size: 21,
-                                                    )),
-                                                    // height: 20,
+                                                Positioned(
+                                                  right: 4,
+                                                  top: 39,
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      petCareProvider
+                                                                  .profilePicture !=
+                                                              null
+                                                          ? _showAlertDialog(
+                                                              context,
+                                                              petCareProvider)
+                                                          : _showAlertDialogNOProfile(
+                                                              context,
+                                                              petCareProvider);
+                                                    },
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.blue,
+                                                          shape: BoxShape.circle),
+                                                      child: Center(
+                                                          child: Icon(
+                                                        Icons.add,
+                                                        color: Colors.white,
+                                                        size: 21,
+                                                      )),
+                                                      // height: 20,
+                                                    ),
                                                   ),
-                                                ),
-                                              )
-                                            ],
+                                                )
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        // Text("My Profile"),
-                                        Text(
-                                          signUpProvider.fullName,
-                                          style: mainTitleText,
-                                        ),
-                                        // Text(signUpProvider.userEmail),
-                                        // Text(signUpProvider.userPhone),
-                                        SizedBox(
-                                          height: 10,
-                                        )
-                                      ],
-                                    ),
-                                  ],
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          // Text("My Profile"),
+                                          Text(
+                                            signUpProvider.fullName,
+                                            style: mainTitleText,
+                                          ),
+                                          // Text(signUpProvider.userEmail),
+                                          // Text(signUpProvider.userPhone),
+                                          SizedBox(
+                                            height: 10,
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        testPage(context),
-                        formCollection(context),
-                        settingsAndPrivacy(context),
-                        forAdmin(context),
-                        LogOut(context),
-                      ],
-                    ),
-                  ],
-                )
-              ],
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              height: 200,
+                              color: Colors.red,
+                            ),
+                          ),
+                          testPage(context),
+                          formCollection(context),
+                          settingsAndPrivacy(context),
+                          forAdmin(context),
+                          LogOut(context),
+                        ],
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -496,7 +503,7 @@ class _AccountState extends State<Account> {
                 // await petCareProvider.updateProfilePicture();
                 if (petCareProvider.userImageUtil == StatusUtil.success) {
                   Helper.snackBar("Successfully Saved", context);
-                   Navigator.pop(context);
+                  Navigator.pop(context);
                 } else {
                   Helper.snackBar('Failed to save', context);
                 }
@@ -526,12 +533,11 @@ class _AccountState extends State<Account> {
           content: Column(
             children: [
               Text("Do You want to add you profile picture For your account?"),
-              petCareProvider.userImage != null ?
-              Image.file(File(petCareProvider.userImage!.path)):
-              SizedBox()
+              petCareProvider.userImage != null
+                  ? Image.file(File(petCareProvider.userImage!.path))
+                  : SizedBox()
             ],
           ),
-        
           actions: [
             ElevatedButton(
               onPressed: () {

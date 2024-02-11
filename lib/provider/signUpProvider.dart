@@ -11,6 +11,8 @@ import 'package:project_petcare/service/petcareserivce.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpProvider extends ChangeNotifier {
+  PetCareService petCareService = PetCareImpl();
+
   String? errorMessage;
   String? name, phone, email, password;
   bool isUserLoggedIn = false;
@@ -23,8 +25,6 @@ class SignUpProvider extends ChangeNotifier {
   String fullName = "";
   String userEmail = "";
   String userPhone = "";
-  // String userImage = "";
-  PetCareService petCareService = PetCareImpl();
 
   StatusUtil _signUpUtil = StatusUtil.idle,
       _loginUtil = StatusUtil.idle,
@@ -41,6 +41,7 @@ class SignUpProvider extends ChangeNotifier {
 
   setLoginUtil(StatusUtil statusUtil) {
     _loginUtil = statusUtil;
+    notifyListeners();
   }
 
   setUserDetailsStatus(StatusUtil statusUtil) {
@@ -109,7 +110,6 @@ class SignUpProvider extends ChangeNotifier {
     prefs.setString('userEmail', userEmail);
     prefs.setString("userPhone", userPhone);
     // prefs.setString("userImage", userImage);
-
   }
 
   Future<void> initilizedProvider() async {

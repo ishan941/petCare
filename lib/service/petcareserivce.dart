@@ -2,6 +2,7 @@ import 'package:project_petcare/model/adopt.dart';
 import 'package:project_petcare/model/categories.dart';
 import 'package:project_petcare/model/dashservice.dart';
 import 'package:project_petcare/model/donate.dart';
+import 'package:project_petcare/model/mypet.dart';
 import 'package:project_petcare/model/ourservice.dart';
 import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/model/signUp.dart';
@@ -35,5 +36,7 @@ abstract class PetCareService {
   Future<FireResponse> updateFavourite(SignUp signUp);
   Future<FireResponse> updateCart(SignUp signUp);
   Future<FireResponse> updateProfile(SignUp signUp);
+  Future<FireResponse> myPetDetails(MyPet myPet);
+  Future<FireResponse> getMyPetDetails();
   
 }

@@ -6,6 +6,7 @@ import 'package:project_petcare/helper/constSearch.dart';
 import 'package:project_petcare/helper/simmer.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/string_const.dart';
+import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
 import 'package:project_petcare/view/shop/shopFavourite.dart';
 import 'package:project_petcare/view/shop/shopdetails.dart';
@@ -22,6 +23,7 @@ class ShopAll extends StatefulWidget {
 }
 
 class _ShopAllState extends State<ShopAll> {
+  late TextEditingController _searchController = TextEditingController();
   final ScrollController scrollController =
       ScrollController(keepScrollOffset: true, initialScrollOffset: 0.0);
 
@@ -83,7 +85,13 @@ class _ShopAllState extends State<ShopAll> {
              child: Column(
               children: [
                 ConstSearch(
-                    prefixIcon: Icon(Icons.search), hintText: searchHereStr),
+                    prefixIcon: Icon(Icons.search),
+                    
+                    controller: _searchController,
+                    onChanged: (_) {
+                    //  _searchHere();
+                    },
+                     hintText: searchHereStr),
                     SizedBox(height: 20,),
                  _buildShopItems(shopProvider)
                
@@ -236,5 +244,11 @@ class _ShopAllState extends State<ShopAll> {
                   ),
                 ),
               );
+  }
+  _searchHere(ShopProvider shopProvider){
+    // String searchValue = _searchController.text.toLowerCase();
+
+    // List<Shop> shopList = shopProvider.itemDetails();
+
   }
 }

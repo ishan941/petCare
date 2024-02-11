@@ -5,6 +5,7 @@ class ConstTextForm extends StatelessWidget {
   final String? labelText, hintText;
   final Widget? prefixIcon, suffixIcon;
   final void Function(String)? onChanged;
+  TextEditingController? controller;
 
   ConstTextForm({
     super.key,
@@ -14,6 +15,7 @@ class ConstTextForm extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.onChanged,
+    this.controller,
   });
 
   @override
@@ -40,12 +42,14 @@ class ConstTextForm extends StatelessWidget {
             fillColor: Colors.white,
             prefixIcon: prefixIcon,
             suffixIcon: suffixIcon,
+            
             border: OutlineInputBorder(
                 borderSide: BorderSide.none,
                 borderRadius: BorderRadius.circular(10)),
           ),
           validator: validator,
           onChanged: onChanged,
+          controller: controller,
         ),
       )),
     );

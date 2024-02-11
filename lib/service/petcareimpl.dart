@@ -6,6 +6,7 @@ import 'package:project_petcare/model/adopt.dart';
 import 'package:project_petcare/model/categories.dart';
 import 'package:project_petcare/model/dashservice.dart';
 import 'package:project_petcare/model/donate.dart';
+import 'package:project_petcare/model/mypet.dart';
 import 'package:project_petcare/model/ourservice.dart';
 import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/model/signUp.dart';
@@ -16,8 +17,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PetCareImpl extends PetCareService {
   @override
- 
-
   @override
   Future<FireResponse> donateData(Donate donate) async {
     if (await Helper.checkInterNetConnection()) {
@@ -469,7 +468,8 @@ class PetCareImpl extends PetCareService {
     String userEmail = prefs.getString('userEmail') ?? 'Email';
     return userEmail;
   }
-   @override
+
+  @override
   Future<FireResponse> updateProfile(SignUp signUp) async {
     if (await Helper.checkInterNetConnection()) {
       try {
@@ -524,5 +524,47 @@ class PetCareImpl extends PetCareService {
           statusUtil: StatusUtil.error, errorMessage: noInternetStr);
     }
   }
- 
+
+  @override
+  Future<FireResponse> myPetDetails(MyPet myPet) async {
+    if (await Helper.checkInterNetConnection()) {
+      try {
+        FirebaseFirestore.instance
+            .collection("MyPetDetails")
+            .add(myPet.toJson());
+        return FireResponse(
+            statusUtil: StatusUtil.success,
+            successMessage: "Successfully saved");
+      } catch (e) {
+        return FireResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
+      }
+    } else {
+      return FireResponse(
+          statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+    }
+  }
+
+  @override
+  Future<FireResponse> getMyPetDetails() async {
+    if (await Helper.checkInterNetConnection()) {
+      try {
+        var response =
+            await FirebaseFirestore.instance.collection("MyPetDetails").get();
+         final pet = response.docs;
+         List<MyPet> myPetList = [];
+           if(pet.isNotEmpty){
+            for(var getMyPet in pet){
+              myPetList.add(MyPet.fromJson(getMyPet.data()));
+            }
+           }
+        return FireResponse(
+            statusUtil: StatusUtil.success, data: myPetList);
+      } catch (e) {
+        return FireResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
+      }
+    } else {
+      return FireResponse(
+          statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+    }
+  }
 }

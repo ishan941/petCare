@@ -5,6 +5,7 @@ class ConstSearch extends StatelessWidget {
   final String? labelText, hintText;
   final Widget? prefixIcon, suffixIcon;
   final void Function(String)? onChanged;
+  TextEditingController? controller;
   
 
   ConstSearch({
@@ -15,6 +16,7 @@ class ConstSearch extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.onChanged,
+    this.controller,
     
   });
 
@@ -40,6 +42,7 @@ class ConstSearch extends StatelessWidget {
         ),
         validator: validator,
         onChanged: onChanged,
+        controller: controller,
       ),
     ));
   }

@@ -1,3 +1,5 @@
+import 'package:project_petcare/provider/signUpProvider.dart';
+
 class VerificationTools {
   String? userName;
   String? userPhone;
@@ -10,7 +12,10 @@ class VerificationTools {
       this.userPhone,
       this.userEmail,
       this.userImage,
-      this.userLocation});
+      this.userLocation,
+      SignUpProvider? signUpProvider,
+      
+      });
 
   VerificationTools.fromJson(Map<String, dynamic> json) {
     userName = json['userName'];

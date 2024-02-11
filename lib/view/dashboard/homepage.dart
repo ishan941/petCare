@@ -90,57 +90,60 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorUtil.primaryColor,
-      body: SafeArea(
-        child: Consumer<ShopProvider>(
-          builder: (
-            context,
-            shopProvider,
-            child,
-          ) =>
-              CustomScrollView(
-            controller: _scrollController,
-            slivers: [
-              SliverAppBar(
-                backgroundColor: ColorUtil.primaryColor,
-                expandedHeight: shopProvider.favouriteList.isNotEmpty
-                    ? MediaQuery.of(context).size.height * .49
-                    : 130,
-                pinned: true,
-                elevation: 0,
-                snap: true,
-                floating: true,
-                flexibleSpace: FlexibleSpaceBar(
-                    centerTitle: false,
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                            "Hello ${Provider.of<SignUpProvider>(context).userName}"),
-                        Text(
-                          Provider.of<PetCareProvider>(context).greeting,
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ],
-                    ),
-                    background: dashHead(
-                      Provider.of<SignUpProvider>(context),
-                      context,
-                      shopProvider,
-                      Provider.of<PetCareProvider>(context),
-                    )),
-              ),
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    Consumer<OurServiceProvider>(
-                      builder: (context, ourServiceProvider, child) => ui(),
-                    ),
-                  ],
+    return ScrollConfiguration(
+      behavior: MyBehavior(),
+      child: Scaffold(
+        backgroundColor: ColorUtil.primaryColor,
+        body: SafeArea(
+          child: Consumer<ShopProvider>(
+            builder: (
+              context,
+              shopProvider,
+              child,
+            ) =>
+                CustomScrollView(
+              controller: _scrollController,
+              slivers: [
+                SliverAppBar(
+                  backgroundColor: ColorUtil.primaryColor,
+                  expandedHeight: shopProvider.favouriteList.isNotEmpty
+                      ? MediaQuery.of(context).size.height * .49
+                      : 130,
+                  pinned: true,
+                  elevation: 0,
+                  snap: true,
+                  floating: true,
+                  flexibleSpace: FlexibleSpaceBar(
+                      centerTitle: false,
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              "Hello ${Provider.of<SignUpProvider>(context).userName}"),
+                          Text(
+                            Provider.of<PetCareProvider>(context).greeting,
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                      background: dashHead(
+                        Provider.of<SignUpProvider>(context),
+                        context,
+                        shopProvider,
+                        Provider.of<PetCareProvider>(context),
+                      )),
                 ),
-              ),
-            ],
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      Consumer<OurServiceProvider>(
+                        builder: (context, ourServiceProvider, child) => ui(),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -210,13 +213,7 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                         Column(
                                           children: [
-                                            petCareProvider.profilePicture !=
-                                                    null
-                                                ? Image.network(petCareProvider
-                                                    .profilePicture!,
-                                                    fit: BoxFit.cover,
-                                                    )
-                                                : Image.asset(
+                                            Image.asset(
                                                     "assets/images/streetpets.png",
                                                      fit: BoxFit.cover,
                                                     ),

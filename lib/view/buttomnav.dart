@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
+import 'package:project_petcare/view/dashboard/feed.dart';
 import 'package:project_petcare/view/dashboard/homepage.dart';
 import 'package:project_petcare/view/profile/account.dart';
-import 'package:project_petcare/view/profile/personalDetails.dart';
 import 'package:project_petcare/view/shop/mycart.dart';
-import 'package:project_petcare/view/profile/settingsAndPrivacy.dart';
 import 'package:project_petcare/view/shop/shopFavourite.dart';
 import 'package:project_petcare/view/shop/shopall.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +16,7 @@ class BottomNavBar extends StatefulWidget {
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
+ 
   @override
   Widget build(BuildContext context) {
     var petcareProvider = Provider.of<PetCareProvider>(context);
@@ -27,7 +27,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
           items: [
             _buildNavItem(Icons.home, 'Home', 0),
             _buildNavItem(Icons.shopping_bag_outlined, 'Shop', 1),
-            _buildNavItem(Icons.shopping_cart_outlined, 'Cart', 2),
+            _buildNavItem(Icons.feed_outlined, 'NewsFeed', 2),
             _buildNavItem(Icons.favorite, 'Favourite', 3),
             _buildNavItem(Icons.person, 'Profile', 4),
             //Icon(Icons.perm_identity, size: 30, color: Colors.white,),
@@ -52,7 +52,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       case 1:
         return ShopAll();
       case 2:
-        return MyCart();
+        return NewsFeed();
       case 3:
         return ShopFavourite();
 

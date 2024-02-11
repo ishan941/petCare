@@ -9,9 +9,11 @@ import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/model/dashservice.dart';
 import 'package:project_petcare/model/ourservice.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
+import 'package:project_petcare/response/response.dart';
 import 'package:project_petcare/view/customs/consttextform.dart';
 import 'package:project_petcare/view/ourservice/profession.dart';
 import 'package:project_petcare/view/ourservice/serviceDetail.dart';
+import 'package:project_petcare/view/search_here.dart';
 import 'package:provider/provider.dart';
 
 class OurServicesMore extends StatefulWidget {
@@ -28,16 +30,16 @@ class OurServicesMore extends StatefulWidget {
 
 class _OurServicesMoreState extends State<OurServicesMore>
     with SingleTickerProviderStateMixin {
+  final TextEditingController _searchController = TextEditingController();
   late TabController _tabController;
 
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
       getvalue();
-       SchedulerBinding.instance.addPostFrameCallback((_) {});
+      SchedulerBinding.instance.addPostFrameCallback((_) {});
     });
     super.initState();
-   
 
     _tabController = TabController(length: 3, vsync: this);
   }
@@ -95,9 +97,26 @@ class _OurServicesMoreState extends State<OurServicesMore>
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: ConstTextForm(
-                            hintText: searchHereStr,
-                            suffixIcon: const Icon(Icons.search),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SearchHere()));
+                            },
+                            child:
+                                // Container(
+                                //   height: 50,
+                                //   color: Colors.red,
+                                // )
+                                ConstTextForm(
+                              controller: _searchController,
+                              hintText: searchHereStr,
+                              suffixIcon: const Icon(Icons.search),
+                              onChanged: (_) {
+                                _searchHere(ourServiceProvider);
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -305,7 +324,7 @@ class _OurServicesMoreState extends State<OurServicesMore>
                                                     size: 15,
                                                   ),
                                                   Text(
-                                                      " -  ${filteredList[index].email ??""}",
+                                                      " -  ${filteredList[index].email ?? ""}",
                                                       style:
                                                           textStyleSmallSized),
                                                 ],
@@ -624,5 +643,29 @@ class _OurServicesMoreState extends State<OurServicesMore>
         ),
       ),
     );
+  }
+
+  _searchHere(OurServiceProvider ourServiceProvider) async {
+    String query = _searchController.text.toLowerCase();
+    try {
+      String chosenProfession = widget.dashService!.service!;
+      List<OurService> filteredList =
+          ourServiceProvider.filterByProfession(chosenProfession);
+      ourServiceProvider.setFilteredProfessionData(filteredList);
+      await ourServiceProvider.getProfessionData();
+      if (ourServiceProvider.getProfessionUtil == StatusUtil.success) {
+        List<OurService> professionData = ourServiceProvider.professionDataList;
+        List<OurService> searchResult = professionData
+            .where((service) =>
+                service.fullname!.toLowerCase().contains(query) ||
+                service.location!.toString().contains(query))
+            .toList();
+        ourServiceProvider.setFilteredProfessionData(searchResult);
+      } else {
+        print("Error: ${ourServiceProvider.errorMessage}");
+      }
+    } catch (e) {
+      print("Exception: $e");
+    }
   }
 }
