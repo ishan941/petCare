@@ -418,6 +418,7 @@ class PetCareImpl extends PetCareService {
         statusUtil: StatusUtil.error, errorMessage: noInternetStr);
   }
 
+  
   @override
   Future<FireResponse> saveShopFavourite(Shop shop) async {
     if (await Helper.checkInterNetConnection()) {
@@ -550,15 +551,14 @@ class PetCareImpl extends PetCareService {
       try {
         var response =
             await FirebaseFirestore.instance.collection("MyPetDetails").get();
-         final pet = response.docs;
-         List<MyPet> myPetList = [];
-           if(pet.isNotEmpty){
-            for(var getMyPet in pet){
-              myPetList.add(MyPet.fromJson(getMyPet.data()));
-            }
-           }
-        return FireResponse(
-            statusUtil: StatusUtil.success, data: myPetList);
+        final pet = response.docs;
+        List<MyPet> myPetList = [];
+        if (pet.isNotEmpty) {
+          for (var getMyPet in pet) {
+            myPetList.add(MyPet.fromJson(getMyPet.data()));
+          }
+        }
+        return FireResponse(statusUtil: StatusUtil.success, data: myPetList);
       } catch (e) {
         return FireResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
       }
@@ -567,4 +567,41 @@ class PetCareImpl extends PetCareService {
           statusUtil: StatusUtil.error, errorMessage: noInternetStr);
     }
   }
+   @override
+  Future<FireResponse> updatePet(SignUp signUp) async {
+    if (await Helper.checkInterNetConnection()) {
+      try {
+        await FirebaseFirestore.instance
+            .collection("MyPetDetails")
+            .doc(signUp.id)
+            .update(signUp.toJson());
+        return FireResponse(statusUtil: StatusUtil.success);
+      } catch (e) {
+        return FireResponse(
+            statusUtil: StatusUtil.error, errorMessage: e.toString());
+      }
+    } else {
+      return FireResponse(
+          statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+    }
+  }
+  @override
+  Future<FireResponse> updateMyPetDetails(MyPet myPet) async {
+    if (await Helper.checkInterNetConnection()) {
+      try {
+        await FirebaseFirestore.instance
+            .collection("MyPetDetails")
+            .doc(myPet.id)
+            .update(myPet.toJson());
+        return FireResponse(statusUtil: StatusUtil.success);
+      } catch (e) {
+        return FireResponse(
+            statusUtil: StatusUtil.error, errorMessage: e.toString());
+      }
+    } else {
+      return FireResponse(
+          statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+    }
+  }
+
 }

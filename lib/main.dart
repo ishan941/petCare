@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:project_petcare/core/smooth_scrollable.dart';
 import 'package:project_petcare/firebase_options.dart';
 import 'package:project_petcare/provider/adoptprovider.dart';
@@ -120,6 +121,7 @@ class _MyAppState extends State<MyApp> {
               '/notification': (context) => ShopAll(),
             },
             theme: ThemeData(
+              textTheme: GoogleFonts.poppinsTextTheme(),
               pageTransitionsTheme: const PageTransitionsTheme(
                 builders: {
                   TargetPlatform.android: CupertinoPageTransitionsBuilder(),

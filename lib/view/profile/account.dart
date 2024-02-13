@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -38,37 +39,39 @@ class _AccountState extends State<Account> {
           ),
         ),
         backgroundColor: ColorUtil.primaryColor,
-        body: SingleChildScrollView(
-          child: Consumer<PetCareProvider>(
-            builder: (context, petCareProvider, child) =>
-                Consumer<SignUpProvider>(
-              builder: (context, signUpProvider, child) => Column(
+        body: Consumer<PetCareProvider>(
+          builder: (context, petCareProvider, child) =>
+              Consumer<SignUpProvider>(
+            builder: (context, signUpProvider, child) => SingleChildScrollView(
+              child: Column(
                 children: [
                   Stack(
                     children: [
                       Column(
                         children: [
                           SizedBox(
-                            height: 100,
-                          ),
+                              height: MediaQuery.of(context).size.height * .12),
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(40),
-                            child: Container(
-                                color: ColorUtil.BackGroundColorColor,
-                                height: MediaQuery.of(context).size.height),
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10)),
+                            child:
+                            Expanded(
+                              child: Container(
+                                  color: ColorUtil.BackGroundColorColor,
+                                  height: MediaQuery.of(context).size.height*.72
+                                  ),
+                            ),
                           ),
                         ],
                       ),
                       Column(
                         children: [
                           SizedBox(
-                            height: 40,
-                          ),
+                              height: MediaQuery.of(context).size.height * .08),
                           Center(
                             child: GestureDetector(
                               onTap: () {
-                                // _showAlertDialog(context, petCareProvider);
-                                // pickImageFromGallery(petCareProvider);
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -76,16 +79,16 @@ class _AccountState extends State<Account> {
                               },
                               child: Container(
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        offset: Offset(6, 6),
-                                        color: Colors.grey.withOpacity(0.5),
-                                        spreadRadius: 0,
-                                        blurRadius: 3,
-                                      )
-                                    ]),
+                                  borderRadius: BorderRadius.circular(12),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.blue,
+                                      Colors.white,
+                                    ], 
+                                  ),
+                                ),
                                 width: MediaQuery.of(context).size.width * .9,
                                 height: MediaQuery.of(context).size.height * .1,
                                 child: Padding(
@@ -163,9 +166,7 @@ class _AccountState extends State<Account> {
                                           ),
                                         ),
                                       ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
+                                     
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -177,11 +178,7 @@ class _AccountState extends State<Account> {
                                             signUpProvider.fullName,
                                             style: mainTitleText,
                                           ),
-                                          // Text(signUpProvider.userEmail),
-                                          // Text(signUpProvider.userPhone),
-                                          SizedBox(
-                                            height: 10,
-                                          )
+                                          Text(signUpProvider.userEmail),
                                         ],
                                       ),
                                     ],
@@ -190,13 +187,7 @@ class _AccountState extends State<Account> {
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              height: 200,
-                              color: Colors.red,
-                            ),
-                          ),
+                          SizedBox(height: 100,),
                           testPage(context),
                           formCollection(context),
                           settingsAndPrivacy(context),

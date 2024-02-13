@@ -38,5 +38,7 @@ abstract class PetCareService {
   Future<FireResponse> updateProfile(SignUp signUp);
   Future<FireResponse> myPetDetails(MyPet myPet);
   Future<FireResponse> getMyPetDetails();
+  Future<FireResponse> updateMyPetDetails(MyPet myPet);
+  Future<FireResponse> updatePet(SignUp signUp);
   
 }

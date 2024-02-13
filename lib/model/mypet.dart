@@ -1,4 +1,5 @@
 class MyPet {
+  String? id;
   String? petName;
   String? dateOfBirth;
   String? petType;
@@ -14,7 +15,9 @@ class MyPet {
       this.petBreed,
       this.petSex,
       this.petColor,
-      this.description});
+      this.description,
+      this.id
+      });
 
   MyPet.fromJson(Map<String, dynamic> json) {
     petName = json['petName'];
@@ -24,6 +27,7 @@ class MyPet {
     petSex = json['petSex'];
     petColor = json['petColor'];
     description = json['description'];
+    id = json['id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -35,6 +39,7 @@ class MyPet {
     data['petSex'] = this.petSex;
     data['petColor'] = this.petColor;
     data['description'] = this.description;
+    data['id'] = this.id;
     return data;
   }
 }

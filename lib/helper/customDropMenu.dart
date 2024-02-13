@@ -31,6 +31,7 @@ class CustomDropDown extends StatelessWidget {
       value: value,
       onChanged: onChanged,
       validator: validator,
+      
       autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
         labelText: labelText,

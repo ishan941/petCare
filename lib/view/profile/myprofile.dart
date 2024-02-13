@@ -6,6 +6,7 @@ import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/simmer.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
+import 'package:project_petcare/model/mypet.dart';
 import 'package:project_petcare/provider/mypet_provider.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
@@ -36,6 +37,7 @@ class _MyProfileState extends State<MyProfile> {
   getMyPetData() async {
     var myPetProvider = Provider.of<MyPetProvider>(context, listen: false);
     await myPetProvider.getMyPetDetailsFromFireBase();
+    // await myPetProvider.getPetData();
   }
 
   @override
@@ -69,7 +71,7 @@ class _MyProfileState extends State<MyProfile> {
                         flexibleSpace: FlexibleSpaceBar(
                           centerTitle: true,
                           title: Text(
-                            "Ishan Shrestha",
+                            signUpProvider.userName,
                             style: TextStyle(color: ColorUtil.primaryColor),
                           ),
                           background: Stack(
@@ -94,7 +96,8 @@ class _MyProfileState extends State<MyProfile> {
                                             child: Text(
                                                 "You haven't set your profile picture"),
                                           ),
-                                          Text("Click here for profile Picture"),
+                                          Text(
+                                              "Click here for profile Picture"),
                                         ],
                                       ),
                               ),
@@ -126,11 +129,17 @@ class _MyProfileState extends State<MyProfile> {
                           [
                             Column(
                               children: [
+                                SizedBox(
+                                  height: 10,
+                                ),
                                 _profile(signUpProvider, petCareProvider),
                                 SizedBox(
                                   height: 10,
                                 ),
+                                // myPetProvider.getPetData  ?
                                 _myPet(shopProvider, myPetProvider),
+                                // :
+                                SizedBox(),
                                 myFavourite(shopProvider),
                               ],
                             ),
@@ -169,7 +178,9 @@ class _MyProfileState extends State<MyProfile> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(30),
                   child: Container(
-                      height: MediaQuery.of(context).size.height * .06,
+                      // height: MediaQuery.of(context).size.height * .06,
+                      height: 60,
+                      width: 60,
                       // width: MediaQuery.of(context).size.,
                       child: petCareProvider.profilePicture != null
                           ? Image.network(
@@ -200,55 +211,83 @@ class _MyProfileState extends State<MyProfile> {
     );
   }
 
-  Widget _myPet(ShopProvider shopProviderm, MyPetProvider myPetProvider) {
-    return Container(
-      height: MediaQuery.of(context).size.height * .3,
-  
-      child: ListView.builder(
-          itemCount: myPetProvider.myPetList.length,
-
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, index) => GestureDetector(
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> PetProfile(myPet:myPetProvider.myPetList[index])));
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  width: MediaQuery.of(context).size.width * .45,
-                  color: Colors.white,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: ColorUtil.primaryColor,
+  Widget _myPet(
+    ShopProvider shopProviderm,
+    MyPetProvider myPetProvider,
+    //  String userEmail
+  ) {
+    // List<MyPet> userPets = myPetProvider.myPetList.where((pet)=>pet.userEmail ==userEmail).toList();
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            children: [
+              Text("My pet"),
+              Spacer(),
+              Text(
+                "View more",
+                style: TextStyle(color: ColorUtil.primaryColor),
+              )
+            ],
+          ),
+        ),
+        Container(
+          height: MediaQuery.of(context).size.height * .3,
+          child: ListView.builder(
+              // itemCount: myPetProvider.myPetList.length,
+              itemCount: myPetProvider.myPetDataList.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) => GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              PetProfile(myPet: myPetProvider.myPetDataList[index]),
                         ),
-                        child: Center(
-                          // Display the first two letters of the pet's name
-                          child: Text(
-                            myPetProvider.myPetList[index].petName
-                                    ?.substring(0, 1) ??
-                                "",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * .45,
+                          color: Colors.white,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: ColorUtil.primaryColor,
+                                ),
+                                child: Center(
+                                  // Display the first two letters of the pet's name
+                                  child: Text(
+                                    myPetProvider.myPetDataList[index].petName
+                                            ?.substring(0, 1) ??
+                                        "",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                                height: MediaQuery.of(context).size.height * .1,
+                              ),
+                              Text(myPetProvider.myPetDataList[index].petName ??
+                                  "")
+                            ],
                           ),
                         ),
-                        height: MediaQuery.of(context).size.height * .1,
                       ),
-                      Text(myPetProvider.myPetList[index].petName ?? "")
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          )),
+                    ),
+                  )),
+        ),
+      ],
     );
   }
 

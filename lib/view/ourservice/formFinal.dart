@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 class FormFinalProfession extends StatefulWidget {
   SignUp? signUp;
-   FormFinalProfession({super.key});
+  FormFinalProfession({super.key});
 
   @override
   State<FormFinalProfession> createState() => _FormFinalProfessionState();
@@ -20,26 +20,39 @@ class FormFinalProfession extends StatefulWidget {
 
 class _FormFinalProfessionState extends State<FormFinalProfession> {
   @override
+  void initState() {
+    getvalue();
+    super.initState();
+  }
+
+  getvalue() async {
+    var provider = Provider.of<OurServiceProvider>(context, listen: false);
+    var petcareProvider = Provider.of<PetCareProvider>(context, listen: false);
+    Future.delayed(Duration.zero, () {
+      provider.reset();
+      provider.setPicture(petcareProvider.profilePicture!);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Consumer<PetCareProvider>(
-        builder: (context, petCareProvider, child) =>  Consumer<SignUpProvider>(
-          builder: (context, signUpProvider, child) => Consumer<OurServiceProvider>(
+        builder: (context, petCareProvider, child) => Consumer<SignUpProvider>(
+          builder: (context, signUpProvider, child) =>
+              Consumer<OurServiceProvider>(
             builder: (context, ourServiceProvider, child) => Column(
               children: [
                 Container(
                   height: 150,
                   width: MediaQuery.of(context).size.width,
-                  child:
-                  petCareProvider.profilePicture != null ?
-                  Image.network(petCareProvider.profilePicture!):
-                   Image.file(
-                    File(ourServiceProvider.profilePicture!.path),
-                    fit: BoxFit.cover,
-                  ),
+                  child: petCareProvider.profilePicture != null
+                      ? Image.network(petCareProvider.profilePicture!)
+                      : Image.file(
+                          File(ourServiceProvider.profilePicture!.path),
+                          fit: BoxFit.cover,
+                        ),
                 ),
-                
-                
                 Text(signUpProvider.fullName),
                 Text(ourServiceProvider.profession ?? ""),
                 Text(signUpProvider.email ?? ""),
@@ -50,9 +63,16 @@ class _FormFinalProfessionState extends State<FormFinalProfession> {
                 ElevatedButton(
                     onPressed: () async {
                       await ourServiceProvider.saveProfessionData();
-                      if (ourServiceProvider.professionUtil == StatusUtil.success) {
+                      if (ourServiceProvider.professionUtil ==
+                          StatusUtil.success) {
                         Helper.snackBar(successfullySavedStr, context);
-                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> BottomNavBar()), (route) => false);
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BottomNavBar()),
+                            (route) => false);
+                           
+
                       } else {
                         Helper.snackBar(failedToSaveStr, context);
                       }
@@ -65,4 +85,5 @@ class _FormFinalProfessionState extends State<FormFinalProfession> {
       ),
     );
   }
+  
 }

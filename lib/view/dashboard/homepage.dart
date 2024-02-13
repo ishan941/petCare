@@ -106,9 +106,7 @@ class _HomePageState extends State<HomePage> {
               slivers: [
                 SliverAppBar(
                   backgroundColor: ColorUtil.primaryColor,
-                  expandedHeight: shopProvider.favouriteList.isNotEmpty
-                      ? MediaQuery.of(context).size.height * .49
-                      : 130,
+                  expandedHeight: 130,
                   pinned: true,
                   elevation: 0,
                   snap: true,
@@ -174,7 +172,9 @@ class _HomePageState extends State<HomePage> {
                               // dashHead(signUpProvider, context,
                               //     petCareProvider),
                               ClipRRect(
-                                borderRadius: BorderRadius.circular(40),
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20)),
                                 child: Container(
                                   color: Color(0XFFE5E8FF),
                                   child: Padding(
@@ -207,20 +207,17 @@ class _HomePageState extends State<HomePage> {
                                                 children: [
                                                   categories(
                                                       categoriesProvider),
+                                                  Image.asset(
+                                                    "assets/images/streetpets.png",
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                   ourservice(context),
-                                                  adoptdetails(adoptProvider),
+                                                  // adoptdetails(adoptProvider),
                                                 ],
                                               ),
-                                        Column(
-                                          children: [
-                                            Image.asset(
-                                                    "assets/images/streetpets.png",
-                                                     fit: BoxFit.cover,
-                                                    ),
-                                            SizedBox(
-                                              height: 10,
-                                            )
-                                          ],
+
+                                        SizedBox(
+                                          height: 10,
                                         ),
                                       ],
                                     ),
@@ -243,8 +240,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget myFavourite(ShopProvider shopProvider) {
-
-
     return shopProvider.getshopIemsUtil == StatusUtil.loading
         ? SimmerEffect.shimemrForShop()
         : Container(
@@ -490,21 +485,8 @@ class _HomePageState extends State<HomePage> {
       ShopProvider shopProvider, PetCareProvider petCareProvider) {
     return Container(
         // height: 190,
-        child: shopProvider.favouriteList.isNotEmpty
-            ? Column(
-                children: [
-                  dashAppBar(
-                      signUpProvider, petCareProvider, context, shopProvider),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  myFavourite(
-                    shopProvider,
-                  )
-                ],
-              )
-            : dashAppBar(
-                signUpProvider, petCareProvider, context, shopProvider));
+        child:
+            dashAppBar(signUpProvider, petCareProvider, context, shopProvider));
   }
 
   Widget dashAppBar(
@@ -546,9 +528,10 @@ class _HomePageState extends State<HomePage> {
                             petCareProvider.profilePicture!,
                             fit: BoxFit.cover,
                           )
-                        : Image.asset("assets/images/emptypp.png",
-                         fit: BoxFit.cover,
-                        ),
+                        : Image.asset(
+                            "assets/images/emptypp.png",
+                            fit: BoxFit.cover,
+                          ),
                   ),
                 ),
               )
@@ -600,20 +583,21 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         SizedBox(
-          height: MediaQuery.of(context).size.height * .1,
+          height: MediaQuery.of(context).size.height * .24,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: categoriesProvider.categoriesList.length,
             itemBuilder: (context, index) => GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return CategoriesDetails(
-                        categories: categoriesProvider.categoriesList[index]);
-                  }));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) {
+                      return CategoriesDetails(
+                          categories: categoriesProvider.categoriesList[index]);
+                    }),
+                  );
                 },
-                child: Stack(children: [
-                  categoriesUi(context, categoriesProvider, index),
-                ])),
+                child: categoriesUi(context, categoriesProvider, index)),
           ),
         ),
       ],
@@ -621,26 +605,24 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget categoriesUi(
-      BuildContext context, CategoriesProvider categoriesProvider, int index) {
+      BuildContext context, 
+      CategoriesProvider categoriesProvider, 
+      int index) {
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.only(right: 10, top: 10, bottom: 10),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: Container(
-          // height: 0,
-          // width: MediaQuery.of(context).size.width * .32,
-          // color: Color.fromARGB(255, 68, 145, 173),
           color: Colors.white,
-          child: Row(
+          child: Column(
             children: [
               Padding(
                 padding: const EdgeInsets.all(6),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Container(
-                    // color: Colors.white,
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width * 0.15,
+                    height: MediaQuery.of(context).size.height * .15,
+                    width: MediaQuery.of(context).size.width * 0.35,
                     child: Image.network(
                       categoriesProvider
                               .categoriesList[index].categoriesImage ??
@@ -650,9 +632,20 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              Text(
-                categoriesProvider.categoriesList[index].categoriesName ?? "",
-                style: titleText,
+              Container(
+                height: MediaQuery.of(context).size.height*.045,
+                width: MediaQuery.of(context).size.width * .35,
+                decoration: BoxDecoration(
+                  color: ColorUtil.primaryColor,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: ColorUtil.primaryColor)),
+                child: Center(
+                  child: Text(
+                    categoriesProvider.categoriesList[index].categoriesName ??
+                        "",
+                    style: categoriesTitleText,
+                  ),
+                ),
               ),
               SizedBox(
                 width: 10,

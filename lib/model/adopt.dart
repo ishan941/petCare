@@ -8,23 +8,36 @@ class Adopt {
   String? imageUrl;
   String? id;
   String? petAgeTime;
+  bool isDoubleTapped;
 
-  Adopt(
-      {this.petname,this.petAgeTime, this.petweight, this.id, this.petage, this.gender, this.petbread, this.imageUrl, this.location, this.phone, this.name});
+  Adopt({
+    this.petname,
+    this.petAgeTime,
+    this.petweight,
+    this.id,
+    this.petage,
+    this.gender,
+    this.petbread,
+    this.imageUrl,
+    this.location,
+    this.phone,
+    this.name,
+    this.isDoubleTapped = false,
+  });
 
-  Adopt.fromJson(Map<String, dynamic> json) {
-    petname = json['petname'];
-    petweight = json['petweight'];
-    petage = json['petage'];
-    gender = json['gender'];
-    petbread = json['petbread'];
-    imageUrl = json['imageUrl'];
-    phone = json['phone'];
-    location = json['location'];
-    name = json['name'];
-    id = json['id'];
-    petAgeTime = json['petAgeTime'];
-  }
+  Adopt.fromJson(Map<String, dynamic> json)
+      : petname = json['petname'],
+        petweight = json['petweight'],
+        petage = json['petage'],
+        gender = json['gender'],
+        petbread = json['petbread'],
+        imageUrl = json['imageUrl'],
+        phone = json['phone'],
+        location = json['location'],
+        name = json['name'],
+        id = json['id'],
+        petAgeTime = json['petAgeTime'],
+        isDoubleTapped = false; // Initialize isDoubleTapped here
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -39,7 +52,7 @@ class Adopt {
     data['name'] = this.name;
     data['id'] = this.id;
     data['petAgeTime'] = this.petAgeTime;
-    
+
     return data;
   }
 }

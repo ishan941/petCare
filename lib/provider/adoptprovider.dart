@@ -14,6 +14,8 @@ class AdoptProvider extends ChangeNotifier {
 
   String? id, petGender, petBread, petAgeTime;
 
+ 
+
   double _per = 0.0;
   double get per => _per;
   void updatePercent(double value) {
@@ -200,6 +202,13 @@ class AdoptProvider extends ChangeNotifier {
     } catch (e) {
       errorMessage = "$e";
       setGetAdoptDetails(StatusUtil.error);
+    }
+  }
+  void handleDoubleTap(int index){
+    if(index >= 0 && index < adoptDetailsList.length){
+      Adopt adopt = adoptDetailsList[index];
+      adopt.isDoubleTapped = !adopt.isDoubleTapped;
+      notifyListeners();
     }
   }
 }

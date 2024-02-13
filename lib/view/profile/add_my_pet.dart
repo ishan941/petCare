@@ -5,7 +5,6 @@ import 'package:project_petcare/helper/customDropMenu.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/provider/mypet_provider.dart';
-import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
 
 class AddMyPet extends StatefulWidget {
@@ -44,12 +43,14 @@ class _AddMyPetState extends State<AddMyPet> {
                   onChanged: (value) {
                     myPetProvider.petType = value;
                   },
+                  
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: "Your pet Name"),
-                  onChanged: (value) {
-                    myPetProvider.petName = value;
-                  },
+                  controller: myPetProvider.nameController,
+                  // onChanged: (value) {
+                  //   myPetProvider.petName = value;
+                  // },
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "Please enter name of your pet";

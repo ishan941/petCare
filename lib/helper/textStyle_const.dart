@@ -23,6 +23,11 @@ const TextStyle titleText = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w500
 );
+const TextStyle categoriesTitleText = TextStyle(
+  fontSize: 16,
+  color: ColorUtil.BackGroundColorColor,
+  fontWeight: FontWeight.w500
+);
 const TextStyle smallTitleText = TextStyle(
   fontSize: 14,
   fontWeight: FontWeight.w500

@@ -247,7 +247,7 @@ class _OurServicesMoreState extends State<OurServicesMore>
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(12),
                                   child: Container(
-                                    height: 110,
+                                    height: 120,
                                     color: Colors.white,
                                     child: Row(
                                       children: [
@@ -402,7 +402,7 @@ class _OurServicesMoreState extends State<OurServicesMore>
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: Container(
-                          height: 110,
+                          height: 120,
                           color: Colors.white,
                           child: Row(
                             children: [
@@ -535,7 +535,7 @@ class _OurServicesMoreState extends State<OurServicesMore>
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: Container(
-                          height: 110,
+                          height: 120,
                           color: Colors.white,
                           child: Row(
                             children: [

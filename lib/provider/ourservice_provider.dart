@@ -10,6 +10,7 @@ import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/response/response.dart';
 import 'package:project_petcare/service/petcareimpl.dart';
 import 'package:project_petcare/service/petcareserivce.dart';
+import 'package:project_petcare/view/test.dart/verificationTest.dart';
 
 class OurServiceProvider extends ChangeNotifier {
   SignUpProvider signUpProvider = SignUpProvider();
@@ -24,6 +25,7 @@ class OurServiceProvider extends ChangeNotifier {
   XFile? cpimage, ppimage, profilePicture;
   List<DashService> dashServiceList = [];
   List<OurService> professionDataList = [];
+  String? picture;
 
   String? userName;
 
@@ -42,6 +44,11 @@ class OurServiceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  setPicture(value) {
+    picture = value;
+    notifyListeners();
+  }
+
   setChosenProfession(String profession) {
     chosenProfession = profession;
     notifyListeners();
@@ -53,11 +60,13 @@ class OurServiceProvider extends ChangeNotifier {
   StatusUtil _profilePictureUtil = StatusUtil.idle;
   StatusUtil _professionUtil = StatusUtil.idle;
   StatusUtil _getProfessionUtil = StatusUtil.idle;
+  StatusUtil _verificationUtil = StatusUtil.idle;
 
   StatusUtil get dashServiceUtil => _dashServiceUtil;
   StatusUtil get profilePictureUtil => _profilePictureUtil;
   StatusUtil get professionUtil => _professionUtil;
   StatusUtil get getProfessionUtil => _getProfessionUtil;
+  StatusUtil get verificationUtil => _verificationUtil;
 
   setDashServiceUtil(StatusUtil statusUtil) {
     _dashServiceUtil = statusUtil;
@@ -76,6 +85,35 @@ class OurServiceProvider extends ChangeNotifier {
 
   setGetProfessionUtil(StatusUtil statusUtil) {
     _getProfessionUtil = statusUtil;
+    notifyListeners();
+  }
+  //   Future<void> getProfilePicture() async {
+  //   if (_verificationUtil != StatusUtil.loading) {
+  //     setUserImageUtil(StatusUtil.loading);
+  //   }
+  //   try {
+  //     var response = await petCareService.getUserByEmail();
+  //     if (response.statusUtil == StatusUtil.success) {
+  //       signUp = response.data;
+  //       if (signUp?.userImage != null) {
+  //         profilePicture = signUp!.userImage ?? "";
+  //       }
+
+  //       setUserImageUtil(StatusUtil.success);
+  //     } else if (response.statusUtil == StatusUtil.error) {
+  //       errorMessage = response.errorMessage;
+  //       print("Error fetching shop items: $errorMessage");
+  //       setUserImageUtil(StatusUtil.error);
+  //     }
+  //   } catch (e) {
+  //     errorMessage = "$e";
+  //     print("Exception while fetching shop items: $errorMessage");
+  //     setUserImageUtil(StatusUtil.error);
+  //   }
+  // }
+  reset() {
+    OurService ourService = OurService();
+    ourService.profilePicture == "";
     notifyListeners();
   }
 
@@ -98,7 +136,7 @@ class OurServiceProvider extends ChangeNotifier {
         shopLocation: shopLocation,
         shopName: shopName,
         trainner: trainner,
-        profilePicture: petCareProvider.profilePicture ?? profilePictureUrl,
+        profilePicture: picture ?? profilePictureUrl,
         description: description,
       );
 

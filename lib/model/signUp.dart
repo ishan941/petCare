@@ -7,10 +7,10 @@ class SignUp {
   String? favourite;
   String? id;
   String? shopCart;
-  String? myProfile;
+  String? myPetData;
   String? userImage;
 
-  SignUp({this.name,this.userImage, this.shopCart,this.myProfile, this.phone, this.email, this.password,this.favourite,this.id});
+  SignUp({this.name,this.userImage, this.shopCart,this.myPetData, this.phone, this.email, this.password,this.favourite,this.id});
 
   SignUp.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -20,7 +20,7 @@ class SignUp {
     favourite=json['favourite'];
     shopCart=json['shopCart'];
     id=json["id"];
-    myProfile=json["myProfile"];
+    myPetData=json["myPetData"];
     userImage=json["userImage"];
   }
 
@@ -33,7 +33,7 @@ class SignUp {
     data['favourite']=this.favourite;
     data['shopCart']=this.shopCart;
     data['id']=this.id;
-    data['myProfile']=this.myProfile;
+    data['myPetData']=this.myPetData;
     data['userImage']=this.userImage;
     return data;
   }

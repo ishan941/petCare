@@ -5,7 +5,7 @@ class ConstSearch extends StatelessWidget {
   final String? labelText, hintText;
   final Widget? prefixIcon, suffixIcon;
   final void Function(String)? onChanged;
-  TextEditingController? controller;
+  final TextEditingController? controller;
   
 
   ConstSearch({
@@ -28,6 +28,9 @@ class ConstSearch extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: TextFormField(
+        onTapOutside: (event) {
+          FocusScope.of(context).unfocus();
+        },
         decoration: InputDecoration(
           labelText: labelText,
           hintText: hintText,
@@ -43,6 +46,7 @@ class ConstSearch extends StatelessWidget {
         validator: validator,
         onChanged: onChanged,
         controller: controller,
+        
       ),
     ));
   }
