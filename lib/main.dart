@@ -8,6 +8,7 @@ import 'package:project_petcare/firebase_options.dart';
 import 'package:project_petcare/provider/adoptprovider.dart';
 import 'package:project_petcare/provider/categoryprovider.dart';
 import 'package:project_petcare/provider/donateprovider.dart';
+import 'package:project_petcare/provider/feedprovider.dart';
 import 'package:project_petcare/provider/mypet_provider.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
@@ -113,6 +114,7 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (context) => SignUpProvider()),
           ChangeNotifierProvider(create: (context) => CategoriesProvider()),
           ChangeNotifierProvider(create: (context) => MyPetProvider()),
+          ChangeNotifierProvider(create: (context)=> FeedProvider()),
         ],
         child: MaterialApp(
             navigatorKey: firebaseNavigatorKey,

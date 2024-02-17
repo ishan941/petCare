@@ -4,6 +4,7 @@ import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/provider/donateprovider.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
+import 'package:project_petcare/view/shop/mycart.dart';
 import 'package:project_petcare/view/shop/shopBuyNow.dart';
 import 'package:project_petcare/view/shop/shopall.dart';
 import 'package:provider/provider.dart';
@@ -223,7 +224,7 @@ class _ShopDetailsState extends State<ShopDetails> {
                             children: [
                               InkWell(
                                 onTap: () =>
-                                    _showAlertDialog(context, shopProvider),
+                                   MyCart(),
                                 child: Icon(
                                   Icons.shopping_cart_outlined,
                                   color: ColorUtil.primaryColor,
@@ -232,7 +233,7 @@ class _ShopDetailsState extends State<ShopDetails> {
                               SizedBox(
                                 height: 5,
                               ),
-                              Text('Add to cart')
+                              Text('My cart')
                             ],
                           ),
                         ),

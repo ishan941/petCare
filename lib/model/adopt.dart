@@ -8,6 +8,7 @@ class Adopt {
   String? imageUrl;
   String? id;
   String? petAgeTime;
+  String? userImage;
   bool isDoubleTapped;
 
   Adopt({
@@ -22,6 +23,7 @@ class Adopt {
     this.location,
     this.phone,
     this.name,
+    this.userImage,
     this.isDoubleTapped = false,
   });
 
@@ -37,7 +39,8 @@ class Adopt {
         name = json['name'],
         id = json['id'],
         petAgeTime = json['petAgeTime'],
-        isDoubleTapped = false; // Initialize isDoubleTapped here
+        isDoubleTapped = false,
+        userImage = json['userImage'] ;// Initialize isDoubleTapped here
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -52,6 +55,7 @@ class Adopt {
     data['name'] = this.name;
     data['id'] = this.id;
     data['petAgeTime'] = this.petAgeTime;
+    data['userImage'] = this.userImage;
 
     return data;
   }

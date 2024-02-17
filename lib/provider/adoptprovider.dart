@@ -4,15 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/model/adopt.dart';
+import 'package:project_petcare/provider/petcareprovider.dart';
+import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/response/response.dart';
 import 'package:project_petcare/service/petcareimpl.dart';
 import 'package:project_petcare/service/petcareserivce.dart';
 
 class AdoptProvider extends ChangeNotifier {
+  PetCareService petCareService = PetCareImpl();
+  PetCareProvider petCareProvider = PetCareProvider();
+  SignUpProvider signUpProvider = SignUpProvider();
+
+
   String? errorMessage, imageUrl;
   XFile? image;
 
   String? id, petGender, petBread, petAgeTime;
+  String? userImage;
+  
 
  
 
@@ -36,7 +45,7 @@ class AdoptProvider extends ChangeNotifier {
 
   List<Adopt> adoptDetailsList = [];
 
-  PetCareService petCareService = PetCareImpl();
+  
 
   StatusUtil _adoptUtil = StatusUtil.idle;
   StatusUtil _uploadImageUtil = StatusUtil.idle;
@@ -47,6 +56,11 @@ class AdoptProvider extends ChangeNotifier {
   StatusUtil get uploadImageUtil => _uploadImageUtil;
   StatusUtil get getAdoptDetails => _getAdoptDetails;
   StatusUtil get deleteAdoptDetails => _deleteAdoptDetails;
+
+  setUserImage(value){
+    userImage = value;
+    notifyListeners();
+  }
 
   setPetGender(String value) {
     petGender = value;
@@ -177,6 +191,7 @@ class AdoptProvider extends ChangeNotifier {
       gender: petGender,
       imageUrl: imageUrl,
       petbread: petBread,
+      userImage: userImage ?? "",
       petweight: petweightController.text,
       phone: ownerPhoneController.text,
       name: ownerNameController.text,

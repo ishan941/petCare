@@ -10,7 +10,6 @@ import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/response/response.dart';
 import 'package:project_petcare/service/petcareimpl.dart';
 import 'package:project_petcare/service/petcareserivce.dart';
-import 'package:project_petcare/view/test.dart/verificationTest.dart';
 
 class OurServiceProvider extends ChangeNotifier {
   SignUpProvider signUpProvider = SignUpProvider();

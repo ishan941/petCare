@@ -11,7 +11,7 @@ class Donate {
 
   Donate.fromJson(Map<String, dynamic> json) {
     petname = json['petname'];
-    petweight = json['petweight'];
+    petweight = json['petweight']; 
     petage = json['petage'];
     gender = json['gender'];
     petbread = json['petbread'];

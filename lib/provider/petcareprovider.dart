@@ -12,7 +12,7 @@ import 'package:project_petcare/service/petcareserivce.dart';
 
 class PetCareProvider extends ChangeNotifier {
   PetCareService petCareService = PetCareImpl();
-  SignUpProvider? signUpProvider = SignUpProvider();
+  SignUpProvider signUpProvider = SignUpProvider();
 
   XFile? userImage;
   String? userImageurl;
@@ -158,7 +158,7 @@ class PetCareProvider extends ChangeNotifier {
       setVerificationUtil(StatusUtil.loading);
     }
     VerificationTools verificationTools = VerificationTools(
-      userEmail: signUpProvider!.userEmail,
+      userEmail: signUpProvider.userEmail,
       userImage: userImageurl,
       userLocation: userLocation,
       userName: userName,

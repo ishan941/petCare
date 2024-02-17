@@ -6,6 +6,7 @@ import 'package:project_petcare/model/adopt.dart';
 import 'package:project_petcare/model/categories.dart';
 import 'package:project_petcare/model/dashservice.dart';
 import 'package:project_petcare/model/donate.dart';
+import 'package:project_petcare/model/feed.dart';
 import 'package:project_petcare/model/mypet.dart';
 import 'package:project_petcare/model/ourservice.dart';
 import 'package:project_petcare/model/shop.dart';
@@ -418,7 +419,6 @@ class PetCareImpl extends PetCareService {
         statusUtil: StatusUtil.error, errorMessage: noInternetStr);
   }
 
-  
   @override
   Future<FireResponse> saveShopFavourite(Shop shop) async {
     if (await Helper.checkInterNetConnection()) {
@@ -567,7 +567,8 @@ class PetCareImpl extends PetCareService {
           statusUtil: StatusUtil.error, errorMessage: noInternetStr);
     }
   }
-   @override
+
+  @override
   Future<FireResponse> updatePet(SignUp signUp) async {
     if (await Helper.checkInterNetConnection()) {
       try {
@@ -585,6 +586,7 @@ class PetCareImpl extends PetCareService {
           statusUtil: StatusUtil.error, errorMessage: noInternetStr);
     }
   }
+
   @override
   Future<FireResponse> updateMyPetDetails(MyPet myPet) async {
     if (await Helper.checkInterNetConnection()) {
@@ -604,4 +606,43 @@ class PetCareImpl extends PetCareService {
     }
   }
 
+  @override
+  Future<FireResponse> saveFeedValue(Feed feed) async {
+    if (await Helper.checkInterNetConnection()) {
+      try {
+        await FirebaseFirestore.instance
+            .collection("Feed Details")
+            .add(feed.toJson());
+        return FireResponse(statusUtil: StatusUtil.success);
+      } catch (e) {
+        return FireResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
+      }
+    } else {
+      return FireResponse(
+          statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+    }
+  }
+
+  @override
+  Future<FireResponse> getFeedValue() async {
+    if (await Helper.checkInterNetConnection()) {
+      try {
+        var response =
+            await FirebaseFirestore.instance.collection("Feed Details").get();
+        final user = response.docs;
+        List<Feed> feedList = [];
+        if (user.isNotEmpty) {
+          for (var feedData in user) {
+            feedList.add(Feed.fromJson(feedData.data()));
+          }
+        }
+        return FireResponse(statusUtil: StatusUtil.success, data: feedList);
+      } catch (e) {
+        return FireResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
+      }
+    } else {
+      return FireResponse(
+          statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+    }
+  }
 }
