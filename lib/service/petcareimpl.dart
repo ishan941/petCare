@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
@@ -17,7 +20,7 @@ import 'package:project_petcare/service/petcareserivce.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PetCareImpl extends PetCareService {
-  @override
+  Dio dio = Dio();
   @override
   Future<FireResponse> donateData(Donate donate) async {
     if (await Helper.checkInterNetConnection()) {
@@ -39,24 +42,61 @@ class PetCareImpl extends PetCareService {
   }
 
   //send to firebase
-  @override
-  Future<FireResponse> userLoginDetails(SignUp signUp) async {
-    if (await Helper.checkInterNetConnection()) {
-      try {
-        FirebaseFirestore.instance
-            .collection("User LoginData")
-            .add(signUp.toJson());
-        return FireResponse(
-            statusUtil: StatusUtil.success,
-            successMessage: successfullySavedStr);
-      } catch (e) {
-        return FireResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
+ @override
+Future<Apiresponse> userLoginDetails(SignUp signUp) async {
+  if (await Helper.checkInterNetConnection()) {
+    try {
+      Response response = await dio.post(
+        "https://78ce-103-90-147-204.ngrok-free.app/saveUsers",
+        data: signUp.toJson(),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return Apiresponse(statusUtil: StatusUtil.success);
+      } else {
+        return Apiresponse(
+          statusUtil: StatusUtil.error,
+          errorMessage: "Unexpected server response: ${response.statusCode} ${response.statusMessage}",
+        );
       }
-    } else {
-      return FireResponse(
-          statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+    } on DioError catch (e) {
+      if (e.error is SocketException) {
+        return Apiresponse(
+          statusUtil: StatusUtil.error,
+          errorMessage: "No internet connection.",
+        );
+      } else if (e.response != null) {
+        if (e.response!.statusCode == 400) {
+          return Apiresponse(
+            statusUtil: StatusUtil.error,
+            errorMessage: e.response!.statusMessage ?? badRequestStr,
+          );
+        } else if (e.response!.statusCode == 404) {
+          return Apiresponse(
+            statusUtil: StatusUtil.error,
+            errorMessage: "Resource not found. Check your request URL.",
+          );
+        } else {
+          return Apiresponse(
+            statusUtil: StatusUtil.error,
+            errorMessage: "Unexpected server response: ${e.response!.statusCode} ${e.response!.statusMessage}",
+          );
+        }
+      } else {
+        return Apiresponse(
+          statusUtil: StatusUtil.error,
+          errorMessage: "Unexpected error: ${e.toString()}",
+        );
+      }
     }
   }
+
+  return Apiresponse(
+    statusUtil: StatusUtil.error,
+    errorMessage: noInternetStr,
+  );
+}
+
 
   @override
   Future<FireResponse> isUserLoggedIn(SignUp signUp) async {

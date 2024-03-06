@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/model/mypet.dart';
@@ -36,11 +35,11 @@ class MyPetProvider extends ChangeNotifier {
 
   StatusUtil _myPetUtil = StatusUtil.idle;
   StatusUtil _getMyPetUtil = StatusUtil.idle;
-  StatusUtil _updateMyPetUtil = StatusUtil.idle;
+  // StatusUtil _updateMyPetUtil = StatusUtil.idle;
 
   StatusUtil get myPetUtil => _myPetUtil;
   StatusUtil get getMyPetUtil => _getMyPetUtil;
-  StatusUtil get updateMyPetUtil => updateMyPetUtil;
+  // StatusUtil get updateMyPetUtil => updateMyPetUtil;
 
   setBreed(String value) {
     petBreed = value;
@@ -56,10 +55,10 @@ class MyPetProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  setUpdateMyPetUtil(StatusUtil statusUtil) {
-    _updateMyPetUtil = statusUtil;
-    notifyListeners();
-  }
+  // setUpdateMyPetUtil(StatusUtil statusUtil) {
+  //   _updateMyPetUtil = statusUtil;
+  //   notifyListeners();
+  // }
 
   Future<void> saveMyPetDetailsToFireBase() async {
     if (_myPetUtil != StatusUtil.loading) {

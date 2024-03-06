@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:project_petcare/core/smooth_scrollable.dart';
 import 'package:project_petcare/core/statusutil.dart';
+import 'package:project_petcare/helper/constSearch.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
-import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/simmer.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/model/dashservice.dart';
 import 'package:project_petcare/model/ourservice.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
-import 'package:project_petcare/response/response.dart';
 import 'package:project_petcare/view/customs/consttextform.dart';
 import 'package:project_petcare/view/ourservice/profession.dart';
 import 'package:project_petcare/view/ourservice/serviceDetail.dart';
@@ -109,36 +108,17 @@ class _OurServicesMoreState extends State<OurServicesMore>
                                 //   height: 50,
                                 //   color: Colors.red,
                                 // )
-                                ConstTextForm(
+                                ConstSearch(
+                              prefixIcon: Icon(Icons.search),
                               controller: _searchController,
                               hintText: searchHereStr,
-                              suffixIcon: const Icon(Icons.search),
+                              // suffixIcon: const Icon(Icons.search),
                               onChanged: (_) {
                                 _searchHere(ourServiceProvider);
                               },
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              spreadRadius: 0,
-                              blurRadius: 3,
-                              color: Colors.grey.withOpacity(1),
-                              offset: const Offset(2, 4),
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white,
-                        ),
-                        width: 55,
-                        height: 55,
-                        child: const Icon(Icons.sort),
                       ),
                     ],
                   ),
@@ -234,7 +214,8 @@ class _OurServicesMoreState extends State<OurServicesMore>
                       : ourServiceProvider.getProfessionUtil == StatusUtil.error
                           ? Text("Error: ${ourServiceProvider.errorMessage}")
                           : Padding(
-                              padding: const EdgeInsets.all(15),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 7),
                               child: InkWell(
                                 onTap: () {
                                   Navigator.push(
@@ -390,7 +371,8 @@ class _OurServicesMoreState extends State<OurServicesMore>
                 child: ListView.builder(
                   itemCount: filteredList.length,
                   itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.all(15),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
                     child: InkWell(
                       onTap: () {
                         Navigator.push(
@@ -523,7 +505,8 @@ class _OurServicesMoreState extends State<OurServicesMore>
                 child: ListView.builder(
                   itemCount: filteredList.length,
                   itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.all(15),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
                     child: InkWell(
                       onTap: () {
                         Navigator.push(

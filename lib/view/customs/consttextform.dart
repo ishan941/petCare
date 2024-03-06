@@ -5,7 +5,7 @@ class ConstTextForm extends StatelessWidget {
   final String? labelText, hintText;
   final Widget? prefixIcon, suffixIcon;
   final void Function(String)? onChanged;
-  TextEditingController? controller;
+  final TextEditingController? controller;
 
   ConstTextForm({
     super.key,
@@ -22,7 +22,7 @@ class ConstTextForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
-      child: (Container(
+      child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
@@ -42,7 +42,6 @@ class ConstTextForm extends StatelessWidget {
             fillColor: Colors.white,
             prefixIcon: prefixIcon,
             suffixIcon: suffixIcon,
-            
             border: OutlineInputBorder(
                 borderSide: BorderSide.none,
                 borderRadius: BorderRadius.circular(10)),
@@ -51,23 +50,8 @@ class ConstTextForm extends StatelessWidget {
           onChanged: onChanged,
           controller: controller,
         ),
-      )),
+      )
     );
   }
 }
 
-//   labelText: labelText,
-          //   hintText: hintText,
-          //     filled: true,
-          //   fillColor: Colors.white,
-          //   prefixIcon: prefixIcon,
-          //   suffixIcon: suffixIcon,
-          //   border: OutlineInputBorder(
-          //       borderSide: BorderSide.none,
-          //     borderRadius: BorderRadius.circular(10)
-          //   ),
-            
-          // ),
-          // validator: validator,
-          // onChanged: onChanged,
-          

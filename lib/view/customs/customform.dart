@@ -16,7 +16,7 @@ final void Function(String)? onChanged;
   this.prefixIcon,
   this.suffixIcon,
   this.onChanged,
-  this.obscureText= false
+  this.obscureText  = false
    
    
    });

@@ -11,8 +11,8 @@ import 'package:project_petcare/view/buttomnav.dart';
 import 'package:provider/provider.dart';
 
 class FormFinalProfession extends StatefulWidget {
-  SignUp? signUp;
-  FormFinalProfession({super.key});
+ final SignUp? signUp;
+  FormFinalProfession({super.key, this.signUp});
 
   @override
   State<FormFinalProfession> createState() => _FormFinalProfessionState();

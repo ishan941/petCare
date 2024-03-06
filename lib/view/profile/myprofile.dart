@@ -6,7 +6,6 @@ import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/simmer.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
-import 'package:project_petcare/model/mypet.dart';
 import 'package:project_petcare/provider/mypet_provider.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/shop_provider.dart';

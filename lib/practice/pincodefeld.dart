@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/view/profile/account.dart';
-import 'package:project_petcare/view/profile/settingsAndPrivacy.dart';
 
 class pinCodeTEst extends StatefulWidget {
  final String? verificationCode, phoneNumber;

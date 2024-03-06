@@ -18,7 +18,7 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  String? name, phone, email, password;
+  String? name, phone, email, password,confirmPassword;
   bool obscureText = true;
 
   @override
@@ -122,7 +122,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             ? true
                             : false,
                         onChanged: (value) {
-                          signUpProvider.password = value;
+                          signUpProvider.confirmPassword = value;
                         },
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -170,6 +170,9 @@ class _SignUpPageState extends State<SignUpPage> {
                               onPressed: () async {
                                 await signUpProvider
                                     .sendUserLoginValueToFireBase();
+                                    if(signUpProvider.password != signUpProvider.confirmPassword){
+                                      Helper.snackBar("Your Password doesn't match", context);
+                                    }
                                 if (signUpProvider.signUpUtil ==
                                     StatusUtil.success) {
                                   Helper.snackBar(

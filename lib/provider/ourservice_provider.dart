@@ -12,8 +12,10 @@ import 'package:project_petcare/service/petcareimpl.dart';
 import 'package:project_petcare/service/petcareserivce.dart';
 
 class OurServiceProvider extends ChangeNotifier {
+  PetCareService petCareService = PetCareImpl();
   SignUpProvider signUpProvider = SignUpProvider();
   PetCareProvider petCareProvider = PetCareProvider();
+
   String? errorMessage;
   String? service;
   String? medical, shop, trainner;
@@ -22,11 +24,13 @@ class OurServiceProvider extends ChangeNotifier {
   String? profession, phone, email, description;
   String? chosenProfession;
   XFile? cpimage, ppimage, profilePicture;
+  String? picture;
+  String? userName;
+
   List<DashService> dashServiceList = [];
   List<OurService> professionDataList = [];
-  String? picture;
-
-  String? userName;
+  List<OurService> _filteredProfessionData = [];
+  List<OurService> get filteredProfessionData => _filteredProfessionData;
 
   List<OurService> filterByProfession(String chosenProfession) {
     return professionDataList
@@ -34,9 +38,17 @@ class OurServiceProvider extends ChangeNotifier {
         .toList();
   }
 
-  List<OurService> _filteredProfessionData = [];
+  StatusUtil _dashServiceUtil = StatusUtil.idle;
+  StatusUtil _profilePictureUtil = StatusUtil.idle;
+  StatusUtil _professionUtil = StatusUtil.idle;
+  StatusUtil _getProfessionUtil = StatusUtil.idle;
+  StatusUtil _verificationUtil = StatusUtil.idle;
 
-  List<OurService> get filteredProfessionData => _filteredProfessionData;
+  StatusUtil get dashServiceUtil => _dashServiceUtil;
+  StatusUtil get profilePictureUtil => _profilePictureUtil;
+  StatusUtil get professionUtil => _professionUtil;
+  StatusUtil get getProfessionUtil => _getProfessionUtil;
+  StatusUtil get verificationUtil => _verificationUtil;
 
   setFilteredProfessionData(List<OurService> filteredData) {
     _filteredProfessionData = filteredData;
@@ -52,20 +64,6 @@ class OurServiceProvider extends ChangeNotifier {
     chosenProfession = profession;
     notifyListeners();
   }
-
-  PetCareService petCareService = PetCareImpl();
-
-  StatusUtil _dashServiceUtil = StatusUtil.idle;
-  StatusUtil _profilePictureUtil = StatusUtil.idle;
-  StatusUtil _professionUtil = StatusUtil.idle;
-  StatusUtil _getProfessionUtil = StatusUtil.idle;
-  StatusUtil _verificationUtil = StatusUtil.idle;
-
-  StatusUtil get dashServiceUtil => _dashServiceUtil;
-  StatusUtil get profilePictureUtil => _profilePictureUtil;
-  StatusUtil get professionUtil => _professionUtil;
-  StatusUtil get getProfessionUtil => _getProfessionUtil;
-  StatusUtil get verificationUtil => _verificationUtil;
 
   setDashServiceUtil(StatusUtil statusUtil) {
     _dashServiceUtil = statusUtil;
@@ -263,7 +261,7 @@ class OurServiceProvider extends ChangeNotifier {
   uploadImageInFireBaseForDashService() async {
     setDashServiceUtil(StatusUtil.loading);
     if (cpimage != null) {
-      List<String> extension = cpimage!.name.split(".");
+      // List<String> extension = cpimage!.name.split(".");
       final storageRef = FirebaseStorage.instance.ref();
       var mountainRef = storageRef.child("${cpimage!.name}");
       try {
@@ -281,7 +279,7 @@ class OurServiceProvider extends ChangeNotifier {
   uploadImageInFirebaseForPpImage() async {
     setDashServiceUtil(StatusUtil.loading);
     if (ppimage != null) {
-      List<String> extension = ppimage!.name.split(".");
+      // List<String> extension = ppimage!.name.split(".");
       final firebaseStorageRef = FirebaseStorage.instance.ref();
       var firebaseMountainRef = firebaseStorageRef.child("${ppimage!.name}");
       try {
@@ -301,7 +299,7 @@ class OurServiceProvider extends ChangeNotifier {
       setProfilePictureUtil(StatusUtil.loading);
     }
     if (profilePicture != null) {
-      List<String> extension = profilePicture!.name.split(".");
+      // List<String> extension = profilePicture!.name.split(".");
       final storeProfilePictureImageInFireBaseRef =
           FirebaseStorage.instance.ref();
       var storeProfilePictureImageRef = storeProfilePictureImageInFireBaseRef

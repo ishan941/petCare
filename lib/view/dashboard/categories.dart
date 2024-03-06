@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/string_const.dart';
-import 'package:project_petcare/view/dashboard/homepage.dart';
 
 class CategoriesExplore extends StatefulWidget {
   const CategoriesExplore({super.key});

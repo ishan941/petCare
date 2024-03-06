@@ -92,7 +92,7 @@ class DonateProvider extends ChangeNotifier {
     setUploadImageStatus(StatusUtil.loading);
 
     if (image != null) {
-      List<String> extension = image!.name.split(".");
+      // List<String> extension = image!.name.split(".");
       final storageRef = FirebaseStorage.instance.ref();
       var mountainRef = storageRef.child("${image!.name}");
       try {

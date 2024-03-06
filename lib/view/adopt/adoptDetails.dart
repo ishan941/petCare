@@ -3,7 +3,6 @@ import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/model/adopt.dart';
 import 'package:project_petcare/provider/adoptprovider.dart';
-import 'package:project_petcare/view/shop/shopall.dart';
 import 'package:provider/provider.dart';
 
 class AdoptDetails extends StatefulWidget {

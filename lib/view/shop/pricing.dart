@@ -6,7 +6,6 @@ import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
 import 'package:project_petcare/view/buttomnav.dart';
-import 'package:project_petcare/view/shop/confirmation_item.dart';
 import 'package:provider/provider.dart';
 
 class NextPricing extends StatefulWidget {

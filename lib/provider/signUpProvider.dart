@@ -14,7 +14,7 @@ class SignUpProvider extends ChangeNotifier {
   PetCareService petCareService = PetCareImpl();
 
   String? errorMessage;
-  String? name, phone, email, password;
+  String? name, phone, email, password, confirmPassword;
   bool isUserLoggedIn = false;
 
   List<SignUp> userSignInDataList = [];
@@ -56,7 +56,7 @@ class SignUpProvider extends ChangeNotifier {
     SignUp signUp =
         SignUp(name: name, password: password, email: email, phone: phone);
     try {
-      FireResponse response = await petCareService.userLoginDetails(signUp);
+      Apiresponse response = await petCareService.userLoginDetails(signUp);
       if (response.statusUtil == StatusUtil.success) {
         setSignUpUtil(StatusUtil.success);
       } else {
@@ -64,9 +64,8 @@ class SignUpProvider extends ChangeNotifier {
         setSignUpUtil(StatusUtil.error);
       }
     } catch (e) {
-      setSignUpUtil(
-        StatusUtil.error,
-      );
+      errorMessage = "$e";
+      setSignUpUtil(StatusUtil.error);
     }
   }
 

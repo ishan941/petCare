@@ -6,7 +6,7 @@ class ShopTextForm extends StatelessWidget {
   final void Function(String)? onChanged;
   final String? Function(String?)? validator;
   final Widget? prefixIcon;
-  TextEditingController? controller;
+ final TextEditingController? controller;
 
   ShopTextForm(
       {super.key,

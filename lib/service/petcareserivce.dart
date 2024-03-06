@@ -30,7 +30,7 @@ abstract class PetCareService {
   Future<FireResponse> saveProfessionData(OurService ourService);
   Future<FireResponse> getProfessionDetails();
   Future<FireResponse> getDashServiceDetails();
-  Future<FireResponse> userLoginDetails(SignUp signUp);
+  Future<Apiresponse> userLoginDetails(SignUp signUp);
   Future<FireResponse> userVerification(VerificationTools verificationTools);
   Future<FireResponse> deleteAdoptById(String id);
   Future<FireResponse> getUserByEmail();

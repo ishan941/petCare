@@ -5,7 +5,6 @@ import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/view/profile/account.dart';
-import 'package:project_petcare/view/profile/settingsAndPrivacy.dart';
 import 'package:provider/provider.dart';
 
 class TestConfirmVerification extends StatefulWidget {

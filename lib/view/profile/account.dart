@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project_petcare/core/smooth_scrollable.dart';
@@ -16,8 +14,8 @@ import 'package:project_petcare/view/profile/settingsAndPrivacy.dart';
 import 'package:provider/provider.dart';
 
 class Account extends StatefulWidget {
-  SignUp? signUp;
-  Account({super.key});
+  final SignUp? signUp;
+  Account({super.key, this.signUp});
 
   @override
   State<Account> createState() => _AccountState();

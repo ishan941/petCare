@@ -10,7 +10,10 @@ class SignUp {
   String? myPetData;
   String? userImage;
 
-  SignUp({this.name,this.userImage, this.shopCart,this.myPetData, this.phone, this.email, this.password,this.favourite,this.id});
+  SignUp({this.name,
+  this.userImage, 
+  this.shopCart,
+  this.myPetData, this.phone, this.email, this.password,this.favourite,this.id});
 
   SignUp.fromJson(Map<String, dynamic> json) {
     name = json['name'];

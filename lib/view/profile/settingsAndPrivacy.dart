@@ -8,7 +8,6 @@ import 'package:project_petcare/provider/shop_provider.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/view/profile/passwordandSecurity.dart';
 import 'package:project_petcare/view/profile/personalDetails.dart';
-import 'package:project_petcare/view/profile/verificationCode.dart';
 import 'package:project_petcare/view/profile/verifyYourAccount_1.dart';
 import 'package:project_petcare/view/test.dart/foradmin.dart';
 import 'package:project_petcare/view/test.dart/testPage.dart';
