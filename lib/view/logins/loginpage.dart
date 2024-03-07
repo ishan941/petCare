@@ -54,10 +54,10 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             //Username
                             CustomForm(
-                              labelText: "Phone Number",
-                              prefixIcon: Icon(Icons.phone),
+                              labelText: email,
+                              prefixIcon: Icon(Icons.email),
                               onChanged: (value) {
-                                signUpProvider.phone = value;
+                                signUpProvider.email = value;
                               },
                               validator: (value) {
                                 if (value!.isEmpty) {

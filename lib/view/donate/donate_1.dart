@@ -30,26 +30,26 @@ class _DonateFirstPageState extends State<DonateFirstPage> {
   List<String> petGenderList = ["Male", "Female", "Others"];
 
   // List of items in our dropdown menu
-  @override
-  void initState() {
-    Future.delayed(Duration.zero, () {
-      var adoptProvider = Provider.of<AdoptProvider>(context, listen: false);
-      if (widget.adopt != null) {
-        adoptProvider.petnameController.text = widget.adopt!.petname!;
-        adoptProvider.petAgeController.text = widget.adopt!.petage!;
-        adoptProvider.petweightController.text = widget.adopt!.petweight!;
-        adoptProvider.setPetGender(widget.adopt!.gender!);
-        adoptProvider.setPetBread(widget.adopt!.petbread!);
-        adoptProvider.setImageUrl(widget.adopt!.imageUrl);
-        adoptProvider.setPetAgeTime(widget.adopt!.petAgeTime!);
-        adoptProvider.ownerLocationController.text = widget.adopt!.location!;
-        adoptProvider.ownerNameController.text = widget.adopt!.name!;
-        adoptProvider.ownerPhoneController.text = widget.adopt!.phone!;
-      }
-    });
+  // @override
+  // void initState() {
+  //   Future.delayed(Duration.zero, () {
+  //     var adoptProvider = Provider.of<AdoptProvider>(context, listen: false);
+  //     if (widget.adopt != null) {
+  //       adoptProvider.petnameController.text = widget.adopt!.petname!;
+  //       adoptProvider.petAgeController.text = widget.adopt!.petage!;
+  //       adoptProvider.petweightController.text = widget.adopt!.petweight!;
+  //       adoptProvider.setPetGender(widget.adopt!.gender!);
+  //       adoptProvider.setPetBread(widget.adopt!.petbread!);
+  //       adoptProvider.setImageUrl(widget.adopt!.imageUrl);
+  //       adoptProvider.setPetAgeTime(widget.adopt!.petAgeTime!);
+  //       adoptProvider.ownerLocationController.text = widget.adopt!.location!;
+  //       adoptProvider.ownerNameController.text = widget.adopt!.name!;
+  //       adoptProvider.ownerPhoneController.text = widget.adopt!.phone!;
+  //     }
+  //   });
 
-    super.initState();
-  }
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +114,9 @@ class _DonateFirstPageState extends State<DonateFirstPage> {
                     ),
                     const Text(petNameStr),
                     ShopTextForm(
-                         controller: adoptProvider.petnameController
+                         onChanged: (value){
+                          adoptProvider.petName = value;
+                         },
                         ),
                     const SizedBox(
                       height: 20,
@@ -125,7 +127,9 @@ class _DonateFirstPageState extends State<DonateFirstPage> {
                         Container(
                           width: MediaQuery.of(context).size.width * .6,
                           child: ShopTextForm(
-                            controller: adoptProvider.petAgeController,
+                            onChanged: (value){
+                          adoptProvider.petAge = value;
+                         },
                           ),
                         ),
                         SizedBox(
@@ -146,7 +150,9 @@ class _DonateFirstPageState extends State<DonateFirstPage> {
                     ),
                     const Text(petWeightStr),
                     ShopTextForm(
-                      controller: adoptProvider.petweightController,
+                      onChanged: (value){
+                          adoptProvider.petWeight = value;
+                         },
                     ),
                     const SizedBox(
                       height: 20,
@@ -164,9 +170,9 @@ class _DonateFirstPageState extends State<DonateFirstPage> {
                     const Text(petBreadStr),
                     CustomDropDown(
                         onChanged: (value) {
-                          adoptProvider.petBread = value;
+                          adoptProvider.petBreed = value;
                         },
-                        value:  adoptProvider.petBread,
+                        value:  adoptProvider.petBreed,
                         itemlist: dogBreedList),
                     const SizedBox(
                       height: 10,
@@ -214,7 +220,9 @@ class _DonateFirstPageState extends State<DonateFirstPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => DonateSecond(adopt: adoptProvider.adoptDetailsList.first,)));
+                                    builder: (context) => DonateSecond(
+                                      adopt: adoptProvider.adoptDetailsList.first
+                                      )));
                           },
                           child: const Text(nextStr)),
                     )),

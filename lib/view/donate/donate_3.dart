@@ -11,7 +11,7 @@ import 'package:project_petcare/view/buttomnav.dart';
 import 'package:provider/provider.dart';
 
 class DonateThird extends StatefulWidget {
-   final Adopt? adopt;
+    Adopt? adopt;
   DonateThird({Key? key, this.adopt}) : super(key: key);
 
   @override
@@ -19,23 +19,23 @@ class DonateThird extends StatefulWidget {
 }
 
 class _DonateThirdState extends State<DonateThird> {
-  @override
-  void initState() {
-     var adoptProvider = Provider.of<AdoptProvider>(context, listen: false);
-    if (widget.adopt != null) {
-      adoptProvider.petnameController.text = widget.adopt!.petname!;
-      adoptProvider.petAgeController.text = widget.adopt!.petage!;
-      adoptProvider.petweightController.text = widget.adopt!.petweight!;
-      adoptProvider.setPetGender(widget.adopt!.gender!);
-      adoptProvider.setPetBread(widget.adopt!.petbread!);
-      adoptProvider.setImageUrl(widget.adopt!.imageUrl);
-      adoptProvider.setPetAgeTime(widget.adopt!.petAgeTime!);
-      adoptProvider.ownerLocationController.text = widget.adopt!.location!;
-      adoptProvider.ownerNameController.text = widget.adopt!.name!;
-      adoptProvider.ownerPhoneController.text = widget.adopt!.phone!;
-    }
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //    var adoptProvider = Provider.of<AdoptProvider>(context, listen: false);
+  //   if (widget.adopt != null) {
+  //     adoptProvider.petnameController.text = widget.adopt!.petname!;
+  //     adoptProvider.petAgeController.text = widget.adopt!.petage!;
+  //     adoptProvider.petweightController.text = widget.adopt!.petweight!;
+  //     adoptProvider.setPetGender(widget.adopt!.gender!);
+  //     adoptProvider.setPetBread(widget.adopt!.petbread!);
+  //     adoptProvider.setImageUrl(widget.adopt!.imageUrl);
+  //     adoptProvider.setPetAgeTime(widget.adopt!.petAgeTime!);
+  //     adoptProvider.ownerLocationController.text = widget.adopt!.location!;
+  //     adoptProvider.ownerNameController.text = widget.adopt!.name!;
+  //     adoptProvider.ownerPhoneController.text = widget.adopt!.phone!;
+  //   }
+  //   super.initState();
+  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,16 +108,17 @@ class _DonateThirdState extends State<DonateThird> {
                       fit: BoxFit.cover,
                     )
                   ),
-                  Text(adoptProvider.petnameController.text),
-                  Text(adoptProvider.petweightController.text  ),
-                  Text(adoptProvider.petBread ?? ""),
-                  Text(adoptProvider.petAgeTime ?? ""),
-                  Text(adoptProvider.petGender ?? ""),
-                  Text(adoptProvider.ownerPhoneController.text),
-                  Text(adoptProvider.petAgeController.text  ),
-                  Text(adoptProvider.ownerNameController.text),
-                  Text(adoptProvider.ownerLocationController.text ),
-                  Text(adoptProvider.ownerPhoneController.text ),
+                  // Text(adoptProvider.petName ?? ""),
+                  // Text(adoptProvider.petWeight ?? "" ),
+                  // Text(adoptProvider.petBreed ?? ""),
+                  // Text(adoptProvider.petAgeTime ?? ""),
+                  // Text(adoptProvider.petAge ?? ""),
+                  // Text(adoptProvider.petGender ?? ""),
+                  // Text(adoptProvider.ownerName ?? ""),
+                  
+                  // Text(adoptProvider.ownerNameController.text),
+                  // Text(adoptProvider.ownerLocationController.text ),
+                  // Text(adoptProvider.ownerPhoneController.text ),
 
                   //widget
                 
@@ -130,7 +131,7 @@ class _DonateThirdState extends State<DonateThird> {
                             MaterialPageRoute(
                                 builder: (context) => BottomNavBar()),
                             (Route<dynamic> route) => false);
-                             adoptProvider.formKey.currentState!.reset();
+                            //  adoptProvider.formKey!.currentState!.reset();
                         }else{
                           Helper.snackBar(adoptProvider.errorMessage!, context);
                         }
@@ -147,12 +148,12 @@ class _DonateThirdState extends State<DonateThird> {
       ),
     );
   }
-  reset(AdoptProvider adoptProvider){
-    adoptProvider.petAgeController.clear();
-    adoptProvider.petnameController.clear();
-    adoptProvider.petweightController.clear();
-    adoptProvider.ownerLocationController.clear();
-    adoptProvider.ownerNameController.clear();
-    adoptProvider.ownerPhoneController.clear();
-  }
+  // reset(AdoptProvider adoptProvider){
+  //   adoptProvider.petAgeController.clear();
+  //   adoptProvider.petnameController.clear();
+  //   adoptProvider.petweightController.clear();
+  //   adoptProvider.ownerLocationController.clear();
+  //   adoptProvider.ownerNameController.clear();
+  //   adoptProvider.ownerPhoneController.clear();
+  // }
 }

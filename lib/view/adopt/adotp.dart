@@ -127,7 +127,7 @@ class _AdoptAllState extends State<AdoptAll> {
                                             Text(
                                               adoptProvider
                                                       .adoptDetailsList[index]
-                                                      .petbread ??
+                                                      .petBreed ??
                                                   "",
                                               style: const TextStyle(
                                                   fontSize: 20,
@@ -139,7 +139,7 @@ class _AdoptAllState extends State<AdoptAll> {
                                             Text(
                                               adoptProvider
                                                       .adoptDetailsList[index]
-                                                      .petname ??
+                                                      .petName ??
                                                   "",
                                               style: const TextStyle(
                                                   fontSize: 17,

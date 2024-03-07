@@ -1,62 +1,68 @@
 class Adopt {
-  String? petname;
-  String? name;
-  String? petweight;
-  String? petage;
-  String? gender, phone, location;
-  String? petbread;
   String? imageUrl;
-  String? id;
+  String? category;
+  String? petName;
+  String? ownerName;
+  String? petBreed;
+  String? gender;
+  String? ownerPhone;
+  String? location;
+  String? petWeight;
   String? petAgeTime;
   String? userImage;
-  bool isDoubleTapped;
+  String? description;
+  String? petPrice;
+  bool? isDoubleTapped;
 
-  Adopt({
-    this.petname,
-    this.petAgeTime,
-    this.petweight,
-    this.id,
-    this.petage,
-    this.gender,
-    this.petbread,
-    this.imageUrl,
-    this.location,
-    this.phone,
-    this.name,
-    this.userImage,
-    this.isDoubleTapped = false,
-  });
+  Adopt(
+      {this.imageUrl,
+      this.category,
+      this.petName,
+      this.ownerName,
+      this.petBreed,
+      this.gender,
+      this.ownerPhone,
+      this.location,
+      this.petWeight,
+      this.petAgeTime,
+      this.userImage,
+      this.description,
+      this.petPrice,
+      this.isDoubleTapped});
 
-  Adopt.fromJson(Map<String, dynamic> json)
-      : petname = json['petname'],
-        petweight = json['petweight'],
-        petage = json['petage'],
-        gender = json['gender'],
-        petbread = json['petbread'],
-        imageUrl = json['imageUrl'],
-        phone = json['phone'],
-        location = json['location'],
-        name = json['name'],
-        id = json['id'],
-        petAgeTime = json['petAgeTime'],
-        isDoubleTapped = false,
-        userImage = json['userImage'] ;// Initialize isDoubleTapped here
+  Adopt.fromJson(Map<String, dynamic> json) {
+    imageUrl = json['imageUrl'];
+    category = json['category'];
+    petName = json['petName'];
+    ownerName = json['ownerName'];
+    petBreed = json['petBreed'];
+    gender = json['gender'];
+    ownerPhone = json['ownerPhone'];
+    location = json['location'];
+    petWeight = json['petWeight'];
+    petAgeTime = json['petAgeTime'];
+    userImage = json['userImage'];
+    description = json['description'];
+    petPrice = json['petPrice'];
+    isDoubleTapped = json['isDoubleTapped'];
+  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['petname'] = this.petname;
-    data['petweight'] = this.petweight;
-    data['petage'] = this.petage;
-    data['gender'] = this.gender;
-    data['petbread'] = this.petbread;
     data['imageUrl'] = this.imageUrl;
-    data['phone'] = this.phone;
+    data['category'] = this.category;
+    data['petName'] = this.petName;
+    data['ownerName'] = this.ownerName;
+    data['petBreed'] = this.petBreed;
+    data['gender'] = this.gender;
+    data['ownerPhone'] = this.ownerPhone;
     data['location'] = this.location;
-    data['name'] = this.name;
-    data['id'] = this.id;
+    data['petWeight'] = this.petWeight;
     data['petAgeTime'] = this.petAgeTime;
     data['userImage'] = this.userImage;
-
+    data['description'] = this.description;
+    data['petPrice'] = this.petPrice;
+    data['isDoubleTapped'] = this.isDoubleTapped;
     return data;
   }
 }

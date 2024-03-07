@@ -10,14 +10,17 @@ class FireResponse {
       this.errorMessage,
       this.successMessage});
 }
-class Apiresponse{
+class ApiResponse{
   String? errorMessage;
   dynamic data;
   StatusUtil statusUtil;
-  Apiresponse({
+  final int? status_code;
+  
+  ApiResponse({
    required this.statusUtil,
     this.data,
-    this.errorMessage
+    this.errorMessage,
+    this.status_code,
   });
 }
 

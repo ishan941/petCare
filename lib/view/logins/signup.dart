@@ -18,7 +18,7 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  String? name, phone, email, password,confirmPassword;
+  String? name, phone, email, password, confirmPassword;
   bool obscureText = true;
 
   @override
@@ -34,12 +34,12 @@ class _SignUpPageState extends State<SignUpPage> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      SizedBox(height: MediaQuery.of(context).size.height*.1,),
                       SizedBox(
-                          height:
-                              MediaQuery.of(context).size.height * .2,
-                          child: Image.asset(
-                              "assets/images/petcareLogi.png")),
+                        height: MediaQuery.of(context).size.height * .1,
+                      ),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * .2,
+                          child: Image.asset("assets/images/petcareLogi.png")),
                       Text(
                         "Create an account",
                         style: TextStyle(fontSize: 25),
@@ -104,11 +104,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         suffixIcon: IconButton(
                             onPressed: () {
                               if (petcareProvider.showPassword) {
-                                petcareProvider
-                                    .setPasswordVisibility(false);
+                                petcareProvider.setPasswordVisibility(false);
                               } else {
-                                petcareProvider
-                                    .setPasswordVisibility(true);
+                                petcareProvider.setPasswordVisibility(true);
                               }
                             },
                             icon: Icon(petcareProvider.showPassword
@@ -118,9 +116,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       //confirm password
                       CustomForm(
-                        obscureText: petcareProvider.confirmPassword
-                            ? true
-                            : false,
+                        obscureText:
+                            petcareProvider.confirmPassword ? true : false,
                         onChanged: (value) {
                           signUpProvider.confirmPassword = value;
                         },
@@ -137,11 +134,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         suffixIcon: IconButton(
                             onPressed: () {
                               if (petcareProvider.confirmPassword) {
-                                petcareProvider
-                                    .setPasswordVisibility2(false);
+                                petcareProvider.setPasswordVisibility2(false);
                               } else {
-                                petcareProvider
-                                    .setPasswordVisibility2(true);
+                                petcareProvider.setPasswordVisibility2(true);
                               }
                             },
                             icon: Icon(petcareProvider.confirmPassword
@@ -164,29 +159,28 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                           ]),
                           height: 60,
-                          width:
-                              MediaQuery.of(context).size.width * 0.9,
+                          width: MediaQuery.of(context).size.width * 0.9,
                           child: ElevatedButton(
                               onPressed: () async {
-                                await signUpProvider
-                                    .sendUserLoginValueToFireBase();
-                                    if(signUpProvider.password != signUpProvider.confirmPassword){
-                                      Helper.snackBar("Your Password doesn't match", context);
-                                    }
-                                if (signUpProvider.signUpUtil ==
-                                    StatusUtil.success) {
+                                if (signUpProvider.password !=
+                                    signUpProvider.confirmPassword) {
                                   Helper.snackBar(
-                                      successfullySavedStr, context);
-                                  Navigator.of(context)
-                                      .pushAndRemoveUntil(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  LoginPage()),
-                                          (Route<dynamic> route) =>
-                                              false);
+                                      "Your Password doesn't match", context);
                                 } else {
-                                  Helper.snackBar(
-                                      failedToSaveStr, context);
+                                  await signUpProvider
+                                      .sendUserLoginValueToFireBase();
+
+                                  if (signUpProvider.signUpUtil ==
+                                      StatusUtil.success) {
+                                    Helper.snackBar(
+                                        successfullySavedStr, context);
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                        MaterialPageRoute(
+                                            builder: (context) => LoginPage()),
+                                        (Route<dynamic> route) => false);
+                                  } else {
+                                    Helper.snackBar(failedToSaveStr, context);
+                                  }
                                 }
                               },
                               child: Text('Submit')),

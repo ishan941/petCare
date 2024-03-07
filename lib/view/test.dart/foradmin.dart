@@ -131,7 +131,7 @@ class _ForAdminState extends State<ForAdmin> {
                                             Text(
                                               adoptProvider
                                                       .adoptDetailsList[index]
-                                                      .petbread ??
+                                                      .petBreed ??
                                                   "",
                                               style: const TextStyle(
                                                   fontSize: 20,
@@ -143,7 +143,7 @@ class _ForAdminState extends State<ForAdmin> {
                                             Text(
                                               adoptProvider
                                                       .adoptDetailsList[index]
-                                                      .petname ??
+                                                      .petName ??
                                                   "",
                                               style: const TextStyle(
                                                   fontSize: 17,

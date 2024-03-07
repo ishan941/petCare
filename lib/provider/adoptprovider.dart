@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,8 +19,9 @@ class AdoptProvider extends ChangeNotifier {
 
   String? errorMessage, imageUrl;
   XFile? image;
+  Dio dio = Dio();
 
-  String? id, petGender, petBread, petAgeTime;
+  String? id, petGender, petBreed, petAgeTime,petName,petAge,petWeight,ownerName,ownerPhone,ownerLocation,description;
   String? userImage;
   
 
@@ -32,16 +34,16 @@ class AdoptProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  TextEditingController petnameController = TextEditingController();
-  TextEditingController petAgeController = TextEditingController();
-  TextEditingController petweightController = TextEditingController();
-  // TextEditingController petBreadController = TextEditingController();
-  // TextEditingController petAgeTimeController = TextEditingController();
-  TextEditingController ownerNameController = TextEditingController();
-  TextEditingController ownerPhoneController = TextEditingController();
-  TextEditingController ownerLocationController = TextEditingController();
-  TextEditingController imageUrlConroller = TextEditingController();
+  // final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  // TextEditingController petnameController = TextEditingController();
+  // TextEditingController petAgeController = TextEditingController();
+  // TextEditingController petweightController = TextEditingController();
+  // // TextEditingController petBreadController = TextEditingController();
+  // // TextEditingController petAgeTimeController = TextEditingController();
+  // TextEditingController ownerNameController = TextEditingController();
+  // TextEditingController ownerPhoneController = TextEditingController();
+  // TextEditingController ownerLocationController = TextEditingController();
+  // TextEditingController imageUrlConroller = TextEditingController();
 
   List<Adopt> adoptDetailsList = [];
 
@@ -67,7 +69,7 @@ class AdoptProvider extends ChangeNotifier {
   }
 
   setPetBread(String value) {
-    petBread = value;
+    petBreed = value;
   }
 
   setPetAgeTime(String value) {
@@ -147,7 +149,7 @@ class AdoptProvider extends ChangeNotifier {
       setAdoptUtil(StatusUtil.loading);
     }
     try {
-      FireResponse response = await petCareService.adoptDetails(adopt);
+      ApiResponse response = await petCareService.adoptDetails(adopt);
       if (response.statusUtil == StatusUtil.success) {
         setAdoptUtil(StatusUtil.success);
       } else if (response.statusUtil == StatusUtil.error) {
@@ -162,7 +164,7 @@ class AdoptProvider extends ChangeNotifier {
   }
 
   checkAdoptRegistationStatus(Adopt adopt) async {
-    late FireResponse response;
+    late ApiResponse response;
     try {
       if (adopt.id != null) {
         response = await petCareService.updateAdoptDetails(adopt);
@@ -185,40 +187,83 @@ class AdoptProvider extends ChangeNotifier {
     await uploadAdoptImageInFireBase();
     Adopt adopt = Adopt(
       id: id,
-      petname: petnameController.text,
-      petage: petAgeController.text,
+      petName: petName,
+      petAge: petAge,
       petAgeTime: petAgeTime,
       gender: petGender,
       imageUrl: imageUrl,
-      petbread: petBread,
+      petBreed: petBreed,
       userImage: userImage ?? "",
-      petweight: petweightController.text,
-      phone: ownerPhoneController.text,
-      name: ownerNameController.text,
-      location: ownerLocationController.text,
+      petWeight: petWeight,
+      description: description,
+      ownerPhone: ownerPhone,
+      ownerName: ownerName,
+      location: ownerLocation,
     );
 
-    await checkAdoptRegistationStatus(adopt);
-  }
-
-  Future<void> getAdoptdata() async {
-    if (_getAdoptDetails != StatusUtil.loading) {
-      setGetAdoptDetails(StatusUtil.loading);
-    }
     try {
-      FireResponse response = await petCareService.getAdoptDetails();
+     late ApiResponse response;
+      if (adopt.id != null) {
+        response = await petCareService.updateAdoptDetails(adopt);
+      } else {
+        response = await petCareService.adoptDetails(adopt);
+      }
       if (response.statusUtil == StatusUtil.success) {
-        adoptDetailsList = response.data;
-        setGetAdoptDetails(StatusUtil.success);
+        setAdoptUtil(StatusUtil.success);
       } else if (response.statusUtil == StatusUtil.error) {
         errorMessage = response.errorMessage;
-        setGetAdoptDetails(StatusUtil.error);
+        setAdoptUtil(StatusUtil.error);
       }
     } catch (e) {
-      errorMessage = "$e";
-      setGetAdoptDetails(StatusUtil.error);
+      errorMessage = e.toString();
+      setAdoptUtil(StatusUtil.error);
     }
   }
+
+
+
+Future<void> getAdoptdata() async {
+  if (_getAdoptDetails != StatusUtil.loading) {
+    setGetAdoptDetails(StatusUtil.loading);
+  }
+
+  try {
+    Response response = await dio.get("https://78ce-103-90-147-204.ngrok-free.app/getDonationPet");
+    
+    if (response.statusCode == 200) {
+      dynamic responseData = response.data;
+
+      if (responseData is List) {
+        List<Adopt> adoptDetails = responseData
+            .map((json) => Adopt.fromJson(json))
+            .toList();
+
+        adoptDetailsList = adoptDetails;
+        setGetAdoptDetails(StatusUtil.success);
+      } else {
+        // Handle the case when the response data is a map
+        // You may need to extract the list from the map based on your API's response structure.
+        // For example: adoptDetailsList = responseData['your_key_for_list'];
+        setGetAdoptDetails(StatusUtil.error);
+      }
+    } else {
+      setGetAdoptDetails(StatusUtil.error);
+    }
+  } on DioError catch (e) {
+    if (e.error is SocketException) {
+      errorMessage = "No internet connection.";
+    } else if (e.response != null) {
+      errorMessage = "Unexpected server response: ${e.response!.statusCode} ${e.response!.statusMessage}";
+    } else {
+      errorMessage = "Unexpected error: ${e.toString()}";
+    }
+    setGetAdoptDetails(StatusUtil.error);
+  }
+
+  // Handle any additional logic or UI updates as needed.
+}
+
+
   void handleDoubleTap(int index){
     if(index >= 0 && index < adoptDetailsList.length){
       Adopt adopt = adoptDetailsList[index];

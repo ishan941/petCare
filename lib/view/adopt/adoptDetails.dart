@@ -196,11 +196,11 @@ class _AdoptDetailsState extends State<AdoptDetails> {
                 children: [
                   // SizedBox(height: ),
                   Text(
-                    widget.adopt!.petbread ?? "No data availavile",
+                    widget.adopt!.petBreed ?? "No data availavile",
                     style: mainTitleText,
                   ),
                   Text(
-                    widget.adopt!.petname ?? "",
+                    widget.adopt!.petName ?? "",
                     style: titleText,
                   ),
                   Row(
@@ -213,7 +213,7 @@ class _AdoptDetailsState extends State<AdoptDetails> {
                         width: 5,
                       ),
                       Text(
-                        "-  ${widget.adopt!.petweight ?? ""}",
+                        "-  ${widget.adopt!.petWeight ?? ""}",
                         style: textStyleSmallSized,
                       ),
                     ],
@@ -228,7 +228,7 @@ class _AdoptDetailsState extends State<AdoptDetails> {
                         width: 5,
                       ),
                       Text(
-                        widget.adopt!.petage ?? "",
+                        widget.adopt!.petAge ?? "",
                         style: titleText,
                       ),
                     ],
@@ -258,7 +258,7 @@ class _AdoptDetailsState extends State<AdoptDetails> {
                         width: 5,
                       ),
                       Text(
-                        widget.adopt!.phone ?? "",
+                        widget.adopt!.ownerPhone ?? "",
                         style: titleText,
                       ),
                     ],

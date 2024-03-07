@@ -56,7 +56,7 @@ class SignUpProvider extends ChangeNotifier {
     SignUp signUp =
         SignUp(name: name, password: password, email: email, phone: phone);
     try {
-      Apiresponse response = await petCareService.userLoginDetails(signUp);
+      ApiResponse response = await petCareService.userLoginDetails(signUp);
       if (response.statusUtil == StatusUtil.success) {
         setSignUpUtil(StatusUtil.success);
       } else {
@@ -66,6 +66,7 @@ class SignUpProvider extends ChangeNotifier {
     } catch (e) {
       errorMessage = "$e";
       setSignUpUtil(StatusUtil.error);
+        print("Error: $errorMessage");
     }
   }
 
@@ -73,9 +74,9 @@ class SignUpProvider extends ChangeNotifier {
     if (_loginUtil != StatusUtil.loading) {
       setLoginUtil(StatusUtil.loading);
     }
-    SignUp signUp = SignUp(phone: phone, password: password);
+    SignUp signUp = SignUp(email: email, password: password);
     try {
-      FireResponse response = await petCareService.isUserLoggedIn(signUp);
+      ApiResponse response = await petCareService.isUserLoggedIn(signUp);
       if (response.statusUtil == StatusUtil.success) {
         userName = response.data['name'];
         fullName = response.data['name'];

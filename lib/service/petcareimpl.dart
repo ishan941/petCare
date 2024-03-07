@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:project_petcare/core/statusutil.dart';
+import 'package:project_petcare/helper/baseurl.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/model/adopt.dart';
@@ -16,11 +17,13 @@ import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/model/signUp.dart';
 import 'package:project_petcare/model/verificationTools.dart';
 import 'package:project_petcare/response/response.dart';
+import 'package:project_petcare/service/api.dart';
 import 'package:project_petcare/service/petcareserivce.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PetCareImpl extends PetCareService {
   Dio dio = Dio();
+  Api api = Api();
   @override
   Future<FireResponse> donateData(Donate donate) async {
     if (await Helper.checkInterNetConnection()) {
@@ -42,96 +45,97 @@ class PetCareImpl extends PetCareService {
   }
 
   //send to firebase
- @override
-Future<Apiresponse> userLoginDetails(SignUp signUp) async {
-  if (await Helper.checkInterNetConnection()) {
-    try {
-      Response response = await dio.post(
-        "https://78ce-103-90-147-204.ngrok-free.app/saveUsers",
-        data: signUp.toJson(),
-      );
+  // @override
+  // Future<Apiresponse> userLoginDetails(SignUp signUp) async {
+  //   if (await Helper.checkInterNetConnection()) {
+  //     try {
+  //       Response response = await dio.post(
+  //         url + "/saveUsers",
+  //         data: signUp.toJson(),
+  //       );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return Apiresponse(statusUtil: StatusUtil.success);
-      } else {
-        return Apiresponse(
-          statusUtil: StatusUtil.error,
-          errorMessage: "Unexpected server response: ${response.statusCode} ${response.statusMessage}",
-        );
-      }
-    } on DioError catch (e) {
-      if (e.error is SocketException) {
-        return Apiresponse(
-          statusUtil: StatusUtil.error,
-          errorMessage: "No internet connection.",
-        );
-      } else if (e.response != null) {
-        if (e.response!.statusCode == 400) {
-          return Apiresponse(
-            statusUtil: StatusUtil.error,
-            errorMessage: e.response!.statusMessage ?? badRequestStr,
-          );
-        } else if (e.response!.statusCode == 404) {
-          return Apiresponse(
-            statusUtil: StatusUtil.error,
-            errorMessage: "Resource not found. Check your request URL.",
-          );
-        } else {
-          return Apiresponse(
-            statusUtil: StatusUtil.error,
-            errorMessage: "Unexpected server response: ${e.response!.statusCode} ${e.response!.statusMessage}",
-          );
-        }
-      } else {
-        return Apiresponse(
-          statusUtil: StatusUtil.error,
-          errorMessage: "Unexpected error: ${e.toString()}",
-        );
-      }
-    }
-  }
+  //       if (response.statusCode == 200 || response.statusCode == 201) {
+  //         return Apiresponse(statusUtil: StatusUtil.success);
+  //       } else {
+  //         return Apiresponse(
+  //           statusUtil: StatusUtil.error,
+  //           errorMessage:
+  //               "Unexpected server response: ${response.statusCode} ${response.statusMessage}",
+  //         );
+  //       }
+  //     } on DioError catch (e) {
+  //       if (e.error is SocketException) {
+  //         return Apiresponse(
+  //           statusUtil: StatusUtil.error,
+  //           errorMessage: "No internet connection.",
+  //         );
+  //       } else if (e.response != null) {
+  //         if (e.response!.statusCode == 400) {
+  //           return Apiresponse(
+  //             statusUtil: StatusUtil.error,
+  //             errorMessage: e.response!.statusMessage ?? badRequestStr,
+  //           );
+  //         } else if (e.response!.statusCode == 404) {
+  //           return Apiresponse(
+  //             statusUtil: StatusUtil.error,
+  //             errorMessage: "Resource not found. Check your request URL.",
+  //           );
+  //         } else {
+  //           return Apiresponse(
+  //             statusUtil: StatusUtil.error,
+  //             errorMessage:
+  //                 "Unexpected server response: ${e.response!.statusCode} ${e.response!.statusMessage}",
+  //           );
+  //         }
+  //       } else {
+  //         return Apiresponse(
+  //           statusUtil: StatusUtil.error,
+  //           errorMessage: "Unexpected error: ${e.toString()}",
+  //         );
+  //       }
+  //     }
+  //   }
 
-  return Apiresponse(
-    statusUtil: StatusUtil.error,
-    errorMessage: noInternetStr,
-  );
-}
+  //   return Apiresponse(
+  //     statusUtil: StatusUtil.error,
+  //     errorMessage: noInternetStr,
+  //   );
+  // }
 
+  // @override
+  // Future<Apiresponse> isUserLoggedIn(SignUp signUp) async {
+  //   if (await Helper.checkInterNetConnection()) {
+  //     try {
+  //       // Assuming your API endpoint for login is "/user/login"
+  //       Response response = await dio.post(
+  //         url + "/login",
+  //         data: signUp.toJson(),
+  //       );
 
-  @override
-  Future<FireResponse> isUserLoggedIn(SignUp signUp) async {
-    if (await Helper.checkInterNetConnection()) {
-      try {
-        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-            .collection("User LoginData")
-            .where("phone", isEqualTo: signUp.phone)
-            .where("password", isEqualTo: signUp.password)
-            .get();
-        if (querySnapshot.docs.isNotEmpty) {
-          String? name = (querySnapshot.docs.first.data()
-              as Map<String, dynamic>?)?['name'];
-          String? email = (querySnapshot.docs.first.data()
-              as Map<String, dynamic>?)?['email'];
-          String? phone = (querySnapshot.docs.first.data()
-              as Map<String, dynamic>?)?['phone'];
-          Map<String, dynamic> userData = {
-            'name': name,
-            'email': email,
-            'phone': phone
-          };
-
-          return FireResponse(statusUtil: StatusUtil.success, data: userData);
-        } else {
-          return FireResponse(statusUtil: StatusUtil.success, data: "");
-        }
-      } catch (e) {
-        return FireResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
-      }
-    } else {
-      return FireResponse(
-          statusUtil: StatusUtil.error, errorMessage: noInternetStr);
-    }
-  }
+  //       if (response.statusCode == 200) {
+  //         // If the server returns user data, extract it and return a success response
+  //         Map<String, dynamic> userData = response.data['data'];
+  //         return Apiresponse(statusUtil: StatusUtil.success, data: userData);
+  //       } else {
+  //         // If the server returns an error, handle it accordingly
+  //         return Apiresponse(
+  //           statusUtil: StatusUtil.error,
+  //           errorMessage:
+  //               "Login failed. Server response: ${response.statusCode}",
+  //         );
+  //       }
+  //     } on DioError catch (e) {
+  //       // Handle Dio errors (e.g., no internet connection, timeouts, etc.)
+  //       return Apiresponse(
+  //         statusUtil: StatusUtil.error,
+  //         errorMessage: "Dio error: ${e.toString()}",
+  //       );
+  //     }
+  //   } else {
+  //     return Apiresponse(
+  //         statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+  //   }
+  // }
 
   @override
   Future<FireResponse> getPetDetails() async {
@@ -189,25 +193,58 @@ Future<Apiresponse> userLoginDetails(SignUp signUp) async {
   Future<FireResponse> getAdoptDetails() async {
     if (await Helper.checkInterNetConnection()) {
       try {
-        var response =
-            await FirebaseFirestore.instance.collection("AdoptDetails").get();
-        final getAdoptdata = response.docs;
-        List<Adopt> adoptDetailsList = [];
-        if (getAdoptdata.isNotEmpty) {
-          for (var adoptDetails in getAdoptdata) {
-            Adopt adopt = Adopt.fromJson(adoptDetails.data());
-            adopt.id = adoptDetails.id;
-            adoptDetailsList.add(adopt);
+        Response response = await dio.get(url + "/getDonationPet");
+        if (response.statusCode == 200) {
+          dynamic responseData = response.data;
+
+          if (responseData is List) {
+            List<Adopt> adoptDetailsList =
+                responseData.map((json) => Adopt.fromJson(json)).toList();
+
+            return FireResponse(
+              statusUtil: StatusUtil.success,
+              data: adoptDetailsList,
+            );
+          } else {
+            // Handle the case when the response data is a map
+            // You may need to extract the list from the map based on your API's response structure.
+            // For example: List<Adopt> adoptDetailsList = responseData['your_key_for_list'];
+            return FireResponse(
+              statusUtil: StatusUtil.error,
+              errorMessage: "Unexpected response format",
+            );
           }
+        } else {
+          return FireResponse(
+            statusUtil: StatusUtil.error,
+            errorMessage:
+                "Unexpected server response: ${response.statusCode} ${response.statusMessage}",
+          );
         }
-        return FireResponse(
-            statusUtil: StatusUtil.success, data: adoptDetailsList);
-      } catch (e) {
-        return FireResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
+      } on DioError catch (e) {
+        if (e.error is SocketException) {
+          return FireResponse(
+            statusUtil: StatusUtil.error,
+            errorMessage: "No internet connection.",
+          );
+        } else if (e.response != null) {
+          return FireResponse(
+            statusUtil: StatusUtil.error,
+            errorMessage:
+                "Unexpected server response: ${e.response!.statusCode} ${e.response!.statusMessage}",
+          );
+        } else {
+          return FireResponse(
+            statusUtil: StatusUtil.error,
+            errorMessage: "Unexpected error: ${e.toString()}",
+          );
+        }
       }
     } else {
       return FireResponse(
-          statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+        statusUtil: StatusUtil.error,
+        errorMessage: noInternetStr,
+      );
     }
   }
 
@@ -340,20 +377,20 @@ Future<Apiresponse> userLoginDetails(SignUp signUp) async {
   }
 
   @override
-  Future<FireResponse> adoptDetails(Adopt adopt) async {
+  Future<ApiResponse> adoptDetails(Adopt adopt) async {
     if (await Helper.checkInterNetConnection()) {
       try {
         FirebaseFirestore.instance
             .collection("AdoptDetails")
             .add(adopt.toJson());
-        return FireResponse(
-            statusUtil: StatusUtil.success,
-            successMessage: successfullySavedStr);
+        return ApiResponse(
+          statusUtil: StatusUtil.success,
+        );
       } catch (e) {
-        return FireResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
+        return ApiResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
       }
     } else {
-      return FireResponse(
+      return ApiResponse(
           statusUtil: StatusUtil.error, errorMessage: noInternetStr);
     }
   }
@@ -441,22 +478,50 @@ Future<Apiresponse> userLoginDetails(SignUp signUp) async {
   }
 
   @override
-  Future<FireResponse> updateAdoptDetails(Adopt adopt) async {
+  Future<ApiResponse> updateAdoptDetails(Adopt adopt) async {
     if (await Helper.checkInterNetConnection()) {
       try {
-        await FirebaseFirestore.instance
-            .collection("AdoptDetails")
-            .doc(adopt.id)
-            .update(adopt.toJson());
+        Response response = await dio.put(
+          url + "/saveDonatedPet",
+          data: adopt.toJson(),
+        );
 
-        return FireResponse(statusUtil: StatusUtil.success);
-      } catch (e) {
-        return FireResponse(
-            statusUtil: StatusUtil.error, errorMessage: e.toString());
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          // Do something with the data if needed
+
+          return ApiResponse(statusUtil: StatusUtil.success);
+        } else {
+          return ApiResponse(
+            statusUtil: StatusUtil.error,
+            errorMessage:
+                "Unexpected server response: ${response.statusCode} ${response.statusMessage}",
+          );
+        }
+      } on DioError catch (e) {
+        if (e.error is SocketException) {
+          return ApiResponse(
+            statusUtil: StatusUtil.error,
+            errorMessage: "No internet connection.",
+          );
+        } else if (e.response != null) {
+          return ApiResponse(
+            statusUtil: StatusUtil.error,
+            errorMessage:
+                "Unexpected server response: ${e.response!.statusCode} ${e.response!.statusMessage}",
+          );
+        } else {
+          return ApiResponse(
+            statusUtil: StatusUtil.error,
+            errorMessage: "Unexpected error: ${e.toString()}",
+          );
+        }
       }
     }
-    return FireResponse(
-        statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+
+    return ApiResponse(
+      statusUtil: StatusUtil.error,
+      errorMessage: noInternetStr,
+    );
   }
 
   @override
@@ -492,7 +557,7 @@ Future<Apiresponse> userLoginDetails(SignUp signUp) async {
 
         // if (getUserdata) {
         user = SignUp.fromJson(getUserdata.data());
-        user.id = getUserdata.id;
+        user.email = getUserdata.id;
         // }
         return FireResponse(statusUtil: StatusUtil.success, data: user);
       } catch (e) {
@@ -516,7 +581,7 @@ Future<Apiresponse> userLoginDetails(SignUp signUp) async {
       try {
         await FirebaseFirestore.instance
             .collection("User LoginData")
-            .doc(signUp.id)
+            .doc(signUp.email)
             .update(signUp.toJson());
         return FireResponse(statusUtil: StatusUtil.success);
       } catch (e) {
@@ -535,7 +600,7 @@ Future<Apiresponse> userLoginDetails(SignUp signUp) async {
       try {
         await FirebaseFirestore.instance
             .collection("User LoginData")
-            .doc(signUp.id)
+            .doc(signUp.email)
             .update(signUp.toJson());
         return FireResponse(statusUtil: StatusUtil.success);
       } catch (e) {
@@ -553,7 +618,7 @@ Future<Apiresponse> userLoginDetails(SignUp signUp) async {
       try {
         await FirebaseFirestore.instance
             .collection("User LoginData")
-            .doc(signUp.id)
+            .doc(signUp.email)
             .update(signUp.toJson());
         return FireResponse(statusUtil: StatusUtil.success);
       } catch (e) {
@@ -614,7 +679,7 @@ Future<Apiresponse> userLoginDetails(SignUp signUp) async {
       try {
         await FirebaseFirestore.instance
             .collection("MyPetDetails")
-            .doc(signUp.id)
+            .doc(signUp.email)
             .update(signUp.toJson());
         return FireResponse(statusUtil: StatusUtil.success);
       } catch (e) {
@@ -685,4 +750,24 @@ Future<Apiresponse> userLoginDetails(SignUp signUp) async {
           statusUtil: StatusUtil.error, errorMessage: noInternetStr);
     }
   }
-}
+
+ 
+   
+     @override
+     Future<ApiResponse> isUserLoggedIn(SignUp signUp)async {
+    ApiResponse response = await api.post(url+saveuser, signUp);
+    return response;
+     }
+   
+     @override
+     Future<ApiResponse> userLoginDetails(SignUp signUp) {
+    // TODO: implement userLoginDetails
+    throw UnimplementedError();
+     }
+     
+       @override
+       Future<ApiResponse> saveSellingPet(Adopt adopt)async {
+         ApiResponse response = await api.post(url+saveSellingPetUrl, adopt.toJson());
+         return response;
+       }
+   }

@@ -18,16 +18,16 @@ class DonateSecond extends StatefulWidget {
 
 class _DonateSecondState extends State<DonateSecond> {
   @override
-  void initState() {
-      var adoptProvider = Provider.of<AdoptProvider>(context, listen: false);
-    if (adoptProvider != null) {
-      adoptProvider.petnameController.text = widget.adopt!.petname!;
-      adoptProvider.petAgeController.text = widget.adopt!.petage!;
-      adoptProvider.petweightController.text = widget.adopt!.petweight!;
+  // void initState() {
+  //     var adoptProvider = Provider.of<AdoptProvider>(context, listen: false);
+  //   // if (adoptProvider != null) {
+  //   //   adoptProvider.petnameController.text = widget.adopt!.petname!;
+  //   //   adoptProvider.petAgeController.text = widget.adopt!.petage!;
+  //   //   adoptProvider.petweightController.text = widget.adopt!.petweight!;
      
-    }
-    super.initState();
-  }
+  //   // }
+  //   super.initState();
+  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,21 +91,27 @@ class _DonateSecondState extends State<DonateSecond> {
                     ),
                     const Text("Your Name"),
                     ShopTextForm(
-                      controller: adoptProvider.ownerNameController,
+                       onChanged: (value){
+                          adoptProvider.ownerName = value;
+                         },
                     ),
                     const SizedBox(
                       height: 20,
                     ),
                     const Text(contactNumberStr),
                     ShopTextForm(
-                     controller: adoptProvider.ownerPhoneController,
+                      onChanged: (value){
+                          adoptProvider.ownerPhone = value;
+                         },
                     ),
                     const SizedBox(
                       height: 20,
                     ),
                     const Text(locationStr),
                     ShopTextForm(
-                     controller: adoptProvider.ownerLocationController,
+                    onChanged: (value){
+                          adoptProvider.ownerLocation = value;
+                         },
                     ),
                     const SizedBox(
                       height: 10,

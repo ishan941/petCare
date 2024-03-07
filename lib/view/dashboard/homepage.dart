@@ -756,7 +756,7 @@ class _HomePageState extends State<HomePage> {
                                   children: [
                                     Text(
                                       adoptProvider.adoptDetailsList[index]
-                                              .petbread ??
+                                              .petBreed ??
                                           "",
                                       style: const TextStyle(
                                           overflow: TextOverflow.ellipsis,
@@ -768,7 +768,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     Text(
                                       adoptProvider.adoptDetailsList[index]
-                                              .petname ??
+                                              .petName ??
                                           "",
                                       style: const TextStyle(
                                           fontSize: 17,
@@ -817,151 +817,151 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Column adopt(BuildContext context, DonateProvider donateProvider) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Row(
-            children: [
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    adoptStr,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  // Text("Your favourite pet",style: TextStyle(fontSize: 16),)
-                ],
-              ),
-              Spacer(),
-              InkWell(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => AdoptAll()));
-                  },
-                  child: Text(
-                    seeAllStr,
-                    style:
-                        TextStyle(fontSize: 18, color: ColorUtil.primaryColor),
-                  ))
-            ],
-          ),
-        ),
-        donateProvider.donatePetList.isNotEmpty
-            ? SizedBox(
-                height: MediaQuery.of(context).size.height * .195,
-                // color: Colors.green,
-                child: ListView.builder(
-                    itemCount: donateProvider.donatePetList.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) => Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 8),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => DonateData(
-                                            donate: donateProvider
-                                                .donatePetList[index],
-                                          )));
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      spreadRadius: 0,
-                                      blurRadius: 3,
-                                      color: Colors.grey.withOpacity(0.5),
-                                      offset: Offset(2, 4),
-                                    ),
-                                  ]),
-                              height: MediaQuery.of(context).size.height * .18,
-                              // width: MediaQuery.of(context).size.width*0.8,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Container(
-                                        height:
-                                            MediaQuery.of(context).size.height,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.36,
-                                        child: Image.network(
-                                          donateProvider.donatePetList[index]
-                                                  .imageUrl ??
-                                              "",
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 20,
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          donateProvider.donatePetList[index]
-                                                  .petbread ??
-                                              "",
-                                          style: const TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Text(
-                                          donateProvider.donatePetList[index]
-                                                  .petname ??
-                                              "",
-                                          style: const TextStyle(
-                                              fontSize: 17,
-                                              fontWeight: FontWeight.w500),
-                                          maxLines: 2, // Adjust as needed
-                                          overflow: TextOverflow
-                                              .ellipsis, // Handle overflow gracefully
-                                        ),
-                                        const SizedBox(height: 5),
-                                        Row(
-                                          children: [
-                                            Icon(Icons.location_on_outlined,
-                                                size: 15,
-                                                color: ColorUtil.primaryColor),
-                                            const SizedBox(
-                                              width: 2,
-                                            ),
-                                            Text(donateProvider
-                                                    .donatePetList[index]
-                                                    .location ??
-                                                ""),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        )),
-              )
-            : const Text(noDateAvailableStr)
-      ],
-    );
-  }
+  // Column adopt(BuildContext context, DonateProvider donateProvider) {
+  //   return Column(
+  //     children: [
+  //       Padding(
+  //         padding: const EdgeInsets.symmetric(horizontal: 8),
+  //         child: Row(
+  //           children: [
+  //             const Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Text(
+  //                   adoptStr,
+  //                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+  //                 ),
+  //                 SizedBox(
+  //                   height: 5,
+  //                 ),
+  //                 // Text("Your favourite pet",style: TextStyle(fontSize: 16),)
+  //               ],
+  //             ),
+  //             Spacer(),
+  //             InkWell(
+  //                 onTap: () {
+  //                   Navigator.push(context,
+  //                       MaterialPageRoute(builder: (context) => AdoptAll()));
+  //                 },
+  //                 child: Text(
+  //                   seeAllStr,
+  //                   style:
+  //                       TextStyle(fontSize: 18, color: ColorUtil.primaryColor),
+  //                 ))
+  //           ],
+  //         ),
+  //       ),
+  //       donateProvider.donatePetList.isNotEmpty
+  //           ? SizedBox(
+  //               height: MediaQuery.of(context).size.height * .195,
+  //               // color: Colors.green,
+  //               child: ListView.builder(
+  //                   itemCount: donateProvider.donatePetList.length,
+  //                   scrollDirection: Axis.horizontal,
+  //                   itemBuilder: (context, index) => Padding(
+  //                         padding: const EdgeInsets.symmetric(
+  //                             vertical: 10, horizontal: 8),
+  //                         child: GestureDetector(
+  //                           onTap: () {
+  //                           //   Navigator.push(
+  //                           //       context,
+  //                           //       MaterialPageRoute(
+  //                           //           builder: (context) => DonateData(
+  //                           //                 donate: donateProvider
+  //                           //                     .donatePetList[index],
+  //                           //               )));
+  //                           },
+  //                           child: Container(
+  //                             decoration: BoxDecoration(
+  //                                 borderRadius: BorderRadius.circular(20),
+  //                                 color: Colors.white,
+  //                                 boxShadow: [
+  //                                   BoxShadow(
+  //                                     spreadRadius: 0,
+  //                                     blurRadius: 3,
+  //                                     color: Colors.grey.withOpacity(0.5),
+  //                                     offset: Offset(2, 4),
+  //                                   ),
+  //                                 ]),
+  //                             height: MediaQuery.of(context).size.height * .18,
+  //                             // width: MediaQuery.of(context).size.width*0.8,
+  //                             child: Padding(
+  //                               padding: const EdgeInsets.all(8.0),
+  //                               child: Row(
+  //                                 children: [
+  //                                   ClipRRect(
+  //                                     borderRadius: BorderRadius.circular(10),
+  //                                     child: Container(
+  //                                       height:
+  //                                           MediaQuery.of(context).size.height,
+  //                                       width:
+  //                                           MediaQuery.of(context).size.width *
+  //                                               0.36,
+  //                                       child: Image.network(
+  //                                         donateProvider.donatePetList[index]
+  //                                                 .image ??
+  //                                             "",
+  //                                         fit: BoxFit.cover,
+  //                                       ),
+  //                                     ),
+  //                                   ),
+  //                                   const SizedBox(
+  //                                     width: 20,
+  //                                   ),
+  //                                   Column(
+  //                                     crossAxisAlignment:
+  //                                         CrossAxisAlignment.start,
+  //                                     children: [
+  //                                       Text(
+  //                                         donateProvider.donatePetList[index]
+  //                                                 .p ??
+  //                                             "",
+  //                                         style: const TextStyle(
+  //                                             fontSize: 20,
+  //                                             fontWeight: FontWeight.w500),
+  //                                       ),
+  //                                       const SizedBox(
+  //                                         height: 5,
+  //                                       ),
+  //                                       Text(
+  //                                         donateProvider.donatePetList[index]
+  //                                                 .petName ??
+  //                                             "",
+  //                                         style: const TextStyle(
+  //                                             fontSize: 17,
+  //                                             fontWeight: FontWeight.w500),
+  //                                         maxLines: 2, // Adjust as needed
+  //                                         overflow: TextOverflow
+  //                                             .ellipsis, // Handle overflow gracefully
+  //                                       ),
+  //                                       const SizedBox(height: 5),
+  //                                       Row(
+  //                                         children: [
+  //                                           Icon(Icons.location_on_outlined,
+  //                                               size: 15,
+  //                                               color: ColorUtil.primaryColor),
+  //                                           const SizedBox(
+  //                                             width: 2,
+  //                                           ),
+  //                                           Text(donateProvider
+  //                                                   .donatePetList[index]
+  //                                                   .location ??
+  //                                               ""),
+  //                                         ],
+  //                                       ),
+  //                                     ],
+  //                                   ),
+  //                                 ],
+  //                               ),
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       ),),
+  //             )
+  //           : const Text(noDateAvailableStr)
+  //     ],
+  //   );
+  // }
 
   Column ourservice(BuildContext context) {
     return Column(

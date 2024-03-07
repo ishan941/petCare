@@ -12,16 +12,17 @@ import 'package:project_petcare/response/response.dart';
 
 abstract class PetCareService {
 
-  Future<FireResponse> isUserLoggedIn(SignUp signUp);
+  Future<ApiResponse> isUserLoggedIn(SignUp signUp);
   Future<FireResponse> ourServiceData(OurService ourService);
   Future<FireResponse> donateData(Donate donate);
-  Future<FireResponse> adoptDetails(Adopt adopt);
+  Future<ApiResponse> adoptDetails(Adopt adopt);
+  Future<ApiResponse> saveSellingPet(Adopt adopt);
   Future<FireResponse> getPetDetails();
   Future<FireResponse> saveShopFavourite(Shop shop);
   // Future<FireResponse> getShopFavourite();
   // Future<FireResponse> removeShopFavourite(String id);
   Future<FireResponse> getAdoptDetails();
-  Future<FireResponse> updateAdoptDetails(Adopt adopt);
+  Future<ApiResponse> updateAdoptDetails(Adopt adopt);
   Future<FireResponse> shopItemDetails(Shop shop);
   Future<FireResponse> getShopItems();
   Future<FireResponse> getCategoriesDetails();
@@ -30,7 +31,7 @@ abstract class PetCareService {
   Future<FireResponse> saveProfessionData(OurService ourService);
   Future<FireResponse> getProfessionDetails();
   Future<FireResponse> getDashServiceDetails();
-  Future<Apiresponse> userLoginDetails(SignUp signUp);
+  Future<ApiResponse> userLoginDetails(SignUp signUp);
   Future<FireResponse> userVerification(VerificationTools verificationTools);
   Future<FireResponse> deleteAdoptById(String id);
   Future<FireResponse> getUserByEmail();
