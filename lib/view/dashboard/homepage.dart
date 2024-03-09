@@ -13,7 +13,6 @@ import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/view/adopt/adoptDetails.dart';
-import 'package:project_petcare/view/adopt/donateData.dart';
 import 'package:project_petcare/view/adopt/adotp.dart';
 import 'package:project_petcare/view/categories.dart/categoriesDetails.dart';
 import 'package:project_petcare/view/dashboard/categories.dart';
@@ -80,7 +79,12 @@ class _HomePageState extends State<HomePage> {
   getCategories() async {
     var categoriesProvider =
         Provider.of<CategoriesProvider>(context, listen: false);
-    await categoriesProvider.getCategoriesData();
+    try {
+      await categoriesProvider.getCategoriesData();
+      print("Categories data fetched successfully");
+    } catch (e) {
+      print("Error fetching categories: $e");
+    }
   }
 
   getFavourite() async {
@@ -200,18 +204,24 @@ class _HomePageState extends State<HomePage> {
                                         //         ],
                                         //       )
                                         //     :
-                                        ourServiceProvider.dashServiceUtil ==
+                                        categoriesProvider.categoriesUtil ==
                                                 StatusUtil.loading
                                             ? SimmerEffect.shimmerEffect()
                                             : Column(
                                                 children: [
                                                   categories(
                                                       categoriesProvider),
+
                                                   Image.asset(
                                                     "assets/images/streetpets.png",
                                                     fit: BoxFit.cover,
                                                   ),
-                                                  ourservice(context),
+                                                  ourServiceProvider
+                                                              .dashServiceUtil ==
+                                                          StatusUtil.loading
+                                                      ? SimmerEffect
+                                                          .shimmerEffect()
+                                                      : ourservice(context),
                                                   // adoptdetails(adoptProvider),
                                                 ],
                                               ),
@@ -588,16 +598,18 @@ class _HomePageState extends State<HomePage> {
             scrollDirection: Axis.horizontal,
             itemCount: categoriesProvider.categoriesList.length,
             itemBuilder: (context, index) => GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) {
-                      return CategoriesDetails(
-                          categories: categoriesProvider.categoriesList[index]);
-                    }),
-                  );
-                },
-                child: categoriesUi(context, categoriesProvider, index)),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return CategoriesDetails(
+                      categories: categoriesProvider.categoriesList[index],
+                    );
+                  }),
+                );
+              },
+              child: categoriesUi(context, categoriesProvider, index),
+            ),
           ),
         ),
       ],
@@ -605,9 +617,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget categoriesUi(
-      BuildContext context, 
-      CategoriesProvider categoriesProvider, 
-      int index) {
+      BuildContext context, CategoriesProvider categoriesProvider, int index) {
     return Padding(
       padding: const EdgeInsets.only(right: 10, top: 10, bottom: 10),
       child: ClipRRect(
@@ -633,10 +643,10 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Container(
-                height: MediaQuery.of(context).size.height*.045,
+                height: MediaQuery.of(context).size.height * .045,
                 width: MediaQuery.of(context).size.width * .35,
                 decoration: BoxDecoration(
-                  color: ColorUtil.primaryColor,
+                    color: ColorUtil.primaryColor,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: ColorUtil.primaryColor)),
                 child: Center(

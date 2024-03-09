@@ -44,7 +44,7 @@ class CategoriesProvider extends ChangeNotifier {
     this.imageUrl = imageUrl;
   }
 
-  Future<void> saveCategoriesDataToFireBase() async {
+  Future<void> saveCategory() async {
     if (_categoriesUtil != StatusUtil.loading) {
       setCategoriesUtil(StatusUtil.loading);
     }
@@ -52,7 +52,7 @@ class CategoriesProvider extends ChangeNotifier {
     Categories categories =
         Categories(categoriesImage: imageUrl, categoriesName: categoryName);
     try {
-      FireResponse response =
+      ApiResponse response =
           await petCareService.categoriesDetails(categories);
       if (response.statusUtil == StatusUtil.success) {
         setCategoriesUtil(StatusUtil.success);
@@ -71,7 +71,7 @@ class CategoriesProvider extends ChangeNotifier {
       setGetCategoriesUtil(StatusUtil.loading);
     }
     try {
-      FireResponse response = await petCareService.getCategoriesDetails();
+      ApiResponse response = await petCareService.getCategoriesDetails();
       if (response.statusUtil == StatusUtil.success) {
         categoriesList = response.data;
         setGetCategoriesUtil(StatusUtil.success);

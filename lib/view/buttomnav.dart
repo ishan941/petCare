@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
+import 'package:project_petcare/view/feeds/donatesalefeed.dart';
 import 'package:project_petcare/view/feeds/feed.dart';
 import 'package:project_petcare/view/dashboard/homepage.dart';
 import 'package:project_petcare/view/feeds/feedForm.dart';
@@ -16,7 +17,6 @@ class BottomNavBar extends StatefulWidget {
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
- 
   @override
   Widget build(BuildContext context) {
     var petcareProvider = Provider.of<PetCareProvider>(context);
@@ -55,8 +55,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
         return NewsFeed();
       case 3:
         // return ShopFavourite();
-        return FeedForm();
-
+        // return FeedForm();
+        return DonateSaleFeed();
       default:
         return Account();
     }

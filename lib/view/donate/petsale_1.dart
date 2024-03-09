@@ -1,37 +1,68 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/constBread.dart';
-import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/customDropMenu.dart';
 import 'package:project_petcare/helper/string_const.dart';
+import 'package:project_petcare/model/adopt.dart';
 import 'package:project_petcare/provider/adoptprovider.dart';
 import 'package:project_petcare/provider/sellpetprovider.dart';
-import 'package:project_petcare/view/buttomnav.dart';
+import 'package:project_petcare/view/donate/petsale_2.dart';
 import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
 
 class SellingPet extends StatefulWidget {
-
-  SellingPet({super.key});
+  final String choice;
+  final Adopt? adopt;
+  SellingPet({required this.choice, this.adopt, Key? key}) : super(key: key);
 
   @override
   State<SellingPet> createState() => _SellingPetState();
 }
 
 class _SellingPetState extends State<SellingPet> {
+  String getTitle() {
+    if (widget.choice == 'Sale') {
+      return 'Sale';
+    } else if (widget.choice == 'Donate') {
+      return 'Donate';
+    } else {
+      return 'Default';
+    }
+  }
+
   String? gender;
   Object? value;
   FocusNode textFieldFocusNode = FocusNode();
   FocusNode searchFocusNode = FocusNode();
-  List<String> petAgeCalcList = ["Days", "Months", "Year"];
-  List<String> petBreadList = List.from(dogBreedList);
+  List<String> petAgeUnitList = ["Days", "Months", "Year"];
   List<String> petGenderList = ["Male", "Female", "Others"];
+  List<String> petCategoriesList = ["Dog", "Cat", "Fish"];
+  List<String> dogBredList = List.from(dogBreedList);
+  List<String> catBreadList = List.from(catBreedList);
+  List<String> fishBreadList = List.from(fishBreedList);
+  List<String> _getBreedList(String petCategory) {
+    switch (petCategory) {
+      case "Dog":
+        return dogBreedList;
+      case "Cat":
+        return catBreedList;
+      case "Fish":
+        return fishBreedList;
+      default:
+        return [];
+    }
+  }
 
-  
+  //  String getPetBreedList() {
+  //   if () {
+  //     return 'Sale';
+  //   } else if (widget.choice == 'Donate') {
+  //     return 'Donate';
+  //   } else {
+  //     return 'Default';
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -41,15 +72,13 @@ class _SellingPetState extends State<SellingPet> {
         elevation: 0,
         backgroundColor: ColorUtil.BackGroundColorColor,
         iconTheme: const IconThemeData.fallback(),
-        title: const Text(
-          donateNowStr,
-          style: TextStyle(color: Colors.black),
-        ),
+        title: Text(getTitle(), style: appBarTitle),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Consumer<SellingPetProvider>(
-          builder: (context, sellingPetProvider, child) =>  Consumer<AdoptProvider>(
+          builder: (context, sellingPetProvider, child) =>
+              Consumer<AdoptProvider>(
             builder: (context, adoptProvider, child) => Column(
               children: [
                 SizedBox(
@@ -93,26 +122,36 @@ class _SellingPetState extends State<SellingPet> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       const Text(petNameStr),
                       ShopTextForm(
-                           onChanged: (value){
-                            sellingPetProvider.petName = value;
-                           },
-                          ),
+                       onChanged: (value){
+                        sellingPetProvider.petName = value;
+                       },
+                      ),
                       const SizedBox(
                         height: 20,
                       ),
-                      const Text(petAgeStr),
+                      Row(
+                        children: [
+                          const Text(petAgeStr),
+                          Spacer(),
+                          const Text("Units"),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * .18,
+                          )
+                        ],
+                      ),
                       Row(
                         children: [
                           Container(
                             width: MediaQuery.of(context).size.width * .6,
                             child: ShopTextForm(
-                              onChanged: (value){
-                            sellingPetProvider.petAge = value;
-                           },
+                             onChanged: (value){
+                              sellingPetProvider.petAge = value;
+                             },
+                              
                             ),
                           ),
                           SizedBox(
@@ -124,7 +163,7 @@ class _SellingPetState extends State<SellingPet> {
                                   sellingPetProvider.petAgeTime = value;
                                 },
                                 value: sellingPetProvider.petAgeTime,
-                                itemlist: petAgeCalcList),
+                                itemlist: petAgeUnitList),
                           )
                         ],
                       ),
@@ -133,9 +172,9 @@ class _SellingPetState extends State<SellingPet> {
                       ),
                       const Text(petWeightStr),
                       ShopTextForm(
-                        onChanged: (value){
-                            sellingPetProvider.petWeight = value;
-                           },
+                        onChanged: (value) {
+                          sellingPetProvider.petWeight = value;
+                        },
                       ),
                       const SizedBox(
                         height: 20,
@@ -145,74 +184,65 @@ class _SellingPetState extends State<SellingPet> {
                           onChanged: (value) {
                             sellingPetProvider.petGender = value;
                           },
-                          value: adoptProvider.petGender,
+                          value: sellingPetProvider.petGender,
                           itemlist: petGenderList),
                       const SizedBox(
                         height: 20,
                       ),
+                      const Text(petCategoriesStr),
+                      CustomDropDown(
+                          onChanged: (value) {
+                            sellingPetProvider.petCategories = value;
+                            //  sellingPetProvider.setBreedList(_getBreedList(value));
+                          },
+                          value: sellingPetProvider.petCategories,
+                          itemlist: petCategoriesList),
+                      const SizedBox(
+                        height: 20,
+                      ),
                       const Text(petBreadStr),
-                      // CustomDropDown(
-                      //     onChanged: (value) {
-                      //       sellingPetProvider.petBreed = value;
-                      //     },
-                      //     value:  sellingPetProvider.petBreed,
-                      //     itemlist: petGenderList),
+                      CustomDropDown(
+                          onChanged: (value) {
+                            sellingPetProvider.petBreed = value;
+                          },
+                          value: sellingPetProvider.petBreed,
+                          itemlist: sellingPetProvider.breedList),
                       const SizedBox(
                         height: 10,
                       ),
-                      InkWell(
-                        onTap: () {
-                          pickImageFromGalleryForDonate(adoptProvider);
-                        },
+                      Center(
                         child: Container(
-                          height: 200,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all()),
-                          child:
-                              //
-                              adoptProvider.image != null
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: adoptProvider.imageUrl != null &&
-                                              adoptProvider.image != null
-                                          ? Image.network(adoptProvider.imageUrl!)
-                                          : adoptProvider.image != null
-                                              ? Image.file(
-                                                  File(adoptProvider.image!.path),
-                                                  fit: BoxFit.cover,
-                                                )
-                                              : SizedBox())
-                                  : Icon(
-                                      Icons.photo_library_outlined,
-                                      size: 70,
-                                      color: Colors.black.withOpacity(0.5),
-                                    ),
+                          height: 50,
+                          width: MediaQuery.of(context).size.width * .9,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (widget.choice == 'Sale') {
+                                // Navigate to the same page with Sale-specific content
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        DonateOrSale(choice: 'Sale'),
+                                  ),
+                                );
+                              } else if (widget.choice == 'Donate') {
+                                // Navigate to the same page with Donate-specific content
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        DonateOrSale(choice: 'Donate'),
+                                  ),
+                                );
+                              }
+                            },
+                            child: const Text(nextStr),
+                          ),
                         ),
                       ),
                       const SizedBox(
-                        height: 25,
+                        height: 20,
                       ),
-                        ElevatedButton(
-                        onPressed: () async {
-                          // await adoptProvider.sendAdoptValueToFireBase(context);
-                          await sellingPetProvider.sendSellingPet();
-                          if(adoptProvider.adoptUtil == StatusUtil.success){
-                            Helper.snackBar(successfullySavedStr, context);
-                              Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => BottomNavBar()),
-                              (Route<dynamic> route) => false);
-                              //  adoptProvider.formKey!.currentState!.reset();
-                          }else{
-                            Helper.snackBar(adoptProvider.errorMessage!, context);
-                          }
-                         
-                         
-                        
-                        },
-                        child: Text(submitStr))
                     ],
                   ),
                 ),
@@ -222,13 +252,5 @@ class _SellingPetState extends State<SellingPet> {
         ),
       ),
     );
-  }
-
-  pickImageFromGalleryForDonate(AdoptProvider adoptProvider) async {
-    final image = await ImagePicker()
-        .pickImage(source: ImageSource.gallery, imageQuality: 100);
-    if (image == null) return;
-
-    adoptProvider.setImage(image);
   }
 }

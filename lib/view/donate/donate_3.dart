@@ -19,23 +19,7 @@ class DonateThird extends StatefulWidget {
 }
 
 class _DonateThirdState extends State<DonateThird> {
-  // @override
-  // void initState() {
-  //    var adoptProvider = Provider.of<AdoptProvider>(context, listen: false);
-  //   if (widget.adopt != null) {
-  //     adoptProvider.petnameController.text = widget.adopt!.petname!;
-  //     adoptProvider.petAgeController.text = widget.adopt!.petage!;
-  //     adoptProvider.petweightController.text = widget.adopt!.petweight!;
-  //     adoptProvider.setPetGender(widget.adopt!.gender!);
-  //     adoptProvider.setPetBread(widget.adopt!.petbread!);
-  //     adoptProvider.setImageUrl(widget.adopt!.imageUrl);
-  //     adoptProvider.setPetAgeTime(widget.adopt!.petAgeTime!);
-  //     adoptProvider.ownerLocationController.text = widget.adopt!.location!;
-  //     adoptProvider.ownerNameController.text = widget.adopt!.name!;
-  //     adoptProvider.ownerPhoneController.text = widget.adopt!.phone!;
-  //   }
-  //   super.initState();
-  // }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

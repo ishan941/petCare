@@ -73,7 +73,7 @@ class _CategoriesFormsState extends State<CategoriesForms> {
                     ElevatedButton(
                         onPressed: () async {
                           await categoriesProvider
-                              .saveCategoriesDataToFireBase();
+                              .saveCategory();
 
                           if (categoriesProvider.categoriesUtil ==
                               StatusUtil.success) {

@@ -134,8 +134,8 @@ class _MyAppState extends State<MyApp> {
                 },
               ),
             ),
-            // home: SplashScreen()
-            home: BottomNavBar(),
+            home: SplashScreen()
+            // home: BottomNavBar(),
             // home: MyProfile(),
             
             ),

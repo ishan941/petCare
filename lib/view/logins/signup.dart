@@ -4,6 +4,7 @@ import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
+import 'package:project_petcare/view/buttomnav.dart';
 import 'package:project_petcare/view/customs/customform.dart';
 import 'package:project_petcare/view/logins/loginpage.dart';
 import 'package:provider/provider.dart';
@@ -176,7 +177,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                         successfullySavedStr, context);
                                     Navigator.of(context).pushAndRemoveUntil(
                                         MaterialPageRoute(
-                                            builder: (context) => LoginPage()),
+                                            builder: (context) => BottomNavBar()),
                                         (Route<dynamic> route) => false);
                                   } else {
                                     Helper.snackBar(failedToSaveStr, context);

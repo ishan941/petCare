@@ -11,12 +11,11 @@ import 'package:project_petcare/model/verificationTools.dart';
 import 'package:project_petcare/response/response.dart';
 
 abstract class PetCareService {
-
   Future<ApiResponse> isUserLoggedIn(SignUp signUp);
   Future<FireResponse> ourServiceData(OurService ourService);
   Future<FireResponse> donateData(Donate donate);
   Future<ApiResponse> adoptDetails(Adopt adopt);
-  Future<ApiResponse> saveSellingPet(Adopt adopt);
+
   Future<FireResponse> getPetDetails();
   Future<FireResponse> saveShopFavourite(Shop shop);
   // Future<FireResponse> getShopFavourite();
@@ -25,9 +24,9 @@ abstract class PetCareService {
   Future<ApiResponse> updateAdoptDetails(Adopt adopt);
   Future<FireResponse> shopItemDetails(Shop shop);
   Future<FireResponse> getShopItems();
-  Future<FireResponse> getCategoriesDetails();
+  Future<ApiResponse> getCategoriesDetails();
   Future<FireResponse> saveDashServiceDetails(DashService dashService);
-  Future<FireResponse> categoriesDetails(Categories categories);
+  Future<ApiResponse> categoriesDetails(Categories categories);
   Future<FireResponse> saveProfessionData(OurService ourService);
   Future<FireResponse> getProfessionDetails();
   Future<FireResponse> getDashServiceDetails();
@@ -46,5 +45,8 @@ abstract class PetCareService {
   Future<FireResponse> saveFeedValue(Feed feed);
   Future<FireResponse> getFeedValue();
 
-  
+  Future<ApiResponse> saveSellingPet(Adopt adopt);
+  Future<ApiResponse> getSellingPet();
+  Future<ApiResponse> saveDonatePet(Adopt adopt);
+  Future<ApiResponse> getDonatePet();
 }

@@ -53,21 +53,26 @@ class _SplashScreenState extends State<SplashScreen>
 
   readValue() async {
     var signUpProvider = Provider.of<SignUpProvider>(context, listen: false);
-    bool isLogin = await signUpProvider.readValueFromSharedPreference();
-    bool isGoogleIn =
+    // bool isLogin = await signUpProvider.readValueFromSharedPreference();
+    // bool isGoogleIn =
         await signUpProvider.readGooogelValueFromSharedPreference();
     Future.delayed(Duration(seconds: 2), () {
-      if (isLogin || isGoogleIn) {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => BottomNavBar()),
             (route) => false);
-      } else {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => LoginPage()),
-            (route) => false);
-      }
+      // if (isLogin || isGoogleIn) {
+      //   Navigator.pushAndRemoveUntil(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => BottomNavBar()),
+      //       (route) => false);
+      // } 
+      // else {
+      //   Navigator.pushAndRemoveUntil(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => LoginPage()),
+      //       (route) => false);
+      // }
     });
   }
 
@@ -80,18 +85,20 @@ class _SplashScreenState extends State<SplashScreen>
             scale: _scaleAnimation,
             child: FadeTransition(
               opacity: _fadeAnimation,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.asset(
-                      'assets/images/splash.png',
-                      fit: BoxFit.cover,
+              child: Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      child: Image.asset(
+                        'assets/images/splash.png',
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:project_petcare/core/statusutil.dart';
-import 'package:project_petcare/helper/baseurl.dart';
+import 'package:project_petcare/core/baseurl.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/model/adopt.dart';
@@ -193,7 +193,7 @@ class PetCareImpl extends PetCareService {
   Future<FireResponse> getAdoptDetails() async {
     if (await Helper.checkInterNetConnection()) {
       try {
-        Response response = await dio.get(url + "/getDonationPet");
+        Response response = await dio.get(BASEURL + "/getDonationPet");
         if (response.statusCode == 200) {
           dynamic responseData = response.data;
 
@@ -417,52 +417,6 @@ class PetCareImpl extends PetCareService {
   }
 
   @override
-  Future<FireResponse> categoriesDetails(Categories categories) async {
-    if (await Helper.checkInterNetConnection()) {
-      try {
-        FirebaseFirestore.instance
-            .collection("CategoriesItems")
-            .add(categories.toJson());
-        return FireResponse(
-            statusUtil: StatusUtil.success,
-            successMessage: successfullySavedStr);
-      } catch (e) {
-        return FireResponse(
-            statusUtil: StatusUtil.error, errorMessage: e.toString());
-      }
-    } else {
-      return FireResponse(
-          statusUtil: StatusUtil.error, errorMessage: noInternetStr);
-    }
-  }
-
-  @override
-  Future<FireResponse> getCategoriesDetails() async {
-    if (await Helper.checkInterNetConnection()) {
-      try {
-        var response = await FirebaseFirestore.instance
-            .collection("CategoriesItems")
-            .get();
-        final items = response.docs;
-        List<Categories> categoriesList = [];
-        if (items.isNotEmpty) {
-          for (var categoriesitems in items) {
-            categoriesList.add(Categories.fromJson(categoriesitems.data()));
-          }
-        }
-        return FireResponse(
-            statusUtil: StatusUtil.success, data: categoriesList);
-      } catch (e) {
-        return FireResponse(
-            statusUtil: StatusUtil.error, errorMessage: badRequestStr);
-      }
-    } else {
-      return FireResponse(
-          statusUtil: StatusUtil.error, errorMessage: noInternetStr);
-    }
-  }
-
-  @override
   Future<FireResponse> deleteAdoptById(String id) async {
     try {
       await FirebaseFirestore.instance
@@ -482,7 +436,7 @@ class PetCareImpl extends PetCareService {
     if (await Helper.checkInterNetConnection()) {
       try {
         Response response = await dio.put(
-          url + "/saveDonatedPet",
+          BASEURL + "/saveDonatedPet",
           data: adopt.toJson(),
         );
 
@@ -751,23 +705,108 @@ class PetCareImpl extends PetCareService {
     }
   }
 
- 
-   
-     @override
-     Future<ApiResponse> isUserLoggedIn(SignUp signUp)async {
-    ApiResponse response = await api.post(url+saveuser, signUp);
+  @override
+  Future<ApiResponse> isUserLoggedIn(SignUp signUp) async {
+    ApiResponse response = await api.post(BASEURL + saveuser, signUp);
     return response;
-     }
-   
-     @override
-     Future<ApiResponse> userLoginDetails(SignUp signUp) {
-    // TODO: implement userLoginDetails
-    throw UnimplementedError();
-     }
-     
-       @override
-       Future<ApiResponse> saveSellingPet(Adopt adopt)async {
-         ApiResponse response = await api.post(url+saveSellingPetUrl, adopt.toJson());
-         return response;
-       }
-   }
+  }
+
+  @override
+  Future<ApiResponse> userLoginDetails(SignUp signUp) async {
+    ApiResponse response = await api.post(BASEURL + saveuser, signUp);
+    return response;
+  }
+
+  @override
+  Future<ApiResponse> saveSellingPet(Adopt adopt) async {
+    ApiResponse response =
+        await api.post(BASEURL + saveSellingPetUrl, adopt.toJson());
+    return response;
+  }
+@override
+  Future<ApiResponse> saveDonatePet(Adopt adopt) async {
+    ApiResponse response =
+        await api.post(BASEURL + saveDonatedPetUrl, adopt.toJson());
+    return response;
+  }
+   @override
+  Future<ApiResponse> categoriesDetails(Categories categories) async {
+    ApiResponse response =
+        await api.post(BASEURL + saveCategoryUrl, categories.toJson());
+    return response;
+  }
+
+
+  @override
+  Future<ApiResponse> getSellingPet() async {
+    ApiResponse response = await api.get(BASEURL + getSellingPetUrl);
+    final sellingPet = response.data;
+    List<Adopt> sellingPetList = [];
+    if (sellingPet.isNotEmpty) {
+      for (var sellingPetData in sellingPet) {
+        sellingPetList.add(Adopt.fromJson(sellingPetData.data()));
+      }
+    }
+    return ApiResponse(statusUtil: StatusUtil.success, data: sellingPetList);
+  }
+
+  @override
+  Future<ApiResponse> getDonatePet() async {
+    ApiResponse response = await api.get(BASEURL + saveSellingPetUrl);
+    final sellingPet = response.data;
+    List<Adopt> sellingPetList = [];
+    if (sellingPet.isNotEmpty) {
+      for (var sellingPetData in sellingPet) {
+        sellingPetList.add(Adopt.fromJson(sellingPetData.data()));
+      }
+    }
+    return response;
+  }
+
+
+  @override
+Future<ApiResponse> getCategoriesDetails() async {
+  try {
+    ApiResponse response = await api.get(BASEURL + getCategoryUrl);
+
+    final List<dynamic> items = response.data['data']; // Assuming data is a list
+    List<Categories> categoriesList = [];
+    if (items.isNotEmpty) {
+      for (var categoriesitems in items) {
+        categoriesList.add(Categories.fromJson(categoriesitems));
+      }
+    }
+
+    return ApiResponse(statusUtil: StatusUtil.success, data: categoriesList);
+  } catch (e) {
+    return ApiResponse(
+      statusUtil: StatusUtil.error,
+      errorMessage: "Failed to fetch categories: $e",
+    );
+  }
+}
+
+// @override
+// Future<ApiResponse> getCategoriesDetails() async {
+//   if (await Helper.checkInterNetConnection()) {
+//     try {
+//       var response =
+//           await FirebaseFirestore.instance.collection("CategoriesItems").get();
+//       final items = response.docs;
+//       List<Categories> categoriesList = [];
+//       if (items.isNotEmpty) {
+//         for (var categoriesitems in items) {
+//           categoriesList.add(Categories.fromJson(categoriesitems.data()));
+//         }
+//       }
+//       return ApiResponse(statusUtil: StatusUtil.success, data: categoriesList);
+//     } catch (e) {
+//       return ApiResponse(
+//           statusUtil: StatusUtil.error, errorMessage: badRequestStr);
+//     }
+//   } else {
+//     return ApiResponse(
+//         statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+//   }
+// }
+}

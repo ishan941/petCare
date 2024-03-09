@@ -22,5 +22,7 @@ class ApiResponse{
     this.errorMessage,
     this.status_code,
   });
+
+  get docs => null;
 }
 

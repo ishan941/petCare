@@ -23,6 +23,7 @@ const String petAgeValidatorStr = "Please enter age of your pet";
 const String phoneValidatorStr = "Please enter your phone number";
 const String locationValidatorStr = "Please enter your location";
 const String petSexStr = "Pet Sex";
+const String petCategoriesStr = "Pet Categories";
 const String petSexValidatorStr = "Please enter gender of your pet";
 const String petBreadStr = "Pet Bread";
 const String petBreadValidatorStr = "Please enter bread of your pet";

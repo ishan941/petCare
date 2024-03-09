@@ -7,14 +7,14 @@ import 'package:project_petcare/provider/sellpetprovider.dart';
 import 'package:project_petcare/view/donate/petsale_1.dart';
 import 'package:provider/provider.dart';
 
-class NewsFeed extends StatefulWidget {
-  const NewsFeed({Key? key}) : super(key: key);
+class DonateSaleFeed extends StatefulWidget {
+  const DonateSaleFeed({Key? key}) : super(key: key);
 
   @override
-  State<NewsFeed> createState() => _NewsFeedState();
+  State<DonateSaleFeed> createState() => _DonateSaleFeedState();
 }
 
-class _NewsFeedState extends State<NewsFeed> {
+class _DonateSaleFeedState extends State<DonateSaleFeed> {
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
@@ -25,8 +25,8 @@ class _NewsFeedState extends State<NewsFeed> {
   }
 
   getFeed() async {
-    var feedProvider = Provider.of<FeedProvider>(context, listen: false);
-    await feedProvider.getFeedValueFromFireBase();
+    var selliingProvider = Provider.of<SellingPetProvider>(context, listen: false);
+    await selliingProvider.getSellingPetData();
   }
  List<String> petCategoriesList= ["Dog", "Cat", "Fish"];
 
@@ -144,19 +144,22 @@ class _NewsFeedState extends State<NewsFeed> {
                                               BoxDecoration(shape: BoxShape.circle),
                                           child: ClipRRect(
                                             borderRadius: BorderRadius.circular(10),
-                                            child: Image.network(
-                                              feedProvider
-                                                      .feedList[index].profile ??
-                                                  " ",
+                                            child:  sellingPetProvider.sellingPetList[index].userImage != null ? 
+                                            Image.network(
+                                              sellingPetProvider.sellingPetList[index].userImage!,
+                                              // feedProvider
+                                              //         .feedList[index].profile ??
+                                              //     " ",
                                               fit: BoxFit.cover,
-                                            ),
+                                            ): Image.asset("assets/images/emptypp.png")
                                           ),
                                         ),
                                         SizedBox(
                                           width: 10,
                                         ),
                                         Text(
-                                          feedProvider.feedList[index].name ?? "",
+                                          // feedProvider.feedList[index].name ?? "",
+                                          sellingPetProvider.sellingPetList[index].petName ?? "Emplt",
                                           style: const TextStyle(
                                             fontSize: 17,
                                             fontWeight: FontWeight.w500,
@@ -180,12 +183,11 @@ class _NewsFeedState extends State<NewsFeed> {
                                             onDoubleTap: () {
                                               feedProvider.handleDoubleTap(index);
                                             },
-                                            child: feedProvider
-                                                        .feedList[index].image !=
-                                                    null
+                                            child: 
+                                            sellingPetProvider.sellingPetList[index].imageUrl != null
                                                 ? Image.network(
-                                                    feedProvider
-                                                        .feedList[index].image!,
+                                                    sellingPetProvider
+                                                        .sellingPetList[index].imageUrl!,
                                                     fit: BoxFit.cover,
                                                   )
                                                 : SizedBox(),
@@ -252,7 +254,7 @@ class _NewsFeedState extends State<NewsFeed> {
                                       ],
                                     ),
                                   ),
-                                  if (index != feedProvider.feedList.length - 1)
+                                  if (index != sellingPetProvider.sellingPetList.length - 1)
                                     Divider(
                                       thickness: 3,
                                     ),
@@ -261,7 +263,7 @@ class _NewsFeedState extends State<NewsFeed> {
                             ),
                           );
                         },
-                        childCount: feedProvider.feedList.length,
+                        childCount: sellingPetProvider.sellingPetList.length,
                       ),
                     ),
                   ],
