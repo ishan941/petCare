@@ -73,6 +73,7 @@ class _NewsFeedState extends State<NewsFeed> {
                             ),
                             IconButton(
                               onPressed: () {
+                                // Navigator.push(context, MaterialPageRoute(builder: (context)=> FeedForm()));
                               _DonateOrSale(context);
                             //  _CategoriesOfPet(context, choice);
                               },

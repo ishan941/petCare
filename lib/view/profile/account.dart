@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project_petcare/core/smooth_scrollable.dart';
@@ -54,12 +55,10 @@ class _AccountState extends State<Account> {
                                 topLeft: Radius.circular(10),
                                 topRight: Radius.circular(10)),
                             child:
-                            Expanded(
-                              child: Container(
-                                  color: ColorUtil.BackGroundColorColor,
-                                  height: MediaQuery.of(context).size.height*.72
-                                  ),
-                            ),
+                            Container(
+                                color: ColorUtil.BackGroundColorColor,
+                                height: MediaQuery.of(context).size.height*.72
+                                ),
                           ),
                         ],
                       ),
@@ -141,7 +140,7 @@ class _AccountState extends State<Account> {
                                                           ? _showAlertDialog(
                                                               context,
                                                               petCareProvider)
-                                                          : _showAlertDialogNOProfile(
+                                                          :  showAlertDialogNOProfile(
                                                               context,
                                                               petCareProvider);
                                                     },
@@ -505,7 +504,7 @@ class _AccountState extends State<Account> {
     );
   }
 
-  void _showAlertDialogNOProfile(
+  void showAlertDialogNOProfile(
       BuildContext context, PetCareProvider petCareProvider) {
     showDialog(
       context: context,

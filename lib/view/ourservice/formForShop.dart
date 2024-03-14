@@ -50,7 +50,7 @@ class _FormForShopState extends State<FormForShop> {
             child: ShopTextForm(
               hintText: "Your Shop Location",
               onChanged: (val) {
-                ourServiceProvider.shopLocation = val;
+                ourServiceProvider.loaction = val;
                 
               },
             ),

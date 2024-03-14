@@ -38,6 +38,7 @@ class _SellingPetState extends State<SellingPet> {
   List<String> petAgeUnitList = ["Days", "Months", "Year"];
   List<String> petGenderList = ["Male", "Female", "Others"];
   List<String> petCategoriesList = ["Dog", "Cat", "Fish"];
+  List<String> petBreadList = ["Dog", "Cat", "Fish"];
   List<String> dogBredList = List.from(dogBreedList);
   List<String> catBreadList = List.from(catBreedList);
   List<String> fishBreadList = List.from(fishBreedList);
@@ -201,12 +202,12 @@ class _SellingPetState extends State<SellingPet> {
                         height: 20,
                       ),
                       const Text(petBreadStr),
-                      CustomDropDown(
-                          onChanged: (value) {
-                            sellingPetProvider.petBreed = value;
-                          },
-                          value: sellingPetProvider.petBreed,
-                          itemlist: sellingPetProvider.breedList),
+                      // CustomDropDown(
+                      //     onChanged: (value) {
+                      //       sellingPetProvider.petBreed = value;
+                      //     },
+                      //     value: sellingPetProvider.petBreed,
+                      //     itemlist: petBreadList),
                       const SizedBox(
                         height: 10,
                       ),

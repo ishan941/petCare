@@ -10,7 +10,7 @@ class Adopt {
   String? petBreed;
   String? categories;
   String? imageUrl;
-  String? id;
+  int? id;
   String? petAgeTime;
   String? userImage;
   String? petPrice;
@@ -36,11 +36,11 @@ class Adopt {
   });
 
   Adopt.fromJson(Map<String, dynamic> json)
-      : petName = json['petname'],
-        petWeight = json['petweight'],
-        petAge = json['petage'],
+      : petName = json['petName'],
+        petWeight = json['petWeight'],
+        petAge = json['petAge'],
         gender = json['gender'],
-        petBreed = json['petbread'],
+        petBreed = json['petBread'],
         imageUrl = json['imageUrl'],
         ownerPhone = json['phone'],
         location = json['location'],
@@ -55,11 +55,11 @@ class Adopt {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['petname'] = this.petName;
-    data['petweight'] = this.petWeight;
-    data['petage'] = this.petAge;
+    data['petName'] = this.petName;
+    data['petWeight'] = this.petWeight;
+    data['petAge'] = this.petAge;
     data['gender'] = this.gender;
-    data['petbread'] = this.petBreed;
+    data['petBread'] = this.petBreed;
     data['imageUrl'] = this.imageUrl;
     data['phone'] = this.ownerPhone;
     data['location'] = this.location;
@@ -72,5 +72,8 @@ class Adopt {
     data['userImage'] = this.userImage;
 
     return data;
+  }
+   static List<Adopt> listFromJson(List<dynamic> jsonList) {
+    return jsonList.map((json) => Adopt.fromJson(json)).toList();
   }
 }

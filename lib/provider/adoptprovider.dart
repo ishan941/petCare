@@ -186,7 +186,7 @@ class AdoptProvider extends ChangeNotifier {
   sendAdoptValueToFireBase(BuildContext context) async {
     await uploadAdoptImageInFireBase();
     Adopt adopt = Adopt(
-      id: id,
+     
       petName: petName,
       petAge: petAge,
       petAgeTime: petAgeTime,

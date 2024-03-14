@@ -292,7 +292,7 @@ class _MyProfileState extends State<MyProfile> {
 
   Widget myFavourite(ShopProvider shopProvider) {
     return shopProvider.getshopIemsUtil == StatusUtil.loading
-        ? SimmerEffect.shimemrForShop()
+        ? SimmerEffect.shimmerEffect()
         : Container(
             height: MediaQuery.of(context).size.height * .325,
             width: MediaQuery.of(context).size.width,

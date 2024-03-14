@@ -124,11 +124,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         },
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return "Please enter your Password";
+                            return "Please enter your confirm Password";
+                          }else if(signUpProvider.password!=value){
+                            return "Password doesn't match";
                           }
-                          // else if (value == password){
-                          //   return "Password doesn't match";
-                          // }
+                        
                           return null;
                         },
                         prefixIcon: Icon(Icons.lock),
@@ -163,11 +163,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           width: MediaQuery.of(context).size.width * 0.9,
                           child: ElevatedButton(
                               onPressed: () async {
-                                if (signUpProvider.password !=
-                                    signUpProvider.confirmPassword) {
-                                  Helper.snackBar(
-                                      "Your Password doesn't match", context);
-                                } else {
+                                if (_formKey.currentState!.validate()) {
                                   await signUpProvider
                                       .sendUserLoginValueToFireBase();
 
@@ -177,7 +173,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                         successfullySavedStr, context);
                                     Navigator.of(context).pushAndRemoveUntil(
                                         MaterialPageRoute(
-                                            builder: (context) => BottomNavBar()),
+                                            builder: (context) =>
+                                                BottomNavBar()),
                                         (Route<dynamic> route) => false);
                                   } else {
                                     Helper.snackBar(failedToSaveStr, context);

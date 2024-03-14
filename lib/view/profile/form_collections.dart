@@ -4,7 +4,9 @@ import 'package:project_petcare/view/categories.dart/forms/categoriesForms.dart'
 import 'package:project_petcare/view/donate/donate_1.dart';
 import 'package:project_petcare/view/ourservice/profession.dart';
 import 'package:project_petcare/view/ourservice/service_form.dart';
+import 'package:project_petcare/view/profile/adsform.dart';
 import 'package:project_petcare/view/shop/shope_sale.dart';
+import 'package:project_petcare/view/test.dart/testPage.dart';
 
 class FormCollection extends StatefulWidget {
   const FormCollection({super.key});
@@ -51,20 +53,27 @@ class _UiTestState extends State<FormCollection> {
                       height: 60,
                     ),
                     Center(
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                offset: Offset(6, 6),
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 0,
-                                blurRadius: 3,
-                              )
-                            ]),
-                        width: MediaQuery.of(context).size.width * .8,
-                        height: 120,
+                      child: GestureDetector(
+                        onDoubleTap: () {
+                           Navigator.push(context, MaterialPageRoute(builder: (context)=> 
+                          TestPage()
+                           ));
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  offset: Offset(6, 6),
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 0,
+                                  blurRadius: 3,
+                                )
+                              ]),
+                          width: MediaQuery.of(context).size.width * .8,
+                          height: 120,
+                        ),
                       ),
                     ),
                     Text('Forms'),
@@ -73,6 +82,7 @@ class _UiTestState extends State<FormCollection> {
                     professionServiceForm(context),
                     shopItemForm(context),
                     serviceDash(context),
+                    adsForm(context),
                   ],
                 ),
               ],
@@ -250,6 +260,41 @@ class _UiTestState extends State<FormCollection> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text("Service in dash"),
+                      Spacer(),
+                      Icon(Icons.arrow_forward_rounded)
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  Widget adsForm(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AdsForm()));
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            color: Colors.white,
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("Add ads"),
                       Spacer(),
                       Icon(Icons.arrow_forward_rounded)
                     ],

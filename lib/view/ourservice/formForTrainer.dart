@@ -27,6 +27,11 @@ class _FormForTrainnerState extends State<FormForTrainner> {
                 ourServiceProvider.trainner = val;
               },
             ),
+            ShopTextForm(
+              onChanged: (val){
+                ourServiceProvider.loaction = val;
+              },
+            ),
              ElevatedButton(onPressed: (){
            Navigator.push(context, MaterialPageRoute(builder: (context)=> FormFinalProfession()));
             

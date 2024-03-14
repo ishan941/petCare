@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             //Username
                             CustomForm(
-                              labelText: email,
+                              labelText: emailStr,
                               prefixIcon: Icon(Icons.email),
                               onChanged: (value) {
                                 signUpProvider.email = value;
@@ -126,26 +126,46 @@ class _LoginPageState extends State<LoginPage> {
                                       MediaQuery.of(context).size.width * 0.9,
                                   child: ElevatedButton(
                                       onPressed: () async {
-                                        await signUpProvider
-                                            .checkUserLoginFromFireBase();
-                                        if (signUpProvider.loginUtil ==
-                                            StatusUtil.success) {
-                                          SaveValueToSharedPreference();
-                                          if (signUpProvider
-                                              .userName.isNotEmpty) {
-                                            Navigator.of(context)
-                                                .pushAndRemoveUntil(
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            BottomNavBar()),
-                                                    (route) => false);
+                                        if (_formKey.currentState!.validate()) {
+                                          await signUpProvider
+                                              .userLoginDetails();
+
+                                          if (signUpProvider.loginUtil ==
+                                              StatusUtil.success) {
+                                           await signUpProvider
+                                                .SaveValueToSharedPreference();
+                                                await signUpProvider.saveUserToSharedPreferences();
+                                            Navigator.pushAndRemoveUntil(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        BottomNavBar()),
+                                                (route) => false);
                                           } else {
-                                            Helper.snackBar(
-                                                "The Provide", context);
+                                            _showAlertDialog(context);
                                           }
-                                        } else {
-                                          _showAlertDialog(context);
                                         }
+
+                                        // await signUpProvider
+                                        //     .checkUserLoginFromFireBase();
+                                        // if (signUpProvider.loginUtil ==
+                                        //     StatusUtil.success) {
+                                        //   SaveValueToSharedPreference();
+                                        //   if (signUpProvider
+                                        //       .userName.isNotEmpty) {
+                                        //     Navigator.of(context)
+                                        //         .pushAndRemoveUntil(
+                                        //             MaterialPageRoute(
+                                        //                 builder: (context) =>
+                                        //                     BottomNavBar()),
+                                        //             (route) => false);
+                                        //   } else {
+                                        //     Helper.snackBar(
+                                        //         "The Provide", context);
+                                        //   }
+                                        // } else {
+                                        //   _showAlertDialog(context);
+                                        // }
                                       },
                                       child: Text("Login"))),
                             )

@@ -19,8 +19,6 @@ class ShopDetails extends StatefulWidget {
 }
 
 class _ShopDetailsState extends State<ShopDetails> {
- 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -223,8 +221,8 @@ class _ShopDetailsState extends State<ShopDetails> {
                           child: Column(
                             children: [
                               InkWell(
-                                onTap: () =>
-                                   MyCart(),
+                                onTap: () => _showDialougeToAddCart(
+                                    context, shopProvider),
                                 child: Icon(
                                   Icons.shopping_cart_outlined,
                                   color: ColorUtil.primaryColor,
@@ -242,25 +240,29 @@ class _ShopDetailsState extends State<ShopDetails> {
                               backgroundColor: MaterialStatePropertyAll(
                                   ColorUtil.primaryColor)),
                           onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ShopBuyNow(
-                                        shopList: shopProvider.shopItemsList)));
+                            _showDialougeToBuy(context, shopProvider);
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) =>
+                            //         _showDialougeToBuy(context, shopProvider)
+                            //         //  ShopBuyNow(
+                            //         //     shopList: shopProvider.shopItemsList)
+                            //             ));
                           },
                           child: Text('Buy Now'),
                         ),
-                        ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(
-                                  ColorUtil.primaryColor)),
-                          onPressed: () {
-                            // shopProvider.updateCartList(
-                            //    widget.shop!);
-                            _showAlertDialog(context, shopProvider);
-                          },
-                          child: Text('Add to cart'),
-                        ),
+                        // ElevatedButton(
+                        //   style: ButtonStyle(
+                        //       backgroundColor: MaterialStatePropertyAll(
+                        //           ColorUtil.primaryColor)),
+                        //   onPressed: () {
+                        //     // shopProvider.updateCartList(
+                        //     //    widget.shop!);
+                        //     _showAlertDialog(context, shopProvider);
+                        //   },
+                        //   child: Text('Add to cart'),
+                        // ),
                       ],
                     ),
                   ),
@@ -273,7 +275,7 @@ class _ShopDetailsState extends State<ShopDetails> {
     );
   }
 
-  void _showAlertDialog(
+  _showDialougeToAddCart(
     BuildContext context,
     ShopProvider shopProvider,
   ) {
@@ -313,6 +315,62 @@ class _ShopDetailsState extends State<ShopDetails> {
                 }
               },
               child: Text("Add to Cart"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  _showDialougeToBuy(
+    BuildContext context,
+    ShopProvider shopProvider,
+  ) {
+    showDialog(
+      context: context,
+      builder: (
+        BuildContext context,
+      ) {
+        return AlertDialog(
+          title: Text(
+            "Do you want to buy " + widget.shop!.product!,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          content: Text(
+            "Choose a payment Method",
+          ),
+          actions: [
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        "assets/images/esewa.png",
+                        height: 40,
+                        width: 70
+                      ),
+                      SizedBox(width: 10,),
+                       Image.asset(
+                            "assets/images/khalti.png",
+                            height: 40,
+                            width: 70
+                          ),
+                     
+
+                      
+                    ],
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Cancel"),
+                ),
+              ],
             ),
           ],
         );

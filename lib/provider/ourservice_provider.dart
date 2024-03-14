@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project_petcare/core/statusutil.dart';
+import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/model/dashservice.dart';
 import 'package:project_petcare/model/ourservice.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
@@ -10,16 +11,19 @@ import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/response/response.dart';
 import 'package:project_petcare/service/petcareimpl.dart';
 import 'package:project_petcare/service/petcareserivce.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OurServiceProvider extends ChangeNotifier {
   PetCareService petCareService = PetCareImpl();
   SignUpProvider signUpProvider = SignUpProvider();
   PetCareProvider petCareProvider = PetCareProvider();
+  String token = "";
 
   String? errorMessage;
   String? service;
   String? medical, shop, trainner;
   String? shopLocation, shopName;
+  String? loaction;
   String? cpimageUrl, ppimageUrl, profilePictureUrl;
   String? profession, phone, email, description;
   String? chosenProfession;
@@ -27,7 +31,7 @@ class OurServiceProvider extends ChangeNotifier {
   String? picture;
   String? userName;
 
-  List<DashService> dashServiceList = [];
+  List<OurService> dashServiceList = [];
   List<OurService> professionDataList = [];
   List<OurService> _filteredProfessionData = [];
   List<OurService> get filteredProfessionData => _filteredProfessionData;
@@ -130,6 +134,7 @@ class OurServiceProvider extends ChangeNotifier {
         phone: signUpProvider.userPhone,
         medical: medical,
         shop: shop,
+        location: loaction,
         shopLocation: shopLocation,
         shopName: shopName,
         trainner: trainner,
@@ -172,13 +177,13 @@ class OurServiceProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> saveDashServiceDetails(DashService dashService) async {
+  Future<void> saveDashServiceDetails(OurService ourService) async {
     if (_dashServiceUtil != StatusUtil.loading) {
       setDashServiceUtil(StatusUtil.loading);
     }
     try {
-      FireResponse response =
-          await petCareService.saveDashServiceDetails(dashService);
+      ApiResponse response =
+          await petCareService.saveDashOurService(ourService,  token);
       if (response.statusUtil == StatusUtil.success) {
         setDashServiceUtil(StatusUtil.success);
       } else if (response.statusUtil == StatusUtil.error) {
@@ -190,6 +195,24 @@ class OurServiceProvider extends ChangeNotifier {
       setDashServiceUtil(StatusUtil.error);
     }
   }
+  // Future<void> saveDashServiceDetails(DashService dashService) async {
+  //   if (_dashServiceUtil != StatusUtil.loading) {
+  //     setDashServiceUtil(StatusUtil.loading);
+  //   }
+  //   try {
+  //     FireResponse response =
+  //         await petCareService.saveDashServiceDetails(dashService);
+  //     if (response.statusUtil == StatusUtil.success) {
+  //       setDashServiceUtil(StatusUtil.success);
+  //     } else if (response.statusUtil == StatusUtil.error) {
+  //       errorMessage = response.errorMessage;
+  //       setDashServiceUtil(StatusUtil.error);
+  //     }
+  //   } catch (e) {
+  //     errorMessage = "$e";
+  //     setDashServiceUtil(StatusUtil.error);
+  //   }
+  // }
 
   Future<void> uploadProfilePicture(OurService ourService) async {
     if (_profilePictureUtil != StatusUtil.loading) {
@@ -320,8 +343,13 @@ class OurServiceProvider extends ChangeNotifier {
   sendValueToFirBase() async {
     await uploadImageInFireBaseForDashService();
     await uploadImageInFirebaseForPpImage();
-    DashService dashService =
-        DashService(cpImage: cpimageUrl, ppImage: ppimageUrl, service: service);
-    await petCareService.saveDashServiceDetails(dashService);
+    OurService ourService =
+        OurService(cpImage: cpimageUrl, ppImage: ppimageUrl, service: service);
+    await petCareService.saveDashServiceDetails(ourService);
+  }
+  readValueFromSharedPreference() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token') ?? "";
+    notifyListeners();
   }
 }

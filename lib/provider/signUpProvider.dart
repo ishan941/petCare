@@ -16,6 +16,7 @@ class SignUpProvider extends ChangeNotifier {
   String? errorMessage;
   String? name, phone, email, password, confirmPassword;
   bool isUserLoggedIn = false;
+  String token = "";
 
   List<SignUp> userSignInDataList = [];
 
@@ -56,7 +57,8 @@ class SignUpProvider extends ChangeNotifier {
     SignUp signUp =
         SignUp(name: name, password: password, email: email, phone: phone);
     try {
-      ApiResponse response = await petCareService.userLoginDetails(signUp);
+      ApiResponse response =
+          await petCareService.userLoginDetails(signUp, token);
       if (response.statusUtil == StatusUtil.success) {
         setSignUpUtil(StatusUtil.success);
       } else {
@@ -66,28 +68,25 @@ class SignUpProvider extends ChangeNotifier {
     } catch (e) {
       errorMessage = "$e";
       setSignUpUtil(StatusUtil.error);
-        print("Error: $errorMessage");
+      print("Error: $errorMessage");
     }
   }
 
-  checkUserLoginFromFireBase() async {
-    if (_loginUtil != StatusUtil.loading) {
-      setLoginUtil(StatusUtil.loading);
-    }
+  Future<void> userLoginDetails() async {
     SignUp signUp = SignUp(email: email, password: password);
+
     try {
-      ApiResponse response = await petCareService.isUserLoggedIn(signUp);
+      ApiResponse response = await petCareService.userLogin(signUp, token);
+
       if (response.statusUtil == StatusUtil.success) {
-        userName = response.data['name'];
-        fullName = response.data['name'];
-        userEmail = response.data['email'];
-        userPhone = response.data['phone'];
-        // userImage = response.data['userImage'];
-        saveUserToSharedPreferences();
+        token = response.data['token'];
+       
+         SaveValueToSharedPreference();
+         saveUserToSharedPreferences();
+  
         setLoginUtil(StatusUtil.success);
         notifyListeners();
-      } else if (response.statusUtil == StatusUtil.error) {
-        errorMessage = response.errorMessage;
+      } else {
         setLoginUtil(StatusUtil.error);
       }
     } catch (e) {
@@ -95,13 +94,93 @@ class SignUpProvider extends ChangeNotifier {
       setLoginUtil(StatusUtil.error);
     }
   }
-
-//
-  Future<void> SaveValueToSharedPreference() async {
+   Future<void> SaveValueToSharedPreference() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool("isUserLoggedIn", true);
     await prefs.setBool("isGoogleLoggedIn", true);
+    await prefs.setString("token", token);
+    notifyListeners();
   }
+   readValueFromSharedPreference() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    isUserLoggedIn = prefs.getBool('isUserLoggedIn') ?? false;
+    token = prefs.getString("token") ?? "";
+    notifyListeners();
+  }
+  Future<void> getTokenFromSharedPref() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token') ?? "";
+   print("$token");
+  }
+
+Future<void> clearLoginStatus(BuildContext context) async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove("isUserLoggedIn");
+      await prefs.remove("isGoogleLoggedIn");
+      if (googleLogIn) {
+        final GoogleSignIn googleSignIn = GoogleSignIn();
+
+        try {
+          if (!kIsWeb) {
+            await googleSignIn.signOut();
+          }
+          await FirebaseAuth.instance.signOut();
+        } catch (e) {
+          Helper.snackBar("Failed to logout ", context);
+        }
+      }
+    } catch (e) {
+      print("$e");
+    }
+  }
+  // checkUserLoginFromFireBase() async {
+  //   if (_loginUtil != StatusUtil.loading) {
+  //     setLoginUtil(StatusUtil.loading);
+  //   }
+  //   SignUp signUp = SignUp(email: email, password: password);
+  //   try {
+  //     ApiResponse response = await petCareService.isUserLoggedIn(signUp, token);
+  //     if (response.statusUtil == StatusUtil.success) {
+  //       // userName = response.data['name'];
+  //       // fullName = response.data['name'];
+  //       // userEmail = response.data['email'];
+  //       // userPhone = response.data['phone'];
+  //       // // userImage = response.data['userImage'];
+  //       // // saveUserToSharedPreferences();
+  //       // setLoginUtil(StatusUtil.success);
+  //       notifyListeners();
+  //     } else if (response.statusUtil == StatusUtil.error) {
+  //       errorMessage = response.errorMessage;
+  //       setLoginUtil(StatusUtil.error);
+  //     }
+  //   } catch (e) {
+  //     errorMessage = "$e";
+  //     setLoginUtil(StatusUtil.error);
+  //   }
+  // }
+
+// Future<void> userLogout() async {
+//   try {
+//     ApiResponse response = await petCareService.userLogout();
+
+//     if (response.statusUtil == StatusUtil.success) {
+//       // Handle successful logout
+//       // Clear user information from SharedPreferences, update UI, etc.
+//     } else {
+//       // Handle logout failure
+//       errorMessage = response.errorMessage;
+//       // Handle the failure according to your app's logic
+//     }
+//   } catch (e) {
+//     // Handle exceptions
+//     errorMessage = "$e";
+//     // Handle the exception according to your app's logic
+//   }
+// }
+
+//
+ 
 
   Future<void> saveUserToSharedPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -128,53 +207,17 @@ class SignUpProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> clearLoginStatus(BuildContext context) async {
-    try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.remove("isUserLoggedIn");
-      await prefs.remove("isGoogleLoggedIn");
-      if (googleLogIn) {
-        final GoogleSignIn googleSignIn = GoogleSignIn();
-
-        try {
-          if (!kIsWeb) {
-            await googleSignIn.signOut();
-          }
-          await FirebaseAuth.instance.signOut();
-        } catch (e) {
-          Helper.snackBar("Failed to logout ", context);
-        }
-      }
-    } catch (e) {
-      print("$e");
-    }
-  }
+  
 
   SignUpProvider() {
     initilizedProvider();
   }
 
-  Future<bool> readValueFromSharedPreference() async {
-    try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      isUserLoggedIn = prefs.getBool('isUserLoggedIn') ?? false;
-
-      return isUserLoggedIn;
-    } catch (e) {
-      print('Error reading from SharedPreferences: $e');
-      return isUserLoggedIn;
-    }
-  }
+ 
 
   Future<bool> readGooogelValueFromSharedPreference() async {
-    try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-
       isGoogleLoggedIn = prefs.getBool('isGoogleLooggedIn') ?? false;
       return isGoogleLoggedIn;
-    } catch (e) {
-      print('Error reading from SharedPreferences: $e');
-      return isGoogleLoggedIn;
-    }
   }
 }

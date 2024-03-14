@@ -5,8 +5,6 @@ import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/response/response.dart';
 
-
-
 class Api {
   Dio dio = Dio();
 
@@ -21,8 +19,7 @@ class Api {
       }
       Response response = await dio.post(url, data: data);
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return ApiResponse(
-            statusUtil: StatusUtil.success, data: response.data);
+        return ApiResponse(statusUtil: StatusUtil.success, data: response.data);
       } else {
         return ApiResponse(
             statusUtil: StatusUtil.error, errorMessage: badRequestStr);
@@ -30,11 +27,13 @@ class Api {
     } on DioError catch (e) {
       if (e.response?.statusCode == 400) {
         return ApiResponse(
-             statusUtil: StatusUtil.error, errorMessage: badRequestStr);
+            statusUtil: StatusUtil.error, errorMessage: badRequestStr);
       } else if (e.error is SocketException) {
         return ApiResponse(
             statusUtil: StatusUtil.error, errorMessage: noInternetStr);
-      } else {
+      } 
+
+      else {
         return ApiResponse(
             statusUtil: StatusUtil.error, errorMessage: e.toString());
       }
@@ -48,22 +47,21 @@ class Api {
       }
       Response response = await dio.put(url, data: data);
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return ApiResponse(
-            statusUtil: StatusUtil.success, data: response.data);
+        return ApiResponse(statusUtil: StatusUtil.success, data: response.data);
       } else {
         return ApiResponse(
-             statusUtil: StatusUtil.error, errorMessage: badRequestStr);
+            statusUtil: StatusUtil.error, errorMessage: badRequestStr);
       }
     } on DioError catch (e) {
       if (e.response?.statusCode == 400) {
         return ApiResponse(
-             statusUtil: StatusUtil.error, errorMessage: badRequestStr);
+            statusUtil: StatusUtil.error, errorMessage: badRequestStr);
       } else if (e.error is SocketException) {
         return ApiResponse(
             statusUtil: StatusUtil.error, errorMessage: noInternetStr);
       } else {
         return ApiResponse(
-             statusUtil: StatusUtil.error, errorMessage: e.toString());
+            statusUtil: StatusUtil.error, errorMessage: e.toString());
       }
     }
   }
@@ -76,8 +74,7 @@ class Api {
       Response response = await dio.get(url);
       if (response.statusCode == 200) {
         // Successful GET request
-        return ApiResponse(
-             statusUtil: StatusUtil.success, data: response.data);
+        return ApiResponse(statusUtil: StatusUtil.success, data: response.data);
       } else {
         // Handle other status codes if needed
         return ApiResponse(
@@ -86,7 +83,7 @@ class Api {
     } on DioError catch (e) {
       if (e.response?.statusCode == 400) {
         return ApiResponse(
-             statusUtil: StatusUtil.error, errorMessage: badRequestStr);
+            statusUtil: StatusUtil.error, errorMessage: badRequestStr);
       } else if (e.response?.statusCode == 403) {
         return ApiResponse(
             statusUtil: StatusUtil.error,
@@ -97,7 +94,7 @@ class Api {
             statusUtil: StatusUtil.error, errorMessage: noInternetStr);
       } else {
         return ApiResponse(
-           statusUtil: StatusUtil.error, errorMessage: e.toString());
+            statusUtil: StatusUtil.error, errorMessage: e.toString());
       }
     }
   }
@@ -109,7 +106,7 @@ class Api {
       }
       Response response = await dio.delete(url);
       if (response.statusCode == 200 || response.statusCode == 204) {
-        return ApiResponse( statusUtil: StatusUtil.success);
+        return ApiResponse(statusUtil: StatusUtil.success);
       } else {
         return ApiResponse(
             statusUtil: StatusUtil.error, errorMessage: badRequestStr);
@@ -120,10 +117,10 @@ class Api {
             statusUtil: StatusUtil.error, errorMessage: badRequestStr);
       } else if (e.error is SocketException) {
         return ApiResponse(
-             statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+            statusUtil: StatusUtil.error, errorMessage: noInternetStr);
       } else {
         return ApiResponse(
-             statusUtil: StatusUtil.error, errorMessage: e.toString());
+            statusUtil: StatusUtil.error, errorMessage: e.toString());
       }
     }
   }

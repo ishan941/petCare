@@ -2,6 +2,9 @@ import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
 
 class OurService {
+  String? cpImage;
+  String? ppImage;
+  String? service;
   String? profession;
   String? fullname;
   String? phone;
@@ -15,28 +18,48 @@ class OurService {
   String? shopLocation;
   String? shopName;
 
-  OurService({this.profession, this.location, this.description, this.shopName, this.shopLocation, this.profilePicture, this.fullname, this.phone, this.email, this.medical, this.shop,this.trainner,
-  SignUpProvider? signUpProvider,
-  PetCareProvider? petCareProvider
-  });
+  OurService(
+      {this.cpImage,
+      this.ppImage,
+      this.service,
+      this.profession,
+      this.location,
+      this.description,
+      this.shopName,
+      this.shopLocation,
+      this.profilePicture,
+      this.fullname,
+      this.phone,
+      this.email,
+      this.medical,
+      this.shop,
+      this.trainner,
+      SignUpProvider? signUpProvider,
+      PetCareProvider? petCareProvider});
 
   OurService.fromJson(Map<String, dynamic> json) {
+    cpImage = json['cpImage'];
+    ppImage = json['ppImage'];
+    service = json['service'];
     profession = json['profession'];
     fullname = json['fullname'];
     phone = json['phone'];
     email = json['email'];
-     shop = json['shop'];
-      medical = json['medical'];
-       trainner = json['trainner'];
-       profilePicture = json['profilePictureUrl'];
-       shopName = json['shopName'];
-       shopLocation = json['shopLocation'];
-       description = json['description'];
-       location = json['location'];
+    shop = json['shop'];
+    medical = json['medical'];
+    trainner = json['trainner'];
+    profilePicture = json['profilePictureUrl'];
+    shopName = json['shopName'];
+    shopLocation = json['shopLocation'];
+    description = json['description'];
+    location = json['location'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['cpImage'] = this.cpImage;
+    data['ppImage'] = this.ppImage;
+    data['service'] = this.service;
     data['profession'] = this.profession;
     data['fullname'] = this.fullname;
     data['phone'] = this.phone;
@@ -47,8 +70,8 @@ class OurService {
     data['profilePictureUrl'] = this.profilePicture;
     data['shopLocation'] = this.shopLocation;
     data['shopName'] = this.shopName;
-    data['description']= this.description;
-    data['location']= this.location;
+    data['description'] = this.description;
+    data['location'] = this.location;
     return data;
   }
 }

@@ -4,17 +4,14 @@ import 'package:project_petcare/view/logins/loginpage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-SaveValueToSharedPreference() async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setBool("isUserLoggedIn", true);
-  await prefs.setBool("isGoogleLoggedIn", true);
-}
 
 Future<void> clearLoginStatus() async {
   try {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool("isUserLoggedIn", false);
-    await prefs.setBool('isGoogleLoggedIn', false);
+    await prefs.remove("isUserLoggedIn");
+    await prefs.remove('isGoogleLoggedIn');
+    await prefs.remove('token');
+  
   } catch (e) {
     print("$e");
   }

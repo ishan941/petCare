@@ -7,6 +7,8 @@ import 'package:project_petcare/view/feeds/feed.dart';
 import 'package:project_petcare/view/dashboard/homepage.dart';
 import 'package:project_petcare/view/feeds/feedForm.dart';
 import 'package:project_petcare/view/profile/account.dart';
+import 'package:project_petcare/view/profile/form_collections.dart';
+import 'package:project_petcare/view/shop/shopFavourite.dart';
 
 import 'package:project_petcare/view/shop/shopall.dart';
 import 'package:provider/provider.dart';
@@ -52,11 +54,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
       case 1:
         return ShopAll();
       case 2:
-        return NewsFeed();
+        // return NewsFeed();
+        return DonateSaleFeed();
       case 3:
         // return ShopFavourite();
+        return FormCollection();
         // return FeedForm();
-        return DonateSaleFeed();
+        // return DonateSaleFeed();
       default:
         return Account();
     }

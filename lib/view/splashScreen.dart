@@ -54,13 +54,16 @@ class _SplashScreenState extends State<SplashScreen>
   readValue() async {
     var signUpProvider = Provider.of<SignUpProvider>(context, listen: false);
     // bool isLogin = await signUpProvider.readValueFromSharedPreference();
+    await signUpProvider.readValueFromSharedPreference();
+    // String token = await signUpProvider.readValueFromSharedPreference();
     // bool isGoogleIn =
-        await signUpProvider.readGooogelValueFromSharedPreference();
-    Future.delayed(Duration(seconds: 2), () {
+      //  bool isLogin = await signUpProvider.readValueFromSharedPreference();
+    Future.delayed(Duration(seconds: 2), ()async {
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => BottomNavBar()),
+            MaterialPageRoute(builder: (context) => signUpProvider.isUserLoggedIn? BottomNavBar() :LoginPage()),
             (route) => false);
+           await signUpProvider.SaveValueToSharedPreference();
       // if (isLogin || isGoogleIn) {
       //   Navigator.pushAndRemoveUntil(
       //       context,

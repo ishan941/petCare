@@ -9,18 +9,17 @@ import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/model/dashservice.dart';
 import 'package:project_petcare/model/ourservice.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
-import 'package:project_petcare/view/customs/consttextform.dart';
 import 'package:project_petcare/view/ourservice/profession.dart';
 import 'package:project_petcare/view/ourservice/serviceDetail.dart';
 import 'package:project_petcare/view/search_here.dart';
 import 'package:provider/provider.dart';
 
 class OurServicesMore extends StatefulWidget {
-  final DashService? dashService;
+  final OurService? ourService;
 
   OurServicesMore({
     Key? key,
-    this.dashService,
+    this.ourService,
   }) : super(key: key);
 
   @override
@@ -34,19 +33,19 @@ class _OurServicesMoreState extends State<OurServicesMore>
 
   @override
   void initState() {
-    Future.delayed(Duration.zero, () {
+    Future.delayed(Duration(milliseconds: 100), () {
       getvalue();
       SchedulerBinding.instance.addPostFrameCallback((_) {});
     });
     super.initState();
 
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   getvalue() async {
     var ourServiceProvider =
         Provider.of<OurServiceProvider>(context, listen: false);
-    String chosenProfession = widget.dashService!.service!;
+    String chosenProfession = widget.ourService!.service!;
     List<OurService> filteredList =
         ourServiceProvider.filterByProfession(chosenProfession);
     ourServiceProvider.setFilteredProfessionData(filteredList);
@@ -54,147 +53,118 @@ class _OurServicesMoreState extends State<OurServicesMore>
   }
 
   @override
+  void dispose() {
+    _tabController.dispose();
+    _searchController.dispose(); // Dispose of the TextEditingController
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: ScrollConfiguration(
-        behavior: MyBehavior(),
-        child: Scaffold(
+    return ScrollConfiguration(
+      behavior: MyBehavior(),
+      child: Scaffold(
+        backgroundColor: ColorUtil.BackGroundColorColor,
+        appBar: AppBar(
+          elevation: 0,
           backgroundColor: ColorUtil.BackGroundColorColor,
-          appBar: AppBar(
-            elevation: 0,
-            backgroundColor: ColorUtil.BackGroundColorColor,
-            iconTheme: const IconThemeData.fallback(),
-            title: Text(
-              (widget.dashService!.service ?? ""),
-              style: const TextStyle(color: Colors.black),
-            ),
-            centerTitle: true,
-            actions: [
-              IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => YourProfession()));
-                },
-                icon: Icon(Icons.person_add_alt_1_rounded),
-              ),
-              SizedBox(width: 5),
-            ],
+          iconTheme: const IconThemeData.fallback(),
+          title: Text(
+            (widget.ourService!.service ?? ""),
+            style: const TextStyle(color: Colors.black),
           ),
-          body: Consumer<OurServiceProvider>(
-            builder: (context, ourServiceProvider, child) => Column(
-              children: [
-                SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => SearchHere()));
+          centerTitle: true,
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => YourProfession()));
+              },
+              icon: Icon(Icons.person_add_alt_1_rounded),
+            ),
+            SizedBox(width: 5),
+          ],
+        ),
+        body: Consumer<OurServiceProvider>(
+          builder: (context, ourServiceProvider, child) => Column(
+            children: [
+              SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SearchHere()));
+                          },
+                          child: ConstSearch(
+                            prefixIcon: Icon(Icons.search),
+                            controller: _searchController,
+                            hintText: searchHereStr,
+                            onChanged: (_) {
+                              _searchHere(ourServiceProvider);
                             },
-                            child:
-                                // Container(
-                                //   height: 50,
-                                //   color: Colors.red,
-                                // )
-                                ConstSearch(
-                              prefixIcon: Icon(Icons.search),
-                              controller: _searchController,
-                              hintText: searchHereStr,
-                              // suffixIcon: const Icon(Icons.search),
-                              onChanged: (_) {
-                                _searchHere(ourServiceProvider);
-                              },
-                            ),
                           ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 20,
+                  ),
+              Text("Explore " "${widget.ourService!.service ?? ""}")
+                ],
+              ),
+              Flexible(
+                child: DefaultTabController(
+                  length: 2,
+                  child: Column(
+                    children: [
+                      TabBar(
+                        controller: _tabController,
+                        labelColor: Colors.red,
+                        unselectedLabelColor: Colors.black,
+                        indicatorColor: Colors.red,
+                        tabs: [
+                          Tab(child: Text('Popular')),
+                          Tab(child: Text('Nearby')),
+                          // Tab(child: Text('Last Visited')),
+                        ],
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                          controller: _tabController,
+                          children: [
+                            popular(ourServiceProvider),
+                            nearby(ourServiceProvider),
+                            // lastVisited(ourServiceProvider),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 15,
-                ),
-                const Row(
-                  children: [
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Text(
-                      exploreVetStr,
-                      style:
-                          TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                DefaultTabController(
-                  length: 3,
-                  child: Container(
-                    child: Expanded(
-                      child: Column(
-                        children: [
-                          TabBar(
-                            controller: _tabController,
-                            labelColor: Colors.red,
-                            unselectedLabelColor: Colors
-                                .black, // Change the color of unselected text
-                            indicatorColor: Colors.red,
-                            tabs: [
-                              Tab(
-                                child: Text(
-                                  'Popular',
-                                ),
-                              ),
-                              Tab(
-                                child: Text(
-                                  'Nearby',
-                                ),
-                              ),
-                              Tab(
-                                child: Text(
-                                  'Last Visited',
-                                ),
-                              ),
-                            ],
-                          ),
-                          Expanded(
-                            child: TabBarView(
-                              controller: _tabController,
-                              children: [
-                                popular(ourServiceProvider),
-                                nearby(ourServiceProvider),
-                                lastVisited(ourServiceProvider),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
   }
 
   Widget popular(OurServiceProvider ourServiceProvider) {
@@ -339,7 +309,9 @@ class _OurServicesMoreState extends State<OurServicesMore>
                                                   ),
                                                   Text(filteredList[index]
                                                           .location ??
-                                                      "")
+                                                      "Kathmandu",
+                                                      style:  textStyleSmallSized
+                                                      )
                                                 ],
                                               ),
                                             ],
@@ -631,7 +603,7 @@ class _OurServicesMoreState extends State<OurServicesMore>
   _searchHere(OurServiceProvider ourServiceProvider) async {
     String query = _searchController.text.toLowerCase();
     try {
-      String chosenProfession = widget.dashService!.service!;
+      String chosenProfession = widget.ourService!.service!;
       List<OurService> filteredList =
           ourServiceProvider.filterByProfession(chosenProfession);
       ourServiceProvider.setFilteredProfessionData(filteredList);

@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 class DonateOrSaleConfirmation extends StatefulWidget {
   final String? choice;
   final Adopt? adopt;
+ 
   DonateOrSaleConfirmation({Key? key, this.adopt, this.choice})
       : super(key: key);
 
@@ -32,9 +33,18 @@ class _DonateOrSaleConfirmationState extends State<DonateOrSaleConfirmation> {
       return 'Default';
     }
   }
+  @override
+  void initState() {
+  gettoken();
+    super.initState();
+  }
+  gettoken(){
+    var provider = Provider.of<SellingPetProvider>(context, listen: false);
+    provider.getTokenFromSharedPref();
+  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ) {
     return Scaffold(
       backgroundColor: ColorUtil.BackGroundColorColor,
       appBar: AppBar(

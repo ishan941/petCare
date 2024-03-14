@@ -187,19 +187,19 @@ class _ForAdminState extends State<ForAdmin> {
                                   ),
                                   Row(
                                     children: [
-                                      IconButton(
-                                          onPressed: () {
-                                            showDeleteConfirmationDialog(
-                                                context,
-                                                adoptProvider,
-                                                adoptProvider
-                                                    .adoptDetailsList[index]
-                                                    .id!);
-                                          },
-                                          icon: Icon(
-                                            Icons.delete_forever,
-                                            color: Colors.red,
-                                          )),
+                                      // IconButton(
+                                      //     onPressed: () {
+                                      //       showDeleteConfirmationDialog(
+                                      //           context,
+                                               
+                                      //           // adoptProvider
+                                      //           //     .adoptDetailsList[index]
+                                      //           //     .id!);
+                                      //     },
+                                      //     icon: Icon(
+                                      //       Icons.delete_forever,
+                                      //       color: Colors.red,
+                                      //     )),
                                       IconButton(
                                           onPressed: () async {
                                             Navigator.push(context, MaterialPageRoute(builder: (context)=> DonateFirstPage(adopt: adoptProvider.adoptDetailsList[index],)));

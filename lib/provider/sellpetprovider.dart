@@ -9,13 +9,15 @@ import 'package:project_petcare/model/adopt.dart';
 import 'package:project_petcare/response/response.dart';
 import 'package:project_petcare/service/petcareimpl.dart';
 import 'package:project_petcare/service/petcareserivce.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SellingPetProvider extends ChangeNotifier {
   PetCareService petCareService = PetCareImpl();
-  List<Adopt> donateSalePetList = [];
+  List<Adopt> donatePetList = [];
   List<Adopt> sellingPetList = [];
   String? errorMessage;
   XFile? image;
+  String token = "";
 
   String? id,
       petName,
@@ -159,7 +161,7 @@ class SellingPetProvider extends ChangeNotifier {
     );
 
     try {
-      ApiResponse response = await petCareService.saveSellingPet(adopt);
+      ApiResponse response = await petCareService.saveSellingPet(adopt, token);
 
       if (response.statusUtil == StatusUtil.success) {
         setSaveSellingPet(StatusUtil.success);
@@ -173,40 +175,23 @@ class SellingPetProvider extends ChangeNotifier {
     }
   }
 
-  getSellingPetData() async {
-    if (_getSellingPetUtil != StatusUtil.loading) {
-      setGetSellingPet(StatusUtil.loading);
-    }
-    try {
-      ApiResponse response = await petCareService.getSellingPet();
-      if (response.statusUtil == StatusUtil.success) {
-        donateSalePetList = response.data;
-        setGetSellingPet(StatusUtil.success);
-      } else {
-        errorMessage = response.errorMessage;
-        setGetSellingPet(StatusUtil.error);
-      }
-    } catch (e) {
-      errorMessage = e.toString();
-      setGetSellingPet(StatusUtil.error);
-    }
-  }
-
   sendDonatePet() async {
     await uploadAdoptImageInFireBase();
     Adopt adopt = Adopt(
-      petName: petName,
+     petName: petName,
       petAge: petAge,
       petAgeTime: petAgeTime,
       petWeight: petWeight,
       gender: petGender,
+      categories: petCategories,
       petBreed: petBreed,
       imageUrl: imageUrl,
       location: ownerLocation,
+    
     );
 
     try {
-      ApiResponse response = await petCareService.saveDonatePet(adopt);
+      ApiResponse response = await petCareService.saveDonatePet(adopt, token);
 
       if (response.statusUtil == StatusUtil.success) {
         setSaveDonatePet(StatusUtil.success);
@@ -218,5 +203,50 @@ class SellingPetProvider extends ChangeNotifier {
       errorMessage = e.toString();
       setSaveDonatePet(StatusUtil.error);
     }
+  }
+
+  getSellingPetData() async {
+    if (_getSellingPetUtil != StatusUtil.loading) {
+      setGetSellingPet(StatusUtil.loading);
+    }
+    try {
+      ApiResponse response = await petCareService.getSellingPet(token);
+      if (response.statusUtil == StatusUtil.success) {
+        sellingPetList = Adopt.listFromJson(response.data['data']);
+        setGetSellingPet(StatusUtil.success);
+      } else {
+        errorMessage = response.errorMessage;
+        setGetSellingPet(StatusUtil.error);
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+      setGetSellingPet(StatusUtil.error);
+    }
+  }
+
+  getDonatePetData() async {
+    if (_getSellingPetUtil != StatusUtil.loading) {
+      setGetSellingPet(StatusUtil.loading);
+    }
+    try {
+      ApiResponse response = await petCareService.getDonatePet(token);
+      if (response.statusUtil == StatusUtil.success) {
+        donatePetList = Adopt.listFromJson(response.data['data']);
+        setGetSellingPet(StatusUtil.success);
+      } else {
+        errorMessage = response.errorMessage;
+        setGetSellingPet(StatusUtil.error);
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+      setGetSellingPet(StatusUtil.error);
+    }
+  }
+
+  Future<void> getTokenFromSharedPref() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token') ?? "";
+    
+    notifyListeners();
   }
 }

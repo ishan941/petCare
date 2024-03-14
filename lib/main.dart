@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:project_petcare/core/smooth_scrollable.dart';
 import 'package:project_petcare/firebase_options.dart';
 import 'package:project_petcare/provider/adoptprovider.dart';
+import 'package:project_petcare/provider/ads_provider.dart';
 import 'package:project_petcare/provider/categoryprovider.dart';
 import 'package:project_petcare/provider/donateprovider.dart';
 import 'package:project_petcare/provider/feedprovider.dart';
@@ -117,7 +118,8 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (context) => CategoriesProvider()),
           ChangeNotifierProvider(create: (context) => MyPetProvider()),
           ChangeNotifierProvider(create: (context) => FeedProvider()),
-          ChangeNotifierProvider(create: (context) =>SellingPetProvider())
+          ChangeNotifierProvider(create: (context) =>SellingPetProvider()),
+          ChangeNotifierProvider(create: (context)=> AdsProvider())
         ],
         child: MaterialApp(
             navigatorKey: firebaseNavigatorKey,
@@ -134,8 +136,9 @@ class _MyAppState extends State<MyApp> {
                 },
               ),
             ),
-            home: SplashScreen()
-            // home: BottomNavBar(),
+            // home: SplashScreen(),
+            // home: LoginPage(),
+            home: BottomNavBar(),
             // home: MyProfile(),
             
             ),

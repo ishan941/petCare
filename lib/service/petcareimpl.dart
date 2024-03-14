@@ -7,8 +7,8 @@ import 'package:project_petcare/core/baseurl.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/model/adopt.dart';
+import 'package:project_petcare/model/ads.dart';
 import 'package:project_petcare/model/categories.dart';
-import 'package:project_petcare/model/dashservice.dart';
 import 'package:project_petcare/model/donate.dart';
 import 'package:project_petcare/model/feed.dart';
 import 'package:project_petcare/model/mypet.dart';
@@ -256,11 +256,11 @@ class PetCareImpl extends PetCareService {
             .collection("ourServiceDashBoard")
             .get();
         final getDashService = response.docs;
-        List<DashService> dashServiceList = [];
+        List<OurService> dashServiceList = [];
         if (getDashService.isNotEmpty) {
           for (var dashServiceDetails in getDashService) {
             dashServiceList
-                .add(DashService.fromJson(dashServiceDetails.data()));
+                .add(OurService.fromJson(dashServiceDetails.data()));
           }
         }
         return FireResponse(
@@ -314,12 +314,12 @@ class PetCareImpl extends PetCareService {
   }
 
   @override
-  Future<FireResponse> saveDashServiceDetails(DashService dashService) async {
+  Future<FireResponse> saveDashServiceDetails(OurService ourService) async {
     if (await Helper.checkInterNetConnection()) {
       try {
         FirebaseFirestore.instance
             .collection("ourServiceDashBoard")
-            .add(dashService.toJson());
+            .add(ourService.toJson());
         return FireResponse(
             statusUtil: StatusUtil.success,
             successMessage: successfullySavedStr);
@@ -706,85 +706,113 @@ class PetCareImpl extends PetCareService {
   }
 
   @override
-  Future<ApiResponse> isUserLoggedIn(SignUp signUp) async {
-    ApiResponse response = await api.post(BASEURL + saveuser, signUp);
-    return response;
-  }
-
-  @override
-  Future<ApiResponse> userLoginDetails(SignUp signUp) async {
-    ApiResponse response = await api.post(BASEURL + saveuser, signUp);
-    return response;
-  }
-
-  @override
-  Future<ApiResponse> saveSellingPet(Adopt adopt) async {
+  Future<ApiResponse> isUserLoggedIn(SignUp signUp, String token) async {
     ApiResponse response =
-        await api.post(BASEURL + saveSellingPetUrl, adopt.toJson());
+        await api.post(BASEURL + loginUrl, signUp.toJson(), token: token);
     return response;
   }
-@override
-  Future<ApiResponse> saveDonatePet(Adopt adopt) async {
+
+  @override
+  Future<ApiResponse> userLoginDetails(SignUp signUp, String token) async {
     ApiResponse response =
-        await api.post(BASEURL + saveDonatedPetUrl, adopt.toJson());
+        await api.post(BASEURL + saveUserUrl, signUp.toJson(), token: token);
     return response;
   }
-   @override
-  Future<ApiResponse> categoriesDetails(Categories categories) async {
+
+  @override
+  Future<ApiResponse> userLogin(SignUp signUp, String token) async {
     ApiResponse response =
-        await api.post(BASEURL + saveCategoryUrl, categories.toJson());
+        await api.post(BASEURL + loginUrl, signUp.toJson(), token: token);
     return response;
   }
 
-
   @override
-  Future<ApiResponse> getSellingPet() async {
-    ApiResponse response = await api.get(BASEURL + getSellingPetUrl);
-    final sellingPet = response.data;
-    List<Adopt> sellingPetList = [];
-    if (sellingPet.isNotEmpty) {
-      for (var sellingPetData in sellingPet) {
-        sellingPetList.add(Adopt.fromJson(sellingPetData.data()));
-      }
-    }
-    return ApiResponse(statusUtil: StatusUtil.success, data: sellingPetList);
-  }
-
-  @override
-  Future<ApiResponse> getDonatePet() async {
-    ApiResponse response = await api.get(BASEURL + saveSellingPetUrl);
-    final sellingPet = response.data;
-    List<Adopt> sellingPetList = [];
-    if (sellingPet.isNotEmpty) {
-      for (var sellingPetData in sellingPet) {
-        sellingPetList.add(Adopt.fromJson(sellingPetData.data()));
-      }
-    }
+  Future<ApiResponse> saveSellingPet(Adopt adopt, String token) async {
+    ApiResponse response = await api
+        .post(BASEURL + saveSellingPetUrl, adopt.toJson(), token: token);
     return response;
   }
 
+  @override
+  Future<ApiResponse> saveDonatePet(Adopt adopt, String token) async {
+    ApiResponse response = await api
+        .post(BASEURL + saveDonatedPetUrl, adopt.toJson(), token: token);
+    return response;
+  }
 
   @override
-Future<ApiResponse> getCategoriesDetails() async {
-  try {
-    ApiResponse response = await api.get(BASEURL + getCategoryUrl);
-
-    final List<dynamic> items = response.data['data']; // Assuming data is a list
-    List<Categories> categoriesList = [];
-    if (items.isNotEmpty) {
-      for (var categoriesitems in items) {
-        categoriesList.add(Categories.fromJson(categoriesitems));
-      }
-    }
-
-    return ApiResponse(statusUtil: StatusUtil.success, data: categoriesList);
-  } catch (e) {
-    return ApiResponse(
-      statusUtil: StatusUtil.error,
-      errorMessage: "Failed to fetch categories: $e",
-    );
+  Future<ApiResponse> categoriesDetails(
+      Categories categories, String token) async {
+    ApiResponse response = await api
+        .post(BASEURL + saveCategoryUrl, categories.toJson(), token: token);
+    return response;
   }
-}
+
+  @override
+  Future<ApiResponse> saveDashOurService(
+      OurService ourService, String token) async {
+    ApiResponse response = await api
+        .post(BASEURL + saveCategoryUrl, ourService.toJson(), token: token);
+    return response;
+  }
+
+  @override
+  Future<ApiResponse> saveAdsImage(Ads ads, String token) async {
+    ApiResponse response =
+        await api.post(BASEURL + saveAdsImageUrl, ads.toJson(), token: token);
+    return response;
+  }
+
+  @override
+  Future<ApiResponse> getSellingPet(String token) async {
+    ApiResponse response =
+        await api.get(BASEURL + getSellingPetUrl, token: token);
+    return response;
+  }
+
+  @override
+  Future<ApiResponse> getDonatePet(String token) async {
+    ApiResponse response =
+        await api.get(BASEURL + getDonationPetUrl, token: token);
+    return response;
+  }
+
+  @override
+  Future<ApiResponse> getCategoriesDetails(String token) async {
+    
+      ApiResponse response =
+          await api.get(BASEURL + getCategoryUrl, token: token);
+          return response;
+
+     
+  }
+
+  @override
+  Future<ApiResponse> getOurService(String token) async {
+    try {
+      ApiResponse response = await api.get(BASEURL + "", token: token);
+      final ourService = response.data;
+      List<OurService> ourServiceList = [];
+      if (ourService.isNotEmpty) {
+        for (var ourServiceData in ourService) {
+          ourServiceList.add(OurService.fromJson(ourServiceData.data));
+        }
+      }
+      return ApiResponse(statusUtil: StatusUtil.success, data: ourServiceList);
+    } catch (e) {
+      return ApiResponse(
+          statusUtil: StatusUtil.error,
+          errorMessage: "Failed to fetch ourServiceData: $e");
+    }
+  }
+
+  @override
+  Future<ApiResponse> getAdsImage(String token) async {
+    ApiResponse response =
+        await api.get(BASEURL + getAdsImageUrl, token: token);
+    
+    return response;
+  }
 
 // @override
 // Future<ApiResponse> getCategoriesDetails() async {

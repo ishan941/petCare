@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:project_petcare/core/smooth_scrollable.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/constSearch.dart';
@@ -6,6 +7,7 @@ import 'package:project_petcare/helper/simmer.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/provider/adoptprovider.dart';
+import 'package:project_petcare/provider/ads_provider.dart';
 import 'package:project_petcare/provider/categoryprovider.dart';
 import 'package:project_petcare/provider/donateprovider.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
@@ -35,11 +37,12 @@ class _HomePageState extends State<HomePage> {
   late ScrollController _scrollController;
   @override
   void initState() {
-    Future.delayed(Duration.zero, () {
-      // getFavourite();
+    Future.delayed(Duration(milliseconds: 1), () {
+      getToken();
       getGreeting();
       getUserName();
       getCategories();
+      getAds();
       getdata();
       getDashServiceDetailsinUi();
       getAdoptdata();
@@ -76,20 +79,22 @@ class _HomePageState extends State<HomePage> {
     await adoptProvider.getAdoptdata();
   }
 
+  getToken() {
+    var signUpProvider = Provider.of<SignUpProvider>(context, listen: false);
+    signUpProvider.getTokenFromSharedPref();
+  }
+
   getCategories() async {
     var categoriesProvider =
         Provider.of<CategoriesProvider>(context, listen: false);
-    try {
-      await categoriesProvider.getCategoriesData();
-      print("Categories data fetched successfully");
-    } catch (e) {
-      print("Error fetching categories: $e");
-    }
+    categoriesProvider.getTokenFromSharedPref();
+    await categoriesProvider.getCategoriesData();
   }
 
-  getFavourite() async {
-    var shopProvider = Provider.of<ShopProvider>(context, listen: false);
-    await shopProvider.getUser();
+  getAds() async {
+    var adsProvider = Provider.of<AdsProvider>(context, listen: false);
+    await adsProvider.getTokenFromSharedPref();
+    await adsProvider.getAdsImage();
   }
 
   @override
@@ -156,87 +161,69 @@ class _HomePageState extends State<HomePage> {
     return ScrollConfiguration(
       behavior: MyBehavior(),
       child: SingleChildScrollView(
-        child: Consumer<ShopProvider>(
-          builder: (context, shopProvider, child) =>
-              Consumer<CategoriesProvider>(
-            builder: (context, categoriesProvider, child) =>
-                Consumer<SignUpProvider>(
-              builder: (context, signUpProvider, child) =>
-                  Consumer<PetCareProvider>(
-                builder: (context, petCareProvider, child) =>
-                    Consumer<OurServiceProvider>(
-                  builder: (context, ourServiceProvider, child) =>
-                      Consumer<DonateProvider>(
-                    builder: (context, donateProvider, child) =>
-                        Consumer<AdoptProvider>(
-                      builder: (context, adoptProvider, child) => Column(
-                        children: [
-                          Column(
-                            children: [
-                              // dashHead(signUpProvider, context,
-                              //     petCareProvider),
-                              ClipRRect(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20)),
-                                child: Container(
-                                  color: Color(0XFFE5E8FF),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(
-                                          height: 15,
-                                        ),
-                                        // shopProvider.favouriteList.isNotEmpty
-                                        //     ? Column(
-                                        //         children: [
-                                        //           myFavourite(
-                                        //               shopProvider),
-                                        //           categories(
-                                        //               categoriesProvider),
-                                        //           ourservice(context),
-                                        //           adoptdetails(
-                                        //               adoptProvider),
-                                        //         ],
-                                        //       )
-                                        //     :
-                                        categoriesProvider.categoriesUtil ==
-                                                StatusUtil.loading
-                                            ? SimmerEffect.shimmerEffect()
-                                            : Column(
-                                                children: [
-                                                  categories(
-                                                      categoriesProvider),
-
-                                                  Image.asset(
-                                                    "assets/images/streetpets.png",
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                  ourServiceProvider
-                                                              .dashServiceUtil ==
-                                                          StatusUtil.loading
-                                                      ? SimmerEffect
-                                                          .shimmerEffect()
-                                                      : ourservice(context),
-                                                  // adoptdetails(adoptProvider),
-                                                ],
-                                              ),
-
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                      ],
+        child: Consumer<AdsProvider>(
+          builder: (context, adsProvider, child) => Consumer<ShopProvider>(
+            builder: (context, shopProvider, child) =>
+                Consumer<CategoriesProvider>(
+              builder: (context, categoriesProvider, child) =>
+                  Consumer<SignUpProvider>(
+                builder: (context, signUpProvider, child) =>
+                    Consumer<PetCareProvider>(
+                  builder: (context, petCareProvider, child) =>
+                      Consumer<OurServiceProvider>(
+                    builder: (context, ourServiceProvider, child) =>
+                        Consumer<DonateProvider>(
+                      builder: (context, donateProvider, child) =>
+                          Consumer<AdoptProvider>(
+                        builder: (context, adoptProvider, child) => Column(
+                          children: [
+                            Column(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20)),
+                                  child: Container(
+                                    color: Color(0XFFE5E8FF),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(
+                                            height: 15,
+                                          ),
+                                          Column(
+                                            children: [
+                                              categories(categoriesProvider),
+                                              ads(adsProvider),
+                                              ourservice(context),
+                                            ],
+                                          ),
+                                          categoriesProvider
+                                                      .categoriesList.isEmpty ||
+                                                  adsProvider
+                                                      .adsImageList.isEmpty
+                                              ? SizedBox(
+                                                  height: 350,
+                                                  child: Center(
+                                                      child: Text(
+                                                          "No data Available")),
+                                                )
+                                              : SizedBox(
+                                                  height: 10,
+                                                )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -251,7 +238,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget myFavourite(ShopProvider shopProvider) {
     return shopProvider.getshopIemsUtil == StatusUtil.loading
-        ? SimmerEffect.shimemrForShop()
+        ? SimmerEffect.shimmerEffect()
         : Container(
             height: MediaQuery.of(context).size.height * .325,
             width: MediaQuery.of(context).size.width,
@@ -561,59 +548,63 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget categories(CategoriesProvider categoriesProvider) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-          child: Row(
+    return categoriesProvider.categoriesList.isEmpty
+        ? Text("No Data Available for Categories")
+        : Column(
             children: [
-              InkWell(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Account()));
-                },
-                child: const Text(
-                  categoriesStr,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Account()));
+                      },
+                      child: const Text(
+                        categoriesStr,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                    Spacer(),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CategoriesExplore()));
+                      },
+                      child: Text(exploreStr,
+                          style: TextStyle(
+                              color: ColorUtil.primaryColor, fontSize: 18)),
+                    ),
+                  ],
                 ),
               ),
-              Spacer(),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CategoriesExplore()));
-                },
-                child: Text(exploreStr,
-                    style:
-                        TextStyle(color: ColorUtil.primaryColor, fontSize: 18)),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .24,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: categoriesProvider.categoriesList.length,
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return CategoriesDetails(
+                            categories:
+                                categoriesProvider.categoriesList[index],
+                          );
+                        }),
+                      );
+                    },
+                    child: categoriesUi(context, categoriesProvider, index),
+                  ),
+                ),
               ),
             ],
-          ),
-        ),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * .24,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: categoriesProvider.categoriesList.length,
-            itemBuilder: (context, index) => GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) {
-                    return CategoriesDetails(
-                      categories: categoriesProvider.categoriesList[index],
-                    );
-                  }),
-                );
-              },
-              child: categoriesUi(context, categoriesProvider, index),
-            ),
-          ),
-        ),
-      ],
-    );
+          );
   }
 
   Widget categoriesUi(
@@ -633,12 +624,15 @@ class _HomePageState extends State<HomePage> {
                   child: Container(
                     height: MediaQuery.of(context).size.height * .15,
                     width: MediaQuery.of(context).size.width * 0.35,
-                    child: Image.network(
-                      categoriesProvider
-                              .categoriesList[index].categoriesImage ??
-                          "",
-                      fit: BoxFit.cover,
-                    ),
+                    child: categoriesProvider.getCategoriesUtil ==
+                            StatusUtil.loading
+                        ? SimmerEffect.normalSimmer(context)
+                        : Image.network(
+                            categoriesProvider
+                                    .categoriesList[index].categoriesImage ??
+                                "",
+                            fit: BoxFit.cover,
+                          ),
                   ),
                 ),
               ),
@@ -650,11 +644,14 @@ class _HomePageState extends State<HomePage> {
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: ColorUtil.primaryColor)),
                 child: Center(
-                  child: Text(
-                    categoriesProvider.categoriesList[index].categoriesName ??
-                        "",
-                    style: categoriesTitleText,
-                  ),
+                  child: categoriesProvider.categoriesUtil == StatusUtil.loading
+                      ? SimmerEffect.normalSimmer(context)
+                      : Text(
+                          categoriesProvider
+                                  .categoriesList[index].categoriesName ??
+                              "",
+                          style: categoriesTitleText,
+                        ),
                 ),
               ),
               SizedBox(
@@ -665,6 +662,74 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  Widget ads(AdsProvider adsProvider) {
+    return adsProvider.adsImageList.isEmpty
+        ? Column(
+            children: [
+              Center(
+                child: Column(
+                  children: [
+                    Text("No ads available RightNow"),
+                    Text("Check your internet Connection or try again later")
+                  ],
+                ),
+              ),
+            ],
+          )
+        : ExpandableCarousel(
+            options: CarouselOptions(
+              // height: 400.0,
+              
+              // aspectRatio: 16 / 9,
+              viewportFraction: 1.0,
+              initialPage: 0,
+              enableInfiniteScroll: true,
+              reverse: false,
+              autoPlay: true,
+              autoPlayInterval: const Duration(seconds: 3),
+              autoPlayAnimationDuration: const Duration(milliseconds: 8000),
+              autoPlayCurve: Curves.decelerate,
+              enlargeCenterPage: false,
+              controller: CarouselController(),
+              pageSnapping: true,
+              // scrollDirection: Axis.horizontal,
+              pauseAutoPlayOnTouch: true,
+              pauseAutoPlayOnManualNavigate: true,
+              pauseAutoPlayInFiniteScroll: false,
+              // enlargeStrategy: CenterPageEnlargeStrategy.scale,
+              disableCenter: false,
+              showIndicator: true,
+              slideIndicator: CircularSlideIndicator(
+                itemSpacing: 20
+              ),
+            ),
+            items: [1, 2, 3, 4].map((i) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return Container(
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(12)),
+                    height: 200,
+                    width: MediaQuery.of(context).size.width,
+                    child: ListView.builder(
+                        itemCount: adsProvider.adsImageList.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) => 
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.network(
+                                adsProvider.adsImageList[index].adsImage ??
+                                    "No data available",
+                                fit: BoxFit.cover,
+                              ),
+                        )),
+                  );
+                },
+              );
+            }).toList(),
+          );
   }
 
   Widget adoptdetails(AdoptProvider adoptProvider) {
@@ -827,152 +892,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Column adopt(BuildContext context, DonateProvider donateProvider) {
-  //   return Column(
-  //     children: [
-  //       Padding(
-  //         padding: const EdgeInsets.symmetric(horizontal: 8),
-  //         child: Row(
-  //           children: [
-  //             const Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: [
-  //                 Text(
-  //                   adoptStr,
-  //                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-  //                 ),
-  //                 SizedBox(
-  //                   height: 5,
-  //                 ),
-  //                 // Text("Your favourite pet",style: TextStyle(fontSize: 16),)
-  //               ],
-  //             ),
-  //             Spacer(),
-  //             InkWell(
-  //                 onTap: () {
-  //                   Navigator.push(context,
-  //                       MaterialPageRoute(builder: (context) => AdoptAll()));
-  //                 },
-  //                 child: Text(
-  //                   seeAllStr,
-  //                   style:
-  //                       TextStyle(fontSize: 18, color: ColorUtil.primaryColor),
-  //                 ))
-  //           ],
-  //         ),
-  //       ),
-  //       donateProvider.donatePetList.isNotEmpty
-  //           ? SizedBox(
-  //               height: MediaQuery.of(context).size.height * .195,
-  //               // color: Colors.green,
-  //               child: ListView.builder(
-  //                   itemCount: donateProvider.donatePetList.length,
-  //                   scrollDirection: Axis.horizontal,
-  //                   itemBuilder: (context, index) => Padding(
-  //                         padding: const EdgeInsets.symmetric(
-  //                             vertical: 10, horizontal: 8),
-  //                         child: GestureDetector(
-  //                           onTap: () {
-  //                           //   Navigator.push(
-  //                           //       context,
-  //                           //       MaterialPageRoute(
-  //                           //           builder: (context) => DonateData(
-  //                           //                 donate: donateProvider
-  //                           //                     .donatePetList[index],
-  //                           //               )));
-  //                           },
-  //                           child: Container(
-  //                             decoration: BoxDecoration(
-  //                                 borderRadius: BorderRadius.circular(20),
-  //                                 color: Colors.white,
-  //                                 boxShadow: [
-  //                                   BoxShadow(
-  //                                     spreadRadius: 0,
-  //                                     blurRadius: 3,
-  //                                     color: Colors.grey.withOpacity(0.5),
-  //                                     offset: Offset(2, 4),
-  //                                   ),
-  //                                 ]),
-  //                             height: MediaQuery.of(context).size.height * .18,
-  //                             // width: MediaQuery.of(context).size.width*0.8,
-  //                             child: Padding(
-  //                               padding: const EdgeInsets.all(8.0),
-  //                               child: Row(
-  //                                 children: [
-  //                                   ClipRRect(
-  //                                     borderRadius: BorderRadius.circular(10),
-  //                                     child: Container(
-  //                                       height:
-  //                                           MediaQuery.of(context).size.height,
-  //                                       width:
-  //                                           MediaQuery.of(context).size.width *
-  //                                               0.36,
-  //                                       child: Image.network(
-  //                                         donateProvider.donatePetList[index]
-  //                                                 .image ??
-  //                                             "",
-  //                                         fit: BoxFit.cover,
-  //                                       ),
-  //                                     ),
-  //                                   ),
-  //                                   const SizedBox(
-  //                                     width: 20,
-  //                                   ),
-  //                                   Column(
-  //                                     crossAxisAlignment:
-  //                                         CrossAxisAlignment.start,
-  //                                     children: [
-  //                                       Text(
-  //                                         donateProvider.donatePetList[index]
-  //                                                 .p ??
-  //                                             "",
-  //                                         style: const TextStyle(
-  //                                             fontSize: 20,
-  //                                             fontWeight: FontWeight.w500),
-  //                                       ),
-  //                                       const SizedBox(
-  //                                         height: 5,
-  //                                       ),
-  //                                       Text(
-  //                                         donateProvider.donatePetList[index]
-  //                                                 .petName ??
-  //                                             "",
-  //                                         style: const TextStyle(
-  //                                             fontSize: 17,
-  //                                             fontWeight: FontWeight.w500),
-  //                                         maxLines: 2, // Adjust as needed
-  //                                         overflow: TextOverflow
-  //                                             .ellipsis, // Handle overflow gracefully
-  //                                       ),
-  //                                       const SizedBox(height: 5),
-  //                                       Row(
-  //                                         children: [
-  //                                           Icon(Icons.location_on_outlined,
-  //                                               size: 15,
-  //                                               color: ColorUtil.primaryColor),
-  //                                           const SizedBox(
-  //                                             width: 2,
-  //                                           ),
-  //                                           Text(donateProvider
-  //                                                   .donatePetList[index]
-  //                                                   .location ??
-  //                                               ""),
-  //                                         ],
-  //                                       ),
-  //                                     ],
-  //                                   ),
-  //                                 ],
-  //                               ),
-  //                             ),
-  //                           ),
-  //                         ),
-  //                       ),),
-  //             )
-  //           : const Text(noDateAvailableStr)
-  //     ],
-  //   );
-  // }
-
   Column ourservice(BuildContext context) {
     return Column(
       children: [
@@ -1020,7 +939,7 @@ class _HomePageState extends State<HomePage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => OurServicesMore(
-                                  dashService:
+                                  ourService:
                                       ourServiceProvider.dashServiceList[index],
                                 )));
                   },
@@ -1054,12 +973,16 @@ class _HomePageState extends State<HomePage> {
                                   width: MediaQuery.of(context).size.width,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
-                                    child: Image.network(
-                                      ourServiceProvider
-                                              .dashServiceList[index].cpImage ??
-                                          "",
-                                      fit: BoxFit.cover,
-                                    ),
+                                    child: ourServiceProvider.dashServiceUtil ==
+                                            StatusUtil.loading
+                                        ? SimmerEffect.normalSimmer(context)
+                                        : Image.network(
+                                            ourServiceProvider
+                                                    .dashServiceList[index]
+                                                    .cpImage ??
+                                                "",
+                                            fit: BoxFit.cover,
+                                          ),
                                   ),
                                 ),
                               ),
@@ -1068,6 +991,7 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height * 0.037),
+
                             Text(
                               ourServiceProvider
                                       .dashServiceList[index].service ??
@@ -1085,7 +1009,7 @@ class _HomePageState extends State<HomePage> {
                                   borderRadius: BorderRadius.circular(7)),
                               height: 25,
                               width: MediaQuery.of(context).size.width * .2,
-                              child: const Center(
+                              child: Center(
                                 child: Text(
                                   viewStr,
                                   style: TextStyle(

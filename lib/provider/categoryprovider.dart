@@ -7,6 +7,7 @@ import 'package:project_petcare/model/categories.dart';
 import 'package:project_petcare/response/response.dart';
 import 'package:project_petcare/service/petcareimpl.dart';
 import 'package:project_petcare/service/petcareserivce.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CategoriesProvider extends ChangeNotifier {
   PetCareService petCareService = PetCareImpl();
@@ -15,6 +16,7 @@ class CategoriesProvider extends ChangeNotifier {
   String? categoryImage, categoryName;
 
   XFile? image;
+  String token = "";
   String? imageUrl;
 
   List<Categories> categoriesList = [];
@@ -53,7 +55,7 @@ class CategoriesProvider extends ChangeNotifier {
         Categories(categoriesImage: imageUrl, categoriesName: categoryName);
     try {
       ApiResponse response =
-          await petCareService.categoriesDetails(categories);
+          await petCareService.categoriesDetails(categories, token);
       if (response.statusUtil == StatusUtil.success) {
         setCategoriesUtil(StatusUtil.success);
       } else {
@@ -71,9 +73,9 @@ class CategoriesProvider extends ChangeNotifier {
       setGetCategoriesUtil(StatusUtil.loading);
     }
     try {
-      ApiResponse response = await petCareService.getCategoriesDetails();
+      ApiResponse response = await petCareService.getCategoriesDetails(token);
       if (response.statusUtil == StatusUtil.success) {
-        categoriesList = response.data;
+        categoriesList = Categories.listFromJson(response.data['data']);
         setGetCategoriesUtil(StatusUtil.success);
       } else {
         errorMessage = response.errorMessage;
@@ -83,6 +85,12 @@ class CategoriesProvider extends ChangeNotifier {
       errorMessage = e.toString();
       setGetCategoriesUtil(StatusUtil.error);
     }
+  }
+
+  Future<void> getTokenFromSharedPref() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token') ?? "";
+   notifyListeners();
   }
 
   Future<void> uploadImageInFireBase() async {
