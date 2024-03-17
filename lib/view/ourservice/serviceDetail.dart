@@ -27,9 +27,9 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                     Navigator.pop(context);
                   },
                   icon: Icon(Icons.arrow_back_ios_new)),
-                  Text(widget.ourService!.fullname ?? "",
-                style: subTitleText,
-                ),
+                  // Text(widget.ourService!.fullName ?? "",
+                // style: subTitleText,
+                
             ],
           ),
           Padding(
@@ -37,10 +37,10 @@ class _ServiceDetailsState extends State<ServiceDetails> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Container(
-                child: Image.network(
-                  widget.ourService!.profilePicture ?? "Image Not available",
-                  fit: BoxFit.cover,
-                ),
+                // child: Image.network(
+                //   widget.ourService!.profilePicture ?? "Image Not available",
+                //   fit: BoxFit.cover,
+                // ),
                 height: MediaQuery.of(context).size.height * .4,
                 width: MediaQuery.of(context).size.width,
               ),
@@ -53,13 +53,13 @@ class _ServiceDetailsState extends State<ServiceDetails> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 
-                Text(widget.ourService!.profession ?? ""),
+                // Text(widget.ourService!.profession ?? ""),
                 SizedBox(height: 15,),
                 Text("About",
                 style: mainTitleText,
                 ),
-                Text(widget.ourService!.description ?? "Description not available ..."),
-                Text("Phone Number -  ${widget.ourService!.phone ?? "Phone Number not available"}")
+                // Text(widget.ourService!.description ?? "Description not available ..."),
+                // Text("Phone Number -  ${widget.ourService!.phone ?? "Phone Number not available"}")
               ],
             ),
           ),

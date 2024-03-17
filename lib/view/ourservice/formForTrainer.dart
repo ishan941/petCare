@@ -24,7 +24,7 @@ class _FormForTrainnerState extends State<FormForTrainner> {
             Text("Form For Trainner"),
             ShopTextForm(
               onChanged: (val){
-                ourServiceProvider.trainner = val;
+                ourServiceProvider.trainer = val;
               },
             ),
             ShopTextForm(

@@ -6,6 +6,7 @@ import 'package:project_petcare/model/donate.dart';
 import 'package:project_petcare/model/feed.dart';
 import 'package:project_petcare/model/mypet.dart';
 import 'package:project_petcare/model/ourservice.dart';
+import 'package:project_petcare/model/ourservicedto.dart';
 import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/model/signUp.dart';
 import 'package:project_petcare/model/verificationTools.dart';
@@ -26,7 +27,7 @@ abstract class PetCareService {
   Future<ApiResponse> updateAdoptDetails(Adopt adopt);
   Future<FireResponse> shopItemDetails(Shop shop);
   Future<FireResponse> getShopItems();
-  Future<FireResponse> saveDashServiceDetails(OurService ourService);
+  // Future<FireResponse> saveDashServiceDetails(OurService ourService);
 
   Future<ApiResponse> categoriesDetails(Categories categories, String token);
   Future<FireResponse> saveProfessionData(OurService ourService);
@@ -48,8 +49,10 @@ abstract class PetCareService {
 
   Future<ApiResponse> userLogin(SignUp signUp, String token);
   Future<ApiResponse> userLoginDetails(SignUp signUp, String token);
+  Future<ApiResponse> saveUserDetails(SignUp signUp, String token);
   Future<ApiResponse> saveSellingPet(Adopt adopt, String token);
   Future<ApiResponse> saveDashOurService(OurService ourService, String token);
+  Future<ApiResponse> saveOurServiceDto(OurServiceDto ourServiceDto, String token);
   Future<ApiResponse> saveDonatePet(Adopt adopt, String token);
   Future<ApiResponse> saveAdsImage(Ads ads, String token);
 
@@ -58,5 +61,7 @@ abstract class PetCareService {
   Future<ApiResponse> getDonatePet(String token);
   Future<ApiResponse> getCategoriesDetails(String token);
   Future<ApiResponse> getAdsImage(String token);
+  Future<ApiResponse> getDashService(String token);
+  
 
 }

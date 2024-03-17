@@ -13,6 +13,7 @@ import 'package:project_petcare/model/donate.dart';
 import 'package:project_petcare/model/feed.dart';
 import 'package:project_petcare/model/mypet.dart';
 import 'package:project_petcare/model/ourservice.dart';
+import 'package:project_petcare/model/ourservicedto.dart';
 import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/model/signUp.dart';
 import 'package:project_petcare/model/verificationTools.dart';
@@ -259,8 +260,7 @@ class PetCareImpl extends PetCareService {
         List<OurService> dashServiceList = [];
         if (getDashService.isNotEmpty) {
           for (var dashServiceDetails in getDashService) {
-            dashServiceList
-                .add(OurService.fromJson(dashServiceDetails.data()));
+            dashServiceList.add(OurService.fromJson(dashServiceDetails.data()));
           }
         }
         return FireResponse(
@@ -312,25 +312,25 @@ class PetCareImpl extends PetCareService {
           statusUtil: StatusUtil.error, errorMessage: noInternetStr);
     }
   }
-
-  @override
-  Future<FireResponse> saveDashServiceDetails(OurService ourService) async {
-    if (await Helper.checkInterNetConnection()) {
-      try {
-        FirebaseFirestore.instance
-            .collection("ourServiceDashBoard")
-            .add(ourService.toJson());
-        return FireResponse(
-            statusUtil: StatusUtil.success,
-            successMessage: successfullySavedStr);
-      } catch (e) {
-        return FireResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
-      }
-    } else {
-      return FireResponse(
-          statusUtil: StatusUtil.error, errorMessage: noInternetStr);
-    }
-  }
+//firebase
+  // @override
+  // Future<FireResponse> saveDashServiceDetails(OurService ourService) async {
+  //   if (await Helper.checkInterNetConnection()) {
+  //     try {
+  //       FirebaseFirestore.instance
+  //           .collection("ourServiceDashBoard")
+  //           .add(ourService.toJson());
+  //       return FireResponse(
+  //           statusUtil: StatusUtil.success,
+  //           successMessage: successfullySavedStr);
+  //     } catch (e) {
+  //       return FireResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
+  //     }
+  //   } else {
+  //     return FireResponse(
+  //         statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+  //   }
+  // }
 
   @override
   Future<FireResponse> saveProfessionData(OurService ourService) async {
@@ -727,6 +727,13 @@ class PetCareImpl extends PetCareService {
   }
 
   @override
+  Future<ApiResponse> saveUserDetails(SignUp signUp, String token) async {
+    ApiResponse response =
+        await api.post(BASEURL + saveUserUrl, signUp.toJson(), token: token);
+    return response;
+  }
+
+  @override
   Future<ApiResponse> saveSellingPet(Adopt adopt, String token) async {
     ApiResponse response = await api
         .post(BASEURL + saveSellingPetUrl, adopt.toJson(), token: token);
@@ -752,7 +759,13 @@ class PetCareImpl extends PetCareService {
   Future<ApiResponse> saveDashOurService(
       OurService ourService, String token) async {
     ApiResponse response = await api
-        .post(BASEURL + saveCategoryUrl, ourService.toJson(), token: token);
+        .post(BASEURL + saveOurServiceUrl, ourService.toJson(), token: token);
+    return response;
+  }
+   @override
+  Future<ApiResponse> saveOurServiceDto(OurServiceDto ourServiceDto, String token) async{
+   ApiResponse response = await api
+        .post(BASEURL + saveOurServiceDtoUrl, ourServiceDto.toJson(), token: token);
     return response;
   }
 
@@ -779,12 +792,9 @@ class PetCareImpl extends PetCareService {
 
   @override
   Future<ApiResponse> getCategoriesDetails(String token) async {
-    
-      ApiResponse response =
-          await api.get(BASEURL + getCategoryUrl, token: token);
-          return response;
-
-     
+    ApiResponse response =
+        await api.get(BASEURL + getCategoryUrl, token: token);
+    return response;
   }
 
   @override
@@ -810,9 +820,18 @@ class PetCareImpl extends PetCareService {
   Future<ApiResponse> getAdsImage(String token) async {
     ApiResponse response =
         await api.get(BASEURL + getAdsImageUrl, token: token);
-    
+
     return response;
   }
+
+  @override
+  Future<ApiResponse> getDashService(String token) async {
+    ApiResponse response =
+        await api.get(BASEURL + getServideUrl, token: token);
+    return response;
+  }
+
+ 
 
 // @override
 // Future<ApiResponse> getCategoriesDetails() async {

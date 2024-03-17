@@ -6,12 +6,16 @@ import 'package:project_petcare/core/smooth_scrollable.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/sharedpref.dart';
+import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/model/signUp.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
+import 'package:project_petcare/view/profile/changepassword.dart';
+import 'package:project_petcare/view/form_collections.dart';
 import 'package:project_petcare/view/profile/myprofile.dart';
 import 'package:project_petcare/view/profile/settingsAndPrivacy.dart';
+import 'package:project_petcare/view/shop/shopFavourite.dart';
 import 'package:provider/provider.dart';
 
 class Account extends StatefulWidget {
@@ -23,6 +27,8 @@ class Account extends StatefulWidget {
 }
 
 class _AccountState extends State<Account> {
+  bool isSwitched = false;
+
   @override
   Widget build(BuildContext context) {
     return ScrollConfiguration(
@@ -33,7 +39,7 @@ class _AccountState extends State<Account> {
           actionsIconTheme: IconThemeData.fallback(),
           elevation: 0,
           title: Text(
-            "Account",
+            accountStr,
             style: appBarTitle,
           ),
         ),
@@ -54,11 +60,11 @@ class _AccountState extends State<Account> {
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(10),
                                 topRight: Radius.circular(10)),
-                            child:
-                            Container(
+                            child: Container(
                                 color: ColorUtil.BackGroundColorColor,
-                                height: MediaQuery.of(context).size.height*.72
-                                ),
+                                height: MediaQuery.of(context).size.height,
+                     
+                                  ),
                           ),
                         ],
                       ),
@@ -74,122 +80,16 @@ class _AccountState extends State<Account> {
                                     MaterialPageRoute(
                                         builder: (context) => MyProfile()));
                               },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.blue,
-                                      Colors.white,
-                                    ], 
-                                  ),
-                                ),
-                                width: MediaQuery.of(context).size.width * .9,
-                                height: MediaQuery.of(context).size.height * .1,
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 10,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(12),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.circle),
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                .1,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                .2,
-                                            child: Stack(
-                                              children: [
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    image: DecorationImage(
-                                                      fit: BoxFit.cover,
-                                                      image: petCareProvider
-                                                                  .profilePicture !=
-                                                              null
-                                                          ? NetworkImage(
-                                                              petCareProvider
-                                                                  .profilePicture!)
-                                                          : AssetImage(
-                                                                  "assets/images/emptypp.png")
-                                                              as ImageProvider,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  right: 4,
-                                                  top: 39,
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      petCareProvider
-                                                                  .profilePicture !=
-                                                              null
-                                                          ? _showAlertDialog(
-                                                              context,
-                                                              petCareProvider)
-                                                          :  showAlertDialogNOProfile(
-                                                              context,
-                                                              petCareProvider);
-                                                    },
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                          color: Colors.blue,
-                                                          shape: BoxShape.circle),
-                                                      child: Center(
-                                                          child: Icon(
-                                                        Icons.add,
-                                                        color: Colors.white,
-                                                        size: 21,
-                                                      )),
-                                                      // height: 20,
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                     
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          // Text("My Profile"),
-                                          Text(
-                                            signUpProvider.fullName,
-                                            style: mainTitleText,
-                                          ),
-                                          Text(signUpProvider.userEmail),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
+                              child: profile(
+                                  context, petCareProvider, signUpProvider),
                             ),
                           ),
-                          SizedBox(height: 100,),
-                          testPage(context),
-                          formCollection(context),
-                          settingsAndPrivacy(context),
-                          forAdmin(context),
-                          LogOut(context),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          _general(context),
+                          _preferences(context, petCareProvider),
+                          _forms(context, petCareProvider)
                         ],
                       ),
                     ],
@@ -203,48 +103,117 @@ class _AccountState extends State<Account> {
     );
   }
 
-  Widget LogOut(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      child: InkWell(
-        onTap: () {
-          dialogBuilder(context);
-        },
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Container(
-            height: 50,
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
+  Widget profile(BuildContext context, PetCareProvider petCareProvider,
+      SignUpProvider signUpProvider) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [ColorUtil.primaryColor, ColorUtil.BackGroundColorColor],
+        ),
+      ),
+      width: MediaQuery.of(context).size.width * .9,
+      height: MediaQuery.of(context).size.height * .1,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: 10,
+        ),
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  decoration: BoxDecoration(shape: BoxShape.circle),
+                  height: MediaQuery.of(context).size.height * .1,
+                  width: MediaQuery.of(context).size.width * .2,
+                  child: Stack(
                     children: [
                       Container(
-                          decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 244, 54, 54)
-                                  .withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(30)),
-                          height: 45,
-                          width: 45,
-                          child: Icon(Icons.logout_outlined)),
-                      SizedBox(
-                        width: 15,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: petCareProvider.profilePicture != null
+                                ? NetworkImage(petCareProvider.profilePicture!)
+                                : AssetImage("assets/images/emptypp.png")
+                                    as ImageProvider,
+                          ),
+                        ),
                       ),
-                      Text(
-                        "Logout",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      Spacer(),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        size: 18,
+                      Positioned(
+                        right: 4,
+                        top: 39,
+                        child: GestureDetector(
+                          onTap: () {
+                            // petCareProvider.profilePicture != null
+                            //     ? _showAlertDialog(context, petCareProvider)
+                            //     : showAlertDialogNOProfile(
+                            //         context, petCareProvider);
+                            // pickImageFromGallery(petCareProvider);
+                            showAlertDialogNOProfile(context, petCareProvider);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.blue, shape: BoxShape.circle),
+                            child: Center(
+                                child: Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 21,
+                            )),
+                            // height: 20,
+                          ),
+                        ),
                       )
                     ],
                   ),
                 ),
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Text("My Profile"),
+                Text(
+                  signUpProvider.fullName,
+                  style: mainTitleText,
+                ),
+                Text(signUpProvider.userEmail),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _general(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(generalStr,
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey)),
+                SizedBox(height: 15),
+                _userDetails(context),
+                _changePassword(context),
+                _myFavourites(context),
+                _settingsAndPrivacy(context),
               ],
             ),
           ),
@@ -253,7 +222,63 @@ class _AccountState extends State<Account> {
     );
   }
 
-  Widget testPage(BuildContext context) {
+  Widget _preferences(BuildContext context, PetCareProvider petCareProvider) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(preferenceStr,
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey)),
+                SizedBox(height: 15),
+                _notification(context, petCareProvider),
+                _logOut(context, petCareProvider),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _forms(BuildContext context, PetCareProvider petCareProvider) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Forms",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey)),
+                SizedBox(height: 15),
+                _formCollection(context, petCareProvider),
+                _formsEdit(context, petCareProvider),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _userDetails(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: InkWell(
@@ -269,31 +294,28 @@ class _AccountState extends State<Account> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    children: [
-                      Container(
-                          decoration: BoxDecoration(
-                              color: Colors.pink.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(30)),
-                          height: 45,
-                          width: 45,
-                          child: Icon(Icons.person_2_outlined)),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Text(
-                        "User Details",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      Spacer(),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        size: 18,
-                      )
-                    ],
-                  ),
+                Row(
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                            color: ColorUtil.primaryColor.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(30)),
+                        height: 45,
+                        width: 45,
+                        child: Icon(Icons.person_2_outlined)),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      userDetailsStr,
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                    )
+                  ],
                 ),
               ],
             ),
@@ -303,11 +325,14 @@ class _AccountState extends State<Account> {
     );
   }
 
-  Widget formCollection(BuildContext context) {
+  Widget _changePassword(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ChangePassword()));
+        },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: Container(
@@ -316,31 +341,28 @@ class _AccountState extends State<Account> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    children: [
-                      Container(
-                          decoration: BoxDecoration(
-                              color: Colors.blue.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(30)),
-                          height: 45,
-                          width: 45,
-                          child: Icon(Icons.dashboard_customize_outlined)),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Text(
-                        "Documents",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      Spacer(),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        size: 18,
-                      )
-                    ],
-                  ),
+                Row(
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                            color: Colors.red.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(30)),
+                        height: 45,
+                        width: 45,
+                        child: Icon(Icons.lock_outlined)),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      "Change Password",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                    )
+                  ],
                 ),
               ],
             ),
@@ -350,11 +372,14 @@ class _AccountState extends State<Account> {
     );
   }
 
-  Widget forAdmin(BuildContext context) {
+  Widget _myFavourites(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ShopFavourite()));
+        },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: Container(
@@ -363,31 +388,28 @@ class _AccountState extends State<Account> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    children: [
-                      Container(
-                          decoration: BoxDecoration(
-                              color: Colors.red.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(30)),
-                          height: 45,
-                          width: 45,
-                          child: Icon(Icons.new_releases_outlined)),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Text(
-                        "Report",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      Spacer(),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        size: 18,
-                      )
-                    ],
-                  ),
+                Row(
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                            color: Colors.pink.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(30)),
+                        height: 45,
+                        width: 45,
+                        child: Icon(Icons.favorite_border)),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      "My Favourites",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                    )
+                  ],
                 ),
               ],
             ),
@@ -397,7 +419,7 @@ class _AccountState extends State<Account> {
     );
   }
 
-  Widget settingsAndPrivacy(BuildContext context) {
+  Widget _settingsAndPrivacy(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: InkWell(
@@ -413,31 +435,220 @@ class _AccountState extends State<Account> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    children: [
-                      Container(
-                          decoration: BoxDecoration(
-                              color: Colors.red.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(30)),
-                          height: 45,
-                          width: 45,
-                          child: Icon(Icons.new_releases_outlined)),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Text(
-                        "Settings and Privacy",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      Spacer(),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        size: 18,
-                      )
-                    ],
-                  ),
+                Row(
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                            color: Colors.blue.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(30)),
+                        height: 45,
+                        width: 45,
+                        child: Icon(Icons.new_releases_outlined)),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      "Settings and Privacy",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _notification(BuildContext context, PetCareProvider petCareProvider) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      child: InkWell(
+        onTap: () {
+          // dialogBuilder(context);
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                            color: ColorUtil.primaryColor.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(30)),
+                        height: 45,
+                        width: 45,
+                        child: Icon(Icons.notifications_none_rounded)),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      "Notification",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Spacer(),
+                    Switch(
+                        value: petCareProvider.isSwitched,
+                        onChanged: (value) {
+                          petCareProvider.getToggledSwitch();
+                        },
+                        activeTrackColor: ColorUtil.primaryColor,
+                        activeColor: ColorUtil.primaryColor),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _formCollection(
+      BuildContext context, PetCareProvider petCareProvider) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => FormCollection()));
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 244, 54, 54)
+                                .withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(30)),
+                        height: 45,
+                        width: 45,
+                        child: Icon(Icons.logout_outlined)),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      "Form Collection",
+                      style: TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _formsEdit(BuildContext context, PetCareProvider petCareProvider) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      child: InkWell(
+        onTap: () {
+          dialogBuilder(context);
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 244, 54, 54)
+                                .withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(30)),
+                        height: 45,
+                        width: 45,
+                        child: Icon(Icons.logout_outlined)),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      "Edit Forms",
+                      style: TextStyle(fontSize: 16, color: Colors.red),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _logOut(BuildContext context, PetCareProvider petCareProvider) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      child: InkWell(
+        onTap: () {
+          dialogBuilder(context);
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 244, 54, 54)
+                                .withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(30)),
+                        height: 45,
+                        width: 45,
+                        child: Icon(Icons.logout_outlined)),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      logOutStr,
+                      style: TextStyle(fontSize: 16, color: Colors.red),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                    )
+                  ],
                 ),
               ],
             ),
@@ -455,7 +666,7 @@ class _AccountState extends State<Account> {
     await petCareProvider.setImage(userImage);
   }
 
-  void _showAlertDialog(BuildContext context, PetCareProvider petCareProvider) {
+  void _addUserImage(BuildContext context, PetCareProvider petCareProvider) {
     showDialog(
       context: context,
       builder: (
@@ -487,13 +698,15 @@ class _AccountState extends State<Account> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await petCareProvider.uploadeImageInFirebase();
+                // await petCareProvider.uploadeImageInFirebase();
+                await petCareProvider.sendUserDetails();
                 // await petCareProvider.updateProfilePicture();
                 if (petCareProvider.userImageUtil == StatusUtil.success) {
-                  Helper.snackBar("Successfully Saved", context);
+                  Helper.snackBar(successfullySavedStr, context);
                   Navigator.pop(context);
                 } else {
-                  Helper.snackBar('Failed to save', context);
+                  Helper.snackBar(failedToSaveStr, context);
+                  Navigator.pop(context);
                 }
               },
               child: Text("Upload"),
@@ -518,14 +731,27 @@ class _AccountState extends State<Account> {
             textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,
           ),
-          content: Column(
-            children: [
-              Text("Do You want to add you profile picture For your account?"),
-              petCareProvider.userImage != null
-                  ? Image.file(File(petCareProvider.userImage!.path))
-                  : SizedBox()
-            ],
-          ),
+          content: Container(
+              height: MediaQuery.of(context).size.height * .2,
+              child: Column(
+                children: [
+                  Text(
+                      "Do You want to add your profile picture for your account?"),
+                  if (petCareProvider.userImage != null)
+                    Container(
+                      height: 120, // Adjust the size as needed
+                      width: 120, // Adjust the size as needed
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image:
+                              FileImage(File(petCareProvider.userImage!.path)),
+                        ),
+                      ),
+                    ),
+                ],
+              )),
           actions: [
             ElevatedButton(
               onPressed: () {
@@ -541,7 +767,8 @@ class _AccountState extends State<Account> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await petCareProvider.uploadeImageInFirebase();
+                // await petCareProvider.uploadeImageInFirebase();
+                await petCareProvider.sendUserDetails();
                 if (petCareProvider.userImageUtil == StatusUtil.success) {
                   Helper.snackBar("Successfully Saved", context);
                   Navigator.pop(context);

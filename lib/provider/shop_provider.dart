@@ -37,6 +37,14 @@ class ShopProvider extends ChangeNotifier {
     _per = value;
     notifyListeners();
   }
+   bool _showAppBar = true;
+
+  bool get showAppBar => _showAppBar;
+
+  void setShowAppBar(bool value) {
+    _showAppBar = value;
+    notifyListeners();
+  }
 
   StatusUtil _shopItems = StatusUtil.idle;
   StatusUtil _uploadImageForShop = StatusUtil.idle;

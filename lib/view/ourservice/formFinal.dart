@@ -29,7 +29,7 @@ class _FormFinalProfessionState extends State<FormFinalProfession> {
     var provider = Provider.of<OurServiceProvider>(context, listen: false);
     var petcareProvider = Provider.of<PetCareProvider>(context, listen: false);
     Future.delayed(Duration.zero, () {
-      provider.reset();
+      // provider.reset();
       provider.setPicture(petcareProvider.profilePicture!);
     });
   }
@@ -62,7 +62,7 @@ class _FormFinalProfessionState extends State<FormFinalProfession> {
                 Text(ourServiceProvider.shopName ?? ""),
                 ElevatedButton(
                     onPressed: () async {
-                      await ourServiceProvider.saveProfessionData();
+                      await ourServiceProvider.saveOurServiceDto();
                       if (ourServiceProvider.professionUtil ==
                           StatusUtil.success) {
                         Helper.snackBar(successfullySavedStr, context);

@@ -18,6 +18,20 @@ class ServiceForm extends StatefulWidget {
 class _ServiceFormState extends State<ServiceForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
+  void initState() {
+    Future.delayed(Duration.zero, () {
+      gettoken();
+    });
+
+    super.initState();
+  }
+
+  gettoken() {
+    var provider = Provider.of<OurServiceProvider>(context, listen: false);
+    provider.getTokenFromSharedPref();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -130,17 +144,16 @@ class _ServiceFormState extends State<ServiceForm> {
                   ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          await ourServiceProvider.sendValueToFirBase();
+                          await ourServiceProvider.saveDashOurService();
 
                           if (ourServiceProvider.dashServiceUtil ==
                               StatusUtil.success) {
                             Helper.snackBar(successfullySavedStr, context);
+                            Navigator.pop(context);
                           } else if (ourServiceProvider.dashServiceUtil ==
                               StatusUtil.error) {
                             Helper.snackBar(failedToSaveStr, context);
                           }
-
-                          Navigator.pop(context);
                         }
                       },
                       child: Text("Submit"))

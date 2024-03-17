@@ -7,7 +7,7 @@ import 'package:project_petcare/view/feeds/feed.dart';
 import 'package:project_petcare/view/dashboard/homepage.dart';
 import 'package:project_petcare/view/feeds/feedForm.dart';
 import 'package:project_petcare/view/profile/account.dart';
-import 'package:project_petcare/view/profile/form_collections.dart';
+import 'package:project_petcare/view/form_collections.dart';
 import 'package:project_petcare/view/shop/shopFavourite.dart';
 
 import 'package:project_petcare/view/shop/shopall.dart';
@@ -27,11 +27,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
           index: petcareProvider.selecedIndex,
           height: 65.0,
           items: [
-            _buildNavItem(Icons.home, 'Home', 0),
-            _buildNavItem(Icons.shopping_bag_outlined, 'Shop', 1),
-            _buildNavItem(Icons.feed_outlined, 'NewsFeed', 2),
-            _buildNavItem(Icons.favorite, 'Favourite', 3),
-            _buildNavItem(Icons.person, 'Profile', 4),
+            _buildNavItem(Icons.pets, 'Home', 0),
+            _buildNavItem(Icons.shopify_sharp, 'Shop', 1),
+            _buildNavItem(Icons.directions_boat_outlined, 'Adoption', 2),
+            // _buildNavItem(Icons.favorite, 'Favourite', 3),
+            _buildNavItem(Icons.account_balance_sharp, 'Profile', 3),
             //Icon(Icons.perm_identity, size: 30, color: Colors.white,),
           ],
           color: Colors.white,
@@ -56,9 +56,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
       case 2:
         // return NewsFeed();
         return DonateSaleFeed();
-      case 3:
-        // return ShopFavourite();
-        return FormCollection();
+      // case 3:
+      //   // return ShopFavourite();
+      //   return FormCollection();
         // return FeedForm();
         // return DonateSaleFeed();
       default:

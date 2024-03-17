@@ -147,7 +147,7 @@ class _NewsFeedState extends State<NewsFeed> {
                                             borderRadius: BorderRadius.circular(10),
                                             child: Image.network(
                                               feedProvider
-                                                      .feedList[index].profile ??
+                                                       .feedList[index].profile ??
                                                   " ",
                                               fit: BoxFit.cover,
                                             ),

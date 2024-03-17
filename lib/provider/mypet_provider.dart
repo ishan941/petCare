@@ -41,6 +41,8 @@ class MyPetProvider extends ChangeNotifier {
   StatusUtil get getMyPetUtil => _getMyPetUtil;
   // StatusUtil get updateMyPetUtil => updateMyPetUtil;
 
+  
+
   setBreed(String value) {
     petBreed = value;
   }
@@ -95,16 +97,13 @@ class MyPetProvider extends ChangeNotifier {
           signUp?.myPetData = myPetTojson;
         }
 
-       
         var userEmail = await petCareService.getUserByEmail();
         if (userEmail.statusUtil == StatusUtil.success) {
           if (signUp?.myPetData != null) {
             List<dynamic> decodedList = jsonDecode(signUp!.myPetData ?? "");
             myPetDataList = decodedList.map((e) => MyPet.fromJson(e)).toList();
           }
-        
-      }
-
+        }
 
         setGetMyPetUtil(StatusUtil.success);
       } else {

@@ -9,6 +9,7 @@ import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/response/response.dart';
 import 'package:project_petcare/service/petcareimpl.dart';
 import 'package:project_petcare/service/petcareserivce.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PetCareProvider extends ChangeNotifier {
   PetCareService petCareService = PetCareImpl();
@@ -29,6 +30,7 @@ class PetCareProvider extends ChangeNotifier {
   bool confirmPassword = false;
 
   SignUp? signUp;
+  String token = "";
 
   String _greeting = "";
   String get greeting => _greeting;
@@ -54,6 +56,7 @@ class PetCareProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+// show good moring and others
   updateGreeting() {
     DateTime now = DateTime.now();
     DateTime localTime = now.toLocal();
@@ -67,6 +70,22 @@ class PetCareProvider extends ChangeNotifier {
       _greeting = "Good Evening";
     }
     print("Geeting: $_greeting");
+    notifyListeners();
+  }
+
+  // NOtification on or off
+  bool _isSwitched = false;
+  bool get isSwitched => _isSwitched;
+  void getToggledSwitch() {
+    _isSwitched = !_isSwitched;
+    notifyListeners();
+  }
+
+  // notification vibration
+  bool _vibrationEnabled = true;
+  bool get vibrationEnabled => _vibrationEnabled;
+  void toggleVibration(bool value) {
+    _vibrationEnabled = value;
     notifyListeners();
   }
 
@@ -177,5 +196,34 @@ class PetCareProvider extends ChangeNotifier {
       errorMessage = e.toString();
       setVerificationUtil(StatusUtil.error);
     }
+  }
+
+  sendUserDetails() async {
+    await uploadeImageInFirebase();
+    if (_userImageUtil != StatusUtil.loading) {
+      setUserImageUtil(StatusUtil.loading);
+    }
+    SignUp signUp = SignUp(
+      userImage: userImageurl,
+    );
+    try {
+      ApiResponse response =
+          await petCareService.saveUserDetails(signUp, token);
+      if (response.statusUtil == StatusUtil.success) {
+        setUserImageUtil(StatusUtil.success);
+      } else if (response.statusUtil == StatusUtil.error) {
+        errorMessage = response.errorMessage;
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+      setUserImageUtil(StatusUtil.error);
+    }
+  }
+
+  Future<void> getTokenFromSharedPref() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token') ?? "";
+
+    notifyListeners();
   }
 }
