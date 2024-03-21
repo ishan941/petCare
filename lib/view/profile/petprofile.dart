@@ -4,14 +4,16 @@ import 'package:project_petcare/helper/constBread.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
+import 'package:project_petcare/model/adopt.dart';
 import 'package:project_petcare/model/mypet.dart';
 import 'package:project_petcare/provider/mypet_provider.dart';
 import 'package:provider/provider.dart';
 
 class PetProfile extends StatefulWidget {
   final MyPet? myPet;
+  final Adopt? adopt;
 
-  PetProfile({super.key, this.myPet});
+  PetProfile({super.key, this.myPet, this.adopt});
 
   @override
   State<PetProfile> createState() => _PetProfileState();

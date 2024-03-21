@@ -12,6 +12,8 @@ import 'package:project_petcare/model/signUp.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/view/edit/adminedit.dart';
+import 'package:project_petcare/view/feeds/approve_selling.dart';
+import 'package:project_petcare/view/feeds/approvel.dart';
 import 'package:project_petcare/view/profile/about_us.dart';
 import 'package:project_petcare/view/profile/changepassword.dart';
 import 'package:project_petcare/view/form_collections.dart';
@@ -286,6 +288,8 @@ class _AccountState extends State<Account> {
                 SizedBox(height: 15),
                 _formCollection(context, petCareProvider),
                 _formsEdit(context, petCareProvider),
+                _approveDonate(context, petCareProvider),
+                _approveSelling(context, petCareProvider)
               ],
             ),
           ),
@@ -627,6 +631,7 @@ class _AccountState extends State<Account> {
       ),
     );
   }
+ 
 
   Widget _logOut(BuildContext context, PetCareProvider petCareProvider) {
     return Padding(
@@ -658,6 +663,100 @@ class _AccountState extends State<Account> {
                     ),
                     Text(
                       logOutStr,
+                      style: TextStyle(fontSize: 16, color: Colors.red),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+   Widget _approveDonate(BuildContext context, PetCareProvider petCareProvider) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => DonatedApprove()));
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 244, 54, 54)
+                                .withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(30)),
+                        height: 45,
+                        width: 45,
+                        child: Icon(Icons.logout_outlined)),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      "Approvel Donation",
+                      style: TextStyle(fontSize: 16, color: Colors.red),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+   Widget _approveSelling(BuildContext context, PetCareProvider petCareProvider) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => SellingApprove()));
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 244, 54, 54)
+                                .withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(30)),
+                        height: 45,
+                        width: 45,
+                        child: Icon(Icons.logout_outlined)),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      "Approve Selling",
                       style: TextStyle(fontSize: 16, color: Colors.red),
                     ),
                     Spacer(),

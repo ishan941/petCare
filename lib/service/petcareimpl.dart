@@ -779,6 +779,40 @@ class PetCareImpl extends PetCareService {
     return response;
   }
 
+
+ @override
+  Future<ApiResponse> getApprovedDonatedPet(String token) async{
+     ApiResponse response =
+        await api.get(BASEURL + getApproveDonationListUrl, token: token);
+    return response;
+  }
+    @override
+  Future<ApiResponse> getApprovedSellingPet(String token) async{
+     ApiResponse response =
+        await api.get(BASEURL + getApproveSellingListUrl, token: token);
+    return response;
+  }
+ 
+
+  @override
+  Future<ApiResponse> approvelDonated(Adopt adopt,  int id, String token,)async {
+    ApiResponse response =
+        await api.post(BASEURL + acceptDonatedUrl + id.toString(), adopt.toJson(), token: token );
+    return response;
+  }
+    @override
+  Future<ApiResponse> approvelSelling(Adopt adopt, int id, String token) async{
+     ApiResponse response =
+        await api.post(BASEURL + acceptSellingUrl + id.toString(), adopt.toJson(), token: token );
+    return response;
+   
+  }
+
+   
+  
+  
+  
+
   @override
   Future<ApiResponse> getUserName(String token) async {
     ApiResponse response =
@@ -858,12 +892,22 @@ class PetCareImpl extends PetCareService {
         await api.get(BASEURL + getOurServiceDtoUrl, token: token);
     return response;
   }
+   @override
+  Future<ApiResponse> getUserAddedPet(String token) async{
+      ApiResponse response =
+        await api.get(BASEURL + getUserAddedPetApi, token: token);
+    return response;
+   
+  }
   @override
   Future<ApiResponse> getCategoriesById( Categories categories, int id, String token) async {
     ApiResponse response =
         await api.post(BASEURL + getCategoryByIdUrl,categories.toJson(), token: token, );
     return response;
   }
+
+
+ 
 
 // @override
 // Future<ApiResponse> getCategoriesDetails() async {
@@ -902,6 +946,19 @@ class PetCareImpl extends PetCareService {
 //           statusUtil: StatusUtil.error, errorMessage: e.toString());
 //     }
 //   }
+ @override
+  Future<ApiResponse> searchDonationPets(  String token) async {
+    ApiResponse response =
+        await api.get(BASEURL + searchDonationPetsApi, token: token);
+    return response;
+  }
+  @override
+  Future<ApiResponse> searchSellingPets(  String token) async {
+    ApiResponse response =
+        await api.get(BASEURL + searchSellingPetsApi, token: token);
+    return response;
+  }
+
 
   @override
   Future<ApiResponse> deleteCategoryById(int id, String token) async {
@@ -930,9 +987,9 @@ class PetCareImpl extends PetCareService {
   }
   
   @override
-  Future<ApiResponse> deleteDonatedPetById(int id, String token) async{
+  Future<ApiResponse> deleteDonatedPetById(Adopt adopt, int id, String token) async{
     ApiResponse response =
-        await api.delete(BASEURL + deleteDonatedPetUrl + id.toString(), token: token);
+        await api.delete(BASEURL + declineDonatedUrl + id.toString(), token: token);
     return response;
   }
   
@@ -942,6 +999,12 @@ class PetCareImpl extends PetCareService {
         await api.delete(BASEURL + deleteSellingPetUrl + id.toString(), token: token);
     return response;
   }
+  
+ 
+  
+ 
+
+  
   
 
  

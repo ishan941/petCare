@@ -52,6 +52,11 @@ class ShopProvider extends ChangeNotifier {
     isPaymentSucessfull = value;
     notifyListeners();
   }
+  bool isSold = false;
+  setSold(value) {
+    isSold = value;
+    notifyListeners();
+  }
 
   StatusUtil _shopItems = StatusUtil.idle;
   StatusUtil _uploadImageForShop = StatusUtil.idle;
@@ -278,6 +283,7 @@ class ShopProvider extends ChangeNotifier {
       price: price,
       negotiable: negotiable,
       description: description,
+      
     );
 
     try {

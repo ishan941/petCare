@@ -199,7 +199,7 @@ class _DonateOrSaleState extends State<DonateOrSale> {
                                     builder: (context) =>
                                         DonateOrSaleConfirmation(
                                             choice: 'Sale',
-                                             adopt: sellingPetProvider.sellingPetList.first,
+                                            //  adopt: sellingPetProvider.sellingPetList.first,
                                             ),
                                   ),
                                 );
@@ -210,7 +210,7 @@ class _DonateOrSaleState extends State<DonateOrSale> {
                                   MaterialPageRoute(
                                     builder: (context) =>
                                         DonateOrSaleConfirmation(
-                                           adopt: sellingPetProvider.donatePetList.first,
+                                          //  adopt: sellingPetProvider.donatePetList.first,
                                             choice: 'Donate'),
                                   ),
                                 );

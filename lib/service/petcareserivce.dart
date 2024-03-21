@@ -52,7 +52,8 @@ abstract class PetCareService {
   Future<ApiResponse> saveUserDetails(SignUp signUp, String token);
   Future<ApiResponse> saveSellingPet(Adopt adopt, String token);
   Future<ApiResponse> saveDashOurService(OurService ourService, String token);
-  Future<ApiResponse> saveOurServiceDto(OurServiceDto ourServiceDto, String token);
+  Future<ApiResponse> saveOurServiceDto(
+      OurServiceDto ourServiceDto, String token);
   Future<ApiResponse> saveDonatePet(Adopt adopt, String token);
   Future<ApiResponse> saveAdsImage(Ads ads, String token);
 
@@ -66,13 +67,25 @@ abstract class PetCareService {
   Future<ApiResponse> getAdsImage(String token);
   Future<ApiResponse> getDashService(String token);
   Future<ApiResponse> getOurServiceDto(String token);
+   Future<ApiResponse> getUserAddedPet(String token);
 
-  Future<ApiResponse> getCategoriesById(Categories categories,int id, String token);
+  Future<ApiResponse> getCategoriesById(
+      Categories categories, int id, String token);
+  Future<ApiResponse> getApprovedDonatedPet(String token);
+  Future<ApiResponse> getApprovedSellingPet(String token);
+ 
 
   Future<ApiResponse> deleteCategoryById(int id, String token);
   Future<ApiResponse> deleteAdsById(int id, String token);
   Future<ApiResponse> deleteOurServiceById(int id, String token);
   Future<ApiResponse> deleteOurServiceDtoById(int id, String token);
-  Future<ApiResponse> deleteDonatedPetById(int id, String token);
+  Future<ApiResponse> deleteDonatedPetById(Adopt adopt, int id, String token);
   Future<ApiResponse> deleteSellingPetById(int id, String token);
+
+  Future<ApiResponse> approvelDonated(Adopt adopt, int id, String token);
+  Future<ApiResponse> approvelSelling(Adopt adopt, int id, String token);
+
+
+  Future<ApiResponse> searchSellingPets(String token);
+  Future<ApiResponse> searchDonatedPets(String token);
 }

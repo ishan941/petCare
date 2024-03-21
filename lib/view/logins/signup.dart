@@ -1,12 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_number_field/flutter_phone_number_field.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
+import 'package:project_petcare/practice/pincodefeld.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/view/buttomnav.dart';
 import 'package:project_petcare/view/customs/customform.dart';
 import 'package:project_petcare/view/logins/loginpage.dart';
+import 'package:project_petcare/view/logins/phonecode.dart';
 import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -18,6 +23,8 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String? phoneNumber;
+  FocusNode focusNode = FocusNode();
 
   String? name, phone, email, password, confirmPassword;
   bool obscureText = true;
@@ -61,18 +68,48 @@ class _SignUpPageState extends State<SignUpPage> {
                         hintText: "Full Name",
                       ),
                       //phone
-                      CustomForm(
-                        onChanged: (value) {
-                          signUpProvider.phone = value;
-                        },
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Please enter your contact number";
-                          }
-                          return null;
-                        },
-                        prefixIcon: Icon(Icons.phone),
-                        hintText: "Contact Number",
+                      // CustomForm(
+                      //   onChanged: (value) {
+                      //     signUpProvider.phone = value;
+                      //   },
+                      //   validator: (value) {
+                      //     if (value!.isEmpty) {
+                      //       return "Please enter your contact number";
+                      //     }
+                      //     return null;
+                      //   },
+                      //   prefixIcon: Icon(Icons.phone),
+                      //   hintText: "Contact Number",
+                      // ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * .9,
+                        child: FlutterPhoneNumberField(
+                          focusNode: focusNode,
+                          initialCountryCode: "NP",
+                          pickerDialogStyle: PickerDialogStyle(
+                            countryFlagStyle: const TextStyle(fontSize: 17),
+                          ),
+                          decoration: InputDecoration(
+                            hintText: 'Phone Number',
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(),
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                          languageCode: "NP",
+                          onChanged: (phone) {
+                            print(phone);
+                            signUpProvider.phone = phone.countryCode + phone.number;
+                            print(phoneNumber);
+                            if (kDebugMode) {
+                              print(phone.completeNumber);
+                            }
+                          },
+                          onCountryChanged: (country) {
+                            if (kDebugMode) {
+                              print('Country changed to: ${country.name}');
+                            }
+                          },
+                        ),
                       ),
                       //email
                       CustomForm(
@@ -164,27 +201,52 @@ class _SignUpPageState extends State<SignUpPage> {
                           child: ElevatedButton(
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  await signUpProvider
-                                      .sendUserLoginValueToFireBase();
-                                  try {
-                                    if (signUpProvider.signUpUtil ==
-                                        StatusUtil.success) {
-                                      Helper.snackBar(
-                                          "Successfully created an account",
-                                          context);
-                                      Navigator.of(context).pushAndRemoveUntil(
+                                  await FirebaseAuth.instance.verifyPhoneNumber(
+                                    phoneNumber: signUpProvider.phone,
+                                    verificationCompleted:
+                                        (PhoneAuthCredential credential) {
+
+                                        },
+                                    verificationFailed:
+                                        (FirebaseAuthException e) {},
+                                    codeSent: (String verificationId,
+                                        int? resendToken) {
+                                      Navigator.push(
+                                          context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  LoginPage()),
-                                          (Route<dynamic> route) => false);
-                                    } else if (signUpProvider.signUpUtil == StatusUtil.error) {
-                                      Helper.snackBar(
-                                          "Failed to create an account",
-                                          context);
-                                    }
-                                  } catch (e) {
-                                    Helper.snackBar(e.toString(), context);
-                                  }
+                                              builder: (context) => PhoneCode(
+                                                    phoneNumber: phoneNumber,
+                                                    verificationCode:
+                                                        verificationId,
+                                                  )));
+                                    },
+                                    codeAutoRetrievalTimeout:
+                                        (String verificationId) {},
+                                  );
+
+                                  // await signUpProvider
+                                  //     .sendUserLoginValueToFireBase();
+
+                                  // try {
+                                  //   if (signUpProvider.signUpUtil ==
+                                  //       StatusUtil.success) {
+                                  //     Helper.snackBar(
+                                  //         "Successfully created an account",
+                                  //         context);
+                                  //     Navigator.of(context).pushAndRemoveUntil(
+                                  //         MaterialPageRoute(
+                                  //             builder: (context) =>
+                                  //                 LoginPage()),
+                                  //         (Route<dynamic> route) => false);
+                                  //   } else if (signUpProvider.signUpUtil ==
+                                  //       StatusUtil.error) {
+                                  //     Helper.snackBar(
+                                  //         "Failed to create an account",
+                                  //         context);
+                                  //   }
+                                  // } catch (e) {
+                                  //   Helper.snackBar(e.toString(), context);
+                                  // }
                                 }
                               },
                               child: Text('Submit')),

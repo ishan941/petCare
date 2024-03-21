@@ -8,8 +8,10 @@ import 'package:project_petcare/helper/simmer.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/provider/mypet_provider.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
+import 'package:project_petcare/provider/sellpetprovider.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
+import 'package:project_petcare/view/feeds/ds_details.dart';
 import 'package:project_petcare/view/profile/add_my_pet.dart';
 import 'package:project_petcare/view/profile/petprofile.dart';
 import 'package:project_petcare/view/profile/verifyYourAccount_1.dart';
@@ -28,7 +30,8 @@ class _MyProfileState extends State<MyProfile> {
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
-      getMyPetData();
+      // getMyPetData();
+      getMyPet();
     });
     super.initState();
   }
@@ -36,6 +39,14 @@ class _MyProfileState extends State<MyProfile> {
   getMyPetData() async {
     var myPetProvider = Provider.of<MyPetProvider>(context, listen: false);
     await myPetProvider.getMyPetDetailsFromFireBase();
+    // await myPetProvider.getPetData();
+  }
+
+  getMyPet() async {
+    var sellingPetProvider =
+        Provider.of<SellingPetProvider>(context, listen: false);
+    await sellingPetProvider.getTokenFromSharedPref();
+    await sellingPetProvider.getMyPet();
     // await myPetProvider.getPetData();
   }
 
@@ -51,101 +62,105 @@ class _MyProfileState extends State<MyProfile> {
             },
             child: Icon(Icons.add)),
         backgroundColor: ColorUtil.BackGroundColorColor,
-        body: Consumer<MyPetProvider>(
-          builder: (context, myPetProvider, child) => Consumer<ShopProvider>(
-            builder: (context, shopProvider, child) => Consumer<SignUpProvider>(
-              builder: (context, signUpProvider, child) =>
-                  Consumer<PetCareProvider>(
-                builder: (context, petCareProvider, child) => GestureDetector(
-                  onVerticalDragUpdate: (details) {},
-                  child: CustomScrollView(
-                    slivers: [
-                      SliverAppBar(
-                        backgroundColor: ColorUtil.BackGroundColorColor,
-                        elevation: 0,
-                        expandedHeight: 250.0,
-                        floating: false,
-                        pinned: true,
-                        centerTitle: true,
-                        flexibleSpace: FlexibleSpaceBar(
+        body: Consumer<SellingPetProvider>(
+          builder: (context, sellingPetProvider, child) =>
+              Consumer<MyPetProvider>(
+            builder: (context, myPetProvider, child) => Consumer<ShopProvider>(
+              builder: (context, shopProvider, child) =>
+                  Consumer<SignUpProvider>(
+                builder: (context, signUpProvider, child) =>
+                    Consumer<PetCareProvider>(
+                  builder: (context, petCareProvider, child) => GestureDetector(
+                    onVerticalDragUpdate: (details) {},
+                    child: CustomScrollView(
+                      slivers: [
+                        SliverAppBar(
+                          backgroundColor: ColorUtil.BackGroundColorColor,
+                          elevation: 0,
+                          expandedHeight: 250.0,
+                          floating: false,
+                          pinned: true,
                           centerTitle: true,
-                          title: Text(
-                            signUpProvider.userName,
-                            style: TextStyle(color: ColorUtil.primaryColor),
-                          ),
-                          background: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              Transform.translate(
-                                offset: Offset(0.0, offsetY),
-                                child: petCareProvider.profilePicture != null
-                                    ? Image.network(
-                                        petCareProvider.profilePicture!,
-                                        fit: BoxFit.cover,
-                                      )
-                                    : Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              _showAlertDialogNOProfile(
-                                                  context, petCareProvider);
-                                            },
-                                            child: Text(
-                                                "You haven't set your profile picture"),
-                                          ),
-                                          Text(
-                                              "Click here for profile Picture"),
-                                        ],
-                                      ),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.black.withOpacity(0.7),
-                                    ],
+                          flexibleSpace: FlexibleSpaceBar(
+                            centerTitle: true,
+                            title: Text(
+                              signUpProvider.userName,
+                              style: TextStyle(color: ColorUtil.primaryColor),
+                            ),
+                            background: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                Transform.translate(
+                                  offset: Offset(0.0, offsetY),
+                                  child: petCareProvider.profilePicture != null
+                                      ? Image.network(
+                                          petCareProvider.profilePicture!,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                _showAlertDialogNOProfile(
+                                                    context, petCareProvider);
+                                              },
+                                              child: Text(
+                                                  "You haven't set your profile picture"),
+                                            ),
+                                            Text(
+                                                "Click here for profile Picture"),
+                                          ],
+                                        ),
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        Colors.transparent,
+                                        Colors.black.withOpacity(0.7),
+                                      ],
+                                    ),
                                   ),
                                 ),
+                              ],
+                            ),
+                          ),
+                          //    bottom: PreferredSize(
+                          //   preferredSize: Size.fromHeight(50), // Adjust the height as needed
+                          //   child: Padding(
+                          //     padding: const EdgeInsets.symmetric(horizontal: 15),
+                          //     child: _profile(signUpProvider, petCareProvider),
+                          //   ),
+                          // ),
+                        ),
+                        SliverList(
+                          delegate: SliverChildListDelegate(
+                            [
+                              Column(
+                                children: [
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  _profile(signUpProvider, petCareProvider),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  // myPetProvider.getPetData  ?
+                                  _myPet(sellingPetProvider),
+                                  // :
+                                  SizedBox(),
+                                  myFavourite(shopProvider),
+                                ],
                               ),
                             ],
                           ),
                         ),
-                        //    bottom: PreferredSize(
-                        //   preferredSize: Size.fromHeight(50), // Adjust the height as needed
-                        //   child: Padding(
-                        //     padding: const EdgeInsets.symmetric(horizontal: 15),
-                        //     child: _profile(signUpProvider, petCareProvider),
-                        //   ),
-                        // ),
-                      ),
-                      SliverList(
-                        delegate: SliverChildListDelegate(
-                          [
-                            Column(
-                              children: [
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                _profile(signUpProvider, petCareProvider),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                // myPetProvider.getPetData  ?
-                                _myPet(shopProvider, myPetProvider),
-                                // :
-                                SizedBox(),
-                                myFavourite(shopProvider),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -211,8 +226,9 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   Widget _myPet(
-    ShopProvider shopProviderm,
-    MyPetProvider myPetProvider,
+    SellingPetProvider sellingPetProvider,
+    // ShopProvider shopProviderm,
+    // MyPetProvider myPetProvider,
     //  String userEmail
   ) {
     // List<MyPet> userPets = myPetProvider.myPetList.where((pet)=>pet.userEmail ==userEmail).toList();
@@ -235,15 +251,16 @@ class _MyProfileState extends State<MyProfile> {
           height: MediaQuery.of(context).size.height * .3,
           child: ListView.builder(
               // itemCount: myPetProvider.myPetList.length,
-              itemCount: myPetProvider.myPetDataList.length,
+              itemCount: sellingPetProvider.myPetList.length,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) => GestureDetector(
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              PetProfile(myPet: myPetProvider.myPetDataList[index]),
+                          builder: (context) => Ds_details(
+                            adopt: sellingPetProvider.myPetList[index],
+                          ),
                         ),
                       );
                     },
@@ -265,7 +282,7 @@ class _MyProfileState extends State<MyProfile> {
                                 child: Center(
                                   // Display the first two letters of the pet's name
                                   child: Text(
-                                    myPetProvider.myPetDataList[index].petName
+                                    sellingPetProvider.myPetList[index].petName
                                             ?.substring(0, 1) ??
                                         "",
                                     style: TextStyle(
@@ -277,8 +294,9 @@ class _MyProfileState extends State<MyProfile> {
                                 ),
                                 height: MediaQuery.of(context).size.height * .1,
                               ),
-                              Text(myPetProvider.myPetDataList[index].petName ??
-                                  "")
+                              Text(
+                                  sellingPetProvider.myPetList[index].petName ??
+                                      "")
                             ],
                           ),
                         ),

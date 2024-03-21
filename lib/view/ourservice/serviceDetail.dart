@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/model/ourservice.dart';
+import 'package:project_petcare/model/ourservicedto.dart';
 
 class ServiceDetails extends StatefulWidget {
   final OurService? ourService;
-  ServiceDetails({super.key, this.ourService});
+  final OurServiceDto? ourServiceDto;
+  ServiceDetails({super.key, this.ourService, this.ourServiceDto});
 
   @override
   State<ServiceDetails> createState() => _ServiceDetailsState();

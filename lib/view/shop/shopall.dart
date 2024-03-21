@@ -24,9 +24,8 @@ class _ShopAllState extends State<ShopAll> {
 
   @override
   void initState() {
-     getShopData();
+    getShopData();
     super.initState();
-   
   }
 
   getShopData() async {
@@ -86,7 +85,9 @@ class _ShopAllState extends State<ShopAll> {
                             Icons.favorite_border_outlined,
                             color: ColorUtil.primaryColor,
                           )),
-                          SizedBox(width: 10,)
+                      SizedBox(
+                        width: 10,
+                      )
                     ],
                   ),
                 ),
@@ -184,6 +185,10 @@ class _ShopAllState extends State<ShopAll> {
                     Row(
                       children: [
                         Spacer(),
+                        shopProvider.isPaymentSucessfull != true
+                            ? IconButton(
+                                onPressed: () {}, icon: Icon(Icons.solar_power))
+                            : SizedBox(),
                         IconButton(
                             onPressed: () async {
                               shopProvider.updateFavouriteList(

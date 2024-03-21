@@ -65,6 +65,9 @@ dependencies:
   dio: ^5.4.1
   flutter_carousel_widget: ^2.2.0
   khalti_flutter: ^3.0.0
+  geolocator: ^11.0.0
+  geocoding: ^3.0.0
+  url_launcher: ^6.2.4
 
 dev_dependencies:
   flutter_test:

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:project_petcare/core/smooth_scrollable.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/constSearch.dart';
+import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/simmer.dart';
 import 'package:project_petcare/helper/string_const.dart';
@@ -10,6 +13,7 @@ import 'package:project_petcare/model/ourservice.dart';
 import 'package:project_petcare/model/ourservicedto.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
 import 'package:project_petcare/view/ourservice/profession.dart';
+import 'package:project_petcare/view/ourservice/serviceDetail.dart';
 import 'package:project_petcare/view/search_here.dart';
 import 'package:provider/provider.dart';
 
@@ -32,6 +36,9 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
   final TextEditingController _searchController = TextEditingController();
   late TabController _tabController;
 
+  String? address;
+  double? lat, long;
+
   @override
   void initState() {
     Future.delayed(Duration(milliseconds: 100), () {
@@ -47,7 +54,9 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
     var ourServiceProvider =
         Provider.of<OurServiceProvider>(context, listen: false);
     await ourServiceProvider.getTokenFromSharedPref();
-    await ourServiceProvider.getOurServiceDto();
+    await ourServiceProvider.getOurServiceDto().then((value) {
+      getCurrentLocation(ourServiceProvider);
+    });
   }
 
   @override
@@ -149,7 +158,7 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                           controller: _tabController,
                           children: [
                             popular(ourServiceProvider),
-                            popular(ourServiceProvider),
+                            nearby(ourServiceProvider),
                             // nearby(ourServiceProvider),
                             // lastVisited(ourServiceProvider),
                           ],
@@ -166,7 +175,50 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
     );
   }
 
-  Widget popular(OurServiceProvider ourServiceProvider) {
+  getCurrentLocation(OurServiceProvider ourServiceProvider) async {
+    LocationPermission permission = await Helper().getPermission();
+    if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) {
+      Stream<Coordinate> coordinateStream = Helper().getCoordinateStream();
+      coordinateStream.listen((Coordinate coordinate) async {
+        setState(() {
+          lat = coordinate.latitude;
+          long = coordinate.longitude;
+          address = coordinate.address!;
+        });
+        if (ourServiceProvider.isValueDisplayed == false) {
+          ourServiceProvider.setIsValueDisplayed(true);
+
+          for (int i = 0;
+              i < ourServiceProvider.ourServiceDtoList.length;
+              i++) {
+            List<Location> startLocations = await locationFromAddress(
+                ourServiceProvider.ourServiceDtoList[i].location!);
+
+            double haversine = await Helper().calculateDistance(lat!, long!,
+                startLocations.first.latitude, startLocations.first.longitude);
+
+            ourServiceProvider.distanceServiceList.add(DistanceService(
+                ourServiceDto: ourServiceProvider.ourServiceDtoList[i],
+                distance: haversine));
+          }
+
+          ourServiceProvider.distanceServiceList
+              .sort((a, b) => (a.distance ?? 0).compareTo(b.distance ?? 0));
+
+          print(ourServiceProvider.distanceServiceList);
+        }
+
+        // setState(() {
+        //   currentAddress = user.data()['Address'];
+        //   calculatedDistances[hardwareName] =
+        //       '${haversine.toStringAsFixed(3)} KM';
+        // });
+      });
+    }
+  }
+
+  Widget nearby(OurServiceProvider ourServiceProvider) {
     // List<OurService> filteredList = ourServiceProvider.filteredProfessionData;
     return Expanded(
       child: Consumer<OurServiceProvider>(
@@ -175,7 +227,7 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
             Container(
               child: Expanded(
                 child: ListView.builder(
-                  itemCount: ourServiceProvider.ourServiceDtoList.length,
+                  itemCount: ourServiceProvider.distanceServiceList.length,
                   itemBuilder: (context, index) => ourServiceProvider
                               .getOurServiceUtil ==
                           StatusUtil.loading
@@ -186,18 +238,11 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 15, vertical: 7),
                               child: InkWell(
-                                onTap: () {
-                                  // Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) => ServiceDetails(
-                                  //             ourService:
-                                  //                 filteredList[index])));
-                                },
+                                onTap: () {},
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(12),
                                   child: Container(
-                                    height: 120,
+                                    height: 140,
                                     color: Colors.white,
                                     child: Row(
                                       children: [
@@ -207,16 +252,18 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             child: Container(
-                                              // child: ourServiceProvider
-                                              //             .getProfessionUtil ==
-                                              //         StatusUtil.loading
-                                              //     ? SimmerEffect.shimmerEffect()
-                                              //     : Image.network(
-                                              //         filteredList[index]
-                                              //                 .profilePicture ??
-                                              //             "",
-                                              //         fit: BoxFit.cover,
-                                              //       ),
+                                              child: ourServiceProvider
+                                                          .getProfessionUtil ==
+                                                      StatusUtil.loading
+                                                  ? SimmerEffect.shimmerEffect()
+                                                  : Image.network(
+                                                      ourServiceProvider
+                                                              .ourServiceDtoList[
+                                                                  index]
+                                                              .image ??
+                                                          "",
+                                                      fit: BoxFit.cover,
+                                                    ),
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .height *
@@ -236,19 +283,22 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                                             children: [
                                               Row(
                                                 children: [
-                                                  // Text(
-                                                  //   filteredList[index]
-                                                  //           .fullName ??
-                                                  //       "",
-                                                  //   style: subTitleText,
-                                                  // ),
+                                                  Text(
+                                                    ourServiceProvider
+                                                            .distanceServiceList[
+                                                                index]
+                                                            .ourServiceDto
+                                                            ?.fullName ??
+                                                        "",
+                                                    style: subTitleText,
+                                                  ),
                                                   SizedBox(
                                                     width: 5,
                                                   ),
-                                                  // Text(
-                                                  //   "  ${filteredList[index].profession ?? ""}",
-                                                  //   style: textStyleMini,
-                                                  // ),
+                                                  Text(
+                                                    "  ${ourServiceProvider.distanceServiceList[index].ourServiceDto?.service ?? ""}",
+                                                    style: textStyleMini,
+                                                  ),
                                                 ],
                                               ),
                                               SizedBox(
@@ -261,10 +311,10 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                                                         .phone_in_talk_outlined,
                                                     size: 15,
                                                   ),
-                                                  // Text(
-                                                  //   " -  ${filteredList[index].phone ?? ""}",
-                                                  //   style: textStyleSmallSized,
-                                                  // ),
+                                                  Text(
+                                                    " -  ${ourServiceProvider.distanceServiceList[index].ourServiceDto?.phone ?? ""}",
+                                                    style: textStyleSmallSized,
+                                                  ),
                                                 ],
                                               ),
                                               Row(
@@ -273,10 +323,10 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                                                     Icons.email_outlined,
                                                     size: 15,
                                                   ),
-                                                  // Text(
-                                                  //     " -  ${filteredList[index].email ?? ""}",
-                                                  //     style:
-                                                  //         textStyleSmallSized),
+                                                  Text(
+                                                      " -  ${ourServiceProvider.distanceServiceList[index].ourServiceDto?.email ?? ""}",
+                                                      style:
+                                                          textStyleSmallSized),
                                                 ],
                                               ),
                                               Spacer(),
@@ -292,20 +342,49 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                                                     height: 30,
                                                     width: 100,
                                                     child: Center(
-                                                      child: Text(
-                                                        "Book Now",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white),
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder: (context) => ServiceDetails(
+                                                                      ourServiceDto: ourServiceProvider
+                                                                          .distanceServiceList[
+                                                                              index]
+                                                                          .ourServiceDto)));
+                                                        },
+                                                        child: Text(
+                                                          "Book Now",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                  Icon(
-                                                    Icons.location_on_outlined,
-                                                    size: 15,
-                                                    color: Colors.black
-                                                        .withOpacity(0.5),
+                                                  IconButton(
+                                                    onPressed: () {
+                                                      Helper().launchMaps(
+                                                          ourServiceProvider
+                                                                  .distanceServiceList[
+                                                                      index]
+                                                                  .ourServiceDto
+                                                                  ?.location ??
+                                                              "");
+                                                    },
+                                                    icon: Icon(
+                                                      Icons
+                                                          .location_on_outlined,
+                                                      size: 40,
+                                                      color: Colors.black
+                                                          .withOpacity(0.5),
+                                                    ),
                                                   ),
+                                                  Text(
+                                                      "${ourServiceProvider.distanceServiceList[index].distance?.toStringAsFixed(3)}" +
+                                                          "KM",
+                                                      style:
+                                                          textStyleSmallSized),
                                                   // Text(
                                                   //     filteredList[index]
                                                   //             .location ??
@@ -332,141 +411,139 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
     );
   }
 
-  // Widget nearby(OurServiceProvider ourServiceProvider) {
-  //   List<OurService> filteredList = ourServiceProvider.filteredProfessionData;
-  //   return Expanded(
-  //     child: Consumer<OurServiceProvider>(
-  //       builder: (context, ourServiceProvider, child) => Column(
-  //         children: [
-  //           Container(
-  //             child: Expanded(
-  //               child: ListView.builder(
-  //                 itemCount: filteredList.length,
-  //                 itemBuilder: (context, index) => Padding(
-  //                   padding:
-  //                       const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
-  //                   child: InkWell(
-  //                     onTap: () {
-  //                       Navigator.push(
-  //                           context,
-  //                           MaterialPageRoute(
-  //                               builder: (context) => ServiceDetails(
-  //                                   ourService: filteredList[index])));
-  //                     },
-  //                     child: ClipRRect(
-  //                       borderRadius: BorderRadius.circular(12),
-  //                       child: Container(
-  //                         height: 120,
-  //                         color: Colors.white,
-  //                         child: Row(
-  //                           children: [
-  //                             Padding(
-  //                               padding: const EdgeInsets.all(8.0),
-  //                               child: ClipRRect(
-  //                                 borderRadius: BorderRadius.circular(10),
-  //                                 child: Container(
-  //                                   child: Image.network(
-  //                                     filteredList[index].profilePicture ?? "",
-  //                                     fit: BoxFit.cover,
-  //                                   ),
-  //                                   height:
-  //                                       MediaQuery.of(context).size.height * .9,
-  //                                   width:
-  //                                       MediaQuery.of(context).size.width * .25,
-  //                                 ),
-  //                               ),
-  //                             ),
-  //                             Padding(
-  //                               padding: const EdgeInsets.all(8.0),
-  //                               child: Column(
-  //                                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                                 children: [
-  //                                   Row(
-  //                                     children: [
-  //                                       Text(
-  //                                         filteredList[index].fullName ?? "",
-  //                                         style: subTitleText,
-  //                                       ),
-  //                                       SizedBox(
-  //                                         width: 5,
-  //                                       ),
-  //                                       Text(
-  //                                         "  ${filteredList[index].profession ?? ""}",
-  //                                         style: textStyleMini,
-  //                                       ),
-  //                                     ],
-  //                                   ),
-  //                                   SizedBox(
-  //                                     height: 5,
-  //                                   ),
-  //                                   Row(
-  //                                     children: [
-  //                                       Icon(
-  //                                         Icons.phone_in_talk_outlined,
-  //                                         size: 15,
-  //                                       ),
-  //                                       // Text(
-  //                                       //   " -  ${filteredList[index].phone!}",
-  //                                       //   style: textStyleSmallSized,
-  //                                       // ),
-  //                                     ],
-  //                                   ),
-  //                                   Row(
-  //                                     children: [
-  //                                       Icon(
-  //                                         Icons.email_outlined,
-  //                                         size: 15,
-  //                                       ),
-  //                                       Text(
-  //                                           " -  ${filteredList[index].email!}",
-  //                                           style: textStyleSmallSized),
-  //                                     ],
-  //                                   ),
-  //                                   Spacer(),
-  //                                   Row(
-  //                                     children: [
-  //                                       Container(
-  //                                         decoration: BoxDecoration(
-  //                                             color: ColorUtil.primaryColor,
-  //                                             borderRadius:
-  //                                                 BorderRadius.circular(8)),
-  //                                         height: 30,
-  //                                         width: 100,
-  //                                         child: Center(
-  //                                           child: Text(
-  //                                             "Book Now",
-  //                                             style: TextStyle(
-  //                                                 color: Colors.white),
-  //                                           ),
-  //                                         ),
-  //                                       ),
-  //                                       Icon(
-  //                                         Icons.location_on_outlined,
-  //                                         size: 15,
-  //                                         color: Colors.black.withOpacity(0.5),
-  //                                       ),
-  //                                       // Text(filteredList[index].location ?? "")
-  //                                     ],
-  //                                   ),
-  //                                 ],
-  //                               ),
-  //                             ),
-  //                           ],
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
-    
+  Widget popular(OurServiceProvider ourServiceProvider) {
+    // List<OurService> filteredList = ourServiceProvider.filteredProfessionData;
+    return Expanded(
+      child: Consumer<OurServiceProvider>(
+        builder: (context, ourServiceProvider, child) => Column(
+          children: [
+            Container(
+              child: Expanded(
+                child: ListView.builder(
+                  itemCount: ourServiceProvider.ourServiceDtoList.length,
+                  itemBuilder: (context, index) => Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
+                    child: InkWell(
+                      onTap: () {
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => ServiceDetails(
+                        //             ourService: filteredList[index])));
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Container(
+                          height: 120,
+                          color: Colors.white,
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Container(
+                                    child: Image.network(
+                                      ourServiceProvider.ourServiceDtoList[index].image ?? "",
+                                      fit: BoxFit.cover,
+                                    ),
+                                    height:
+                                        MediaQuery.of(context).size.height * .9,
+                                    width:
+                                        MediaQuery.of(context).size.width * .25,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          ourServiceProvider.ourServiceDtoList[index].fullName ?? "",
+                                          style: subTitleText,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                           ourServiceProvider.ourServiceDtoList[index].service ?? "",
+                                          style: textStyleMini,
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.phone_in_talk_outlined,
+                                          size: 15,
+                                        ),
+                                        // Text(
+                                        //   " -  ${filteredList[index].phone!}",
+                                        //   style: textStyleSmallSized,
+                                        // ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.email_outlined,
+                                          size: 15,
+                                        ),
+                                        Text(
+                                           ourServiceProvider.ourServiceDtoList[index].email ?? "",
+                                            style: textStyleSmallSized),
+                                      ],
+                                    ),
+                                    Spacer(),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              color: ColorUtil.primaryColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          height: 30,
+                                          width: 100,
+                                          child: Center(
+                                            child: Text(
+                                              "Book Now",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ),
+                                        Icon(
+                                          Icons.location_on_outlined,
+                                          size: 15,
+                                          color: Colors.black.withOpacity(0.5),
+                                        ),
+                                        // Text(filteredList[index].location ?? "")
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   // _searchHere(OurServiceProvider ourServiceProvider) async {
   //   String query = _searchController.text.toLowerCase();
@@ -491,4 +568,11 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
   //     print("Exception: $e");
   //   }
   // }
+}
+
+class DistanceService {
+  OurServiceDto? ourServiceDto;
+  double? distance;
+
+  DistanceService({this.ourServiceDto, this.distance});
 }

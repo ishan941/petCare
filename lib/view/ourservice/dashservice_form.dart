@@ -55,6 +55,7 @@ class _ServiceFormState extends State<ServiceForm> {
                     child: InkWell(
                         onTap: () {
                           Navigator.pop(context);
+                          ourServiceProvider.clearOurServiceData();
                         },
                         child: Row(
                           children: [

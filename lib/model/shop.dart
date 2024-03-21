@@ -11,6 +11,7 @@ class Shop extends Equatable{
   String? description;
   String? price;
   String? negotiable;
+  bool isSold = false;
 
   Shop(
       {this.product,
@@ -20,7 +21,9 @@ class Shop extends Equatable{
       this.description,
       this.price,
       this.id,
-      this.negotiable});
+      this.negotiable,
+      this.isSold = false,
+      });
 
   Shop.fromJson(Map<String, dynamic> json) {
     product = json['product'];
@@ -30,6 +33,7 @@ class Shop extends Equatable{
     description = json['description'];
     price = json['price'];
     negotiable = json['negotiable'];
+    isSold = false;
     id = json['id'];
   }
 

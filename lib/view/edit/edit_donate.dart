@@ -147,7 +147,7 @@ class _EditShopState extends State<EditDonate> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await sellingPetProvider.deletedDonatedPet(id);
+                await sellingPetProvider.deleteDonatedPet(id);
                 if (sellingPetProvider.deletedDonatedPetUtil ==
                     StatusUtil.success) {
                   Helper.snackBar("Successfully deleted", context);

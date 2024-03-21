@@ -74,6 +74,7 @@ class _pinCodeTEstState extends State<pinCodeTEst> {
                   // Sign the user in (or link) with the credential
                   FirebaseAuth auth = FirebaseAuth.instance;
                   await auth.signInWithCredential(credential);
+                  
                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> Account()), (route) => false);
                  }catch(e){
                   return Helper.snackBar("Invalid code", context);

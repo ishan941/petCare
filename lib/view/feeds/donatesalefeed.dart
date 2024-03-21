@@ -5,6 +5,8 @@ import 'package:project_petcare/provider/feedprovider.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/sellpetprovider.dart';
 import 'package:project_petcare/view/donate/petsale_1.dart';
+import 'package:project_petcare/view/feeds/ds_details.dart';
+import 'package:project_petcare/view/search_here.dart';
 import 'package:provider/provider.dart';
 
 class DonateSaleFeed extends StatefulWidget {
@@ -88,7 +90,10 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
                                       ),
                                       Spacer(),
                                       IconButton(
-                                        onPressed: () {},
+                                        onPressed: () async{
+                                          Navigator.push(context, MaterialPageRoute(builder: (context)=> SearchHere()));
+                                          // await sellingPetProvider.searchSellingPet();
+                                        },
                                         icon: Icon(
                                           Icons.search,
                                           color: Colors.black,
@@ -162,79 +167,130 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
 
   Widget sellingPet(
       SellingPetProvider sellingPetProvider, int index, BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          child: Row(
-            children: [
-              Container(
-                height: 500,
-                width: 300,
-                decoration: BoxDecoration(shape: BoxShape.circle),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    sellingPetProvider.sellingPetList[index].imageUrl ?? " ",
-                    fit: BoxFit.cover,
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Ds_details(
+                    adopt: sellingPetProvider.sellingPetList[index])));
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        child: Column(
+          children: [
+            Container(
+              height: 250,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(shape: BoxShape.circle),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  sellingPetProvider.sellingPetList[index].imageUrl ?? " ",
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  sellingPetProvider.sellingPetList[index].petName ?? " ",
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(
-                sellingPetProvider.sellingPetList[index].petName ?? " ",
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w500,
+                Row(
+                  children: [
+                    Icon(Icons.phone),
+                    Text(
+                      sellingPetProvider.sellingPetList[index].ownerPhone ??
+                          "Phone Number",
+                      style: categoriesTitleText,
+                    )
+                  ],
                 ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
+                Row(
+                  children: [
+                    Text(
+                      "Rs",
+                      style: smallTitleText,
+                    ),
+                    Text(
+                      sellingPetProvider.sellingPetList[index].petPrice ??
+                          "Free",
+                      style: mainTitleText,
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ],
         ),
-        // Other widgets for selling pet
-      ],
+      ),
     );
   }
 
   Widget donatePet(
       SellingPetProvider sellingPetProvider, int index, BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          child: Row(
-            children: [
-              Container(
-                height: 40,
-                width: 40,
-                decoration: BoxDecoration(shape: BoxShape.circle),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    sellingPetProvider.donatePetList[index].imageUrl ?? " ",
-                    fit: BoxFit.cover,
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Ds_details(
+                    adopt: sellingPetProvider.donatePetList[index])));
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        child: Column(
+          children: [
+            Container(
+              height: 250,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(shape: BoxShape.circle),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  sellingPetProvider.donatePetList[index].imageUrl ?? " ",
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  sellingPetProvider.donatePetList[index].petName ?? " ",
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(
-                sellingPetProvider.donatePetList[index].petName ?? " ",
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w500,
+                Row(
+                  children: [
+                    Icon(Icons.phone),
+                    Text(
+                      sellingPetProvider.donatePetList[index].ownerPhone ??
+                          "Phone Number",
+                      style: categoriesTitleText,
+                    )
+                  ],
                 ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         ),
-        // Other widgets for donated pet
-      ],
+      ),
     );
   }
 

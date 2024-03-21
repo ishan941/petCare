@@ -10,14 +10,17 @@ import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/response/response.dart';
 import 'package:project_petcare/service/petcareimpl.dart';
 import 'package:project_petcare/service/petcareserivce.dart';
+import 'package:project_petcare/view/ourservice/ourservicedto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OurServiceProvider extends ChangeNotifier {
   PetCareService petCareService = PetCareImpl();
   SignUpProvider signUpProvider = SignUpProvider();
   PetCareProvider petCareProvider = PetCareProvider();
+  bool isValueDisplayed=false;
   String token = "";
   int? id;
+  List<DistanceService> distanceServiceList=[];
 
   String? errorMessage;
   String? service;
@@ -45,6 +48,10 @@ class OurServiceProvider extends ChangeNotifier {
   //       .toList();
   // }
 
+void setIsValueDisplayed(bool value){
+  isValueDisplayed=value;
+  notifyListeners();
+}
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController serviceController = TextEditingController();
 
@@ -192,6 +199,16 @@ class OurServiceProvider extends ChangeNotifier {
       setDashServiceUtil(StatusUtil.error);
     }
   }
+  clearOurServiceData(){
+    cpimageUrl = null;
+    cpimage = null;
+    ppimage = null;
+    ppimageUrl = null;
+    serviceController.clear();
+    service = null;
+    notifyListeners();
+    
+  }
 
   Future<void> saveOurServiceDto() async {
     if (_professionUtil != StatusUtil.loading) {
@@ -225,6 +242,7 @@ class OurServiceProvider extends ChangeNotifier {
       setOurServiceDto(StatusUtil.error);
     }
   }
+  
 
   Future<void> getDashService() async {
     if (_dashServiceUtil != StatusUtil.loading) {
