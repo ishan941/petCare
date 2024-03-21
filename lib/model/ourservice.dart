@@ -1,4 +1,5 @@
 class OurService {
+  int? id;
   String? cpImage;
   String? ppImage;
   String? service;
@@ -7,12 +8,14 @@ class OurService {
     this.cpImage,
     this.ppImage,
     this.service,
+    this.id,
   });
 
   OurService.fromJson(Map<String, dynamic> json) {
     cpImage = json['cpImage'];
     ppImage = json['ppImage'];
     service = json['service'];
+    id = json['id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -20,6 +23,7 @@ class OurService {
     data['cpImage'] = this.cpImage;
     data['ppImage'] = this.ppImage;
     data['service'] = this.service;
+    data['id'] = this.id;
     return data;
   }
 

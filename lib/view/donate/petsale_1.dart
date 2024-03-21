@@ -12,9 +12,10 @@ import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
 
 class SellingPet extends StatefulWidget {
-  final String choice;
+
+  final String? choice;
   final Adopt? adopt;
-  SellingPet({required this.choice, this.adopt, Key? key}) : super(key: key);
+  SellingPet({ this.choice, this.adopt, Key? key}) : super(key: key);
 
   @override
   State<SellingPet> createState() => _SellingPetState();
@@ -33,6 +34,9 @@ class _SellingPetState extends State<SellingPet> {
 
   String? gender;
   Object? value;
+
+  
+
   FocusNode textFieldFocusNode = FocusNode();
   FocusNode searchFocusNode = FocusNode();
   List<String> petAgeUnitList = ["Days", "Months", "Year"];
@@ -54,16 +58,31 @@ class _SellingPetState extends State<SellingPet> {
         return [];
     }
   }
+  @override
+  void initState() {
+    Future.delayed(Duration.zero, () {
+      controller();
+    });
 
-  //  String getPetBreedList() {
-  //   if () {
-  //     return 'Sale';
-  //   } else if (widget.choice == 'Donate') {
-  //     return 'Donate';
-  //   } else {
-  //     return 'Default';
-  //   }
-  // }
+    super.initState();
+  }
+
+  controller() {
+    var sellingPetProvider =
+        Provider.of<SellingPetProvider>(context, listen: false);
+    if (widget.adopt != null) {
+      sellingPetProvider.petNameController.text = widget.adopt!.petName ?? "";
+      sellingPetProvider.petAgeController.text = widget.adopt!.petAge ?? "";
+      sellingPetProvider.petWeightController.text = widget.adopt!.petWeight?? "";
+      sellingPetProvider.ownerLocationController.text = widget.adopt!.location ?? "";
+      sellingPetProvider.setImageUrl(widget.adopt!.imageUrl ?? "");
+      sellingPetProvider.setId(widget.adopt!.id!);
+      sellingPetProvider.setPetGender(widget.adopt!.gender ?? "");
+      sellingPetProvider.setCategory(widget.adopt!.categories ??"");
+      sellingPetProvider.setAgeTime(widget.adopt!.petAgeTime ?? "");
+
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,9 +146,12 @@ class _SellingPetState extends State<SellingPet> {
                       ),
                       const Text(petNameStr),
                       ShopTextForm(
-                       onChanged: (value){
-                        sellingPetProvider.petName = value;
-                       },
+                        hintText: 'PetName',
+                        
+                      //  onChanged: (value){
+                      //   sellingPetProvider.petName = value;
+                      //  },
+                      controller: sellingPetProvider.petNameController,
                       ),
                       const SizedBox(
                         height: 20,
@@ -149,9 +171,11 @@ class _SellingPetState extends State<SellingPet> {
                           Container(
                             width: MediaQuery.of(context).size.width * .6,
                             child: ShopTextForm(
-                             onChanged: (value){
-                              sellingPetProvider.petAge = value;
-                             },
+                              hintText: "Pet Age",
+                               controller: sellingPetProvider.petAgeController,
+                            //  onChanged: (value){
+                            //   sellingPetProvider.petAge = value;
+                            //  },
                               
                             ),
                           ),
@@ -173,9 +197,11 @@ class _SellingPetState extends State<SellingPet> {
                       ),
                       const Text(petWeightStr),
                       ShopTextForm(
-                        onChanged: (value) {
-                          sellingPetProvider.petWeight = value;
-                        },
+                        hintText: "Pet Weight",
+                         controller: sellingPetProvider.petWeightController,
+                        // onChanged: (value) {
+                        //   sellingPetProvider.petWeight = value;
+                        // },
                       ),
                       const SizedBox(
                         height: 20,
@@ -201,7 +227,7 @@ class _SellingPetState extends State<SellingPet> {
                       const SizedBox(
                         height: 20,
                       ),
-                      const Text(petBreadStr),
+                      // const Text(petBreadStr),
                       // CustomDropDown(
                       //     onChanged: (value) {
                       //       sellingPetProvider.petBreed = value;
@@ -223,7 +249,9 @@ class _SellingPetState extends State<SellingPet> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        DonateOrSale(choice: 'Sale'),
+                                        DonateOrSale(
+                                          adopt: sellingPetProvider.sellingPetList.first,
+                                          choice: 'Sale'),
                                   ),
                                 );
                               } else if (widget.choice == 'Donate') {
@@ -232,7 +260,9 @@ class _SellingPetState extends State<SellingPet> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        DonateOrSale(choice: 'Donate'),
+                                        DonateOrSale(
+                                           adopt: sellingPetProvider.donatePetList.first,
+                                          choice: 'Donate'),
                                   ),
                                 );
                               }

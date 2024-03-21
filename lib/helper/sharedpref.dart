@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/view/logins/loginpage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 Future<void> clearLoginStatus() async {
-  try {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove("isUserLoggedIn");
-    await prefs.remove('isGoogleLoggedIn');
-    await prefs.remove('token');
-  
-  } catch (e) {
-    print("$e");
-  }
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.remove("isUserLoggedIn");
+  await prefs.remove('isGoogleLoggedIn');
+  await prefs.remove('token');
 }
 
 Future<void> dialogBuilder(BuildContext context) {
@@ -43,12 +38,12 @@ Future<void> dialogBuilder(BuildContext context) {
                 ),
                 child: const Text("Yes"),
                 onPressed: () async {
-                  clearLoginStatus();
-
+                  signUpProvider.clearLoginStatus(context);
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => LoginPage()),
                       (route) => false);
+                      Helper.snackBar('LOGOUT', context);
                 },
               ),
             ],

@@ -35,7 +35,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             //Icon(Icons.perm_identity, size: 30, color: Colors.white,),
           ],
           color: Colors.white,
-          buttonBackgroundColor: ColorUtil.primaryColor,
+          buttonBackgroundColor: ColorUtil.secondaryColor,
           backgroundColor: ColorUtil.BackGroundColorColor,
           animationCurve: Curves.fastEaseInToSlowEaseOut,
           animationDuration: Duration(milliseconds: 600),
@@ -78,14 +78,14 @@ class _BottomNavBarState extends State<BottomNavBar> {
               size: 30,
               color: isSelected
                   ? ColorUtil.BackGroundColorColor
-                  : ColorUtil.primaryColor),
+                  : ColorUtil.secondaryColor),
           Text(
             label,
             style: TextStyle(
                 fontSize: 12,
                 color: isSelected
                     ? ColorUtil.BackGroundColorColor
-                    : ColorUtil.primaryColor),
+                    : ColorUtil.secondaryColor),
           ),
         ],
       ),

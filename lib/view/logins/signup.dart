@@ -42,7 +42,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           height: MediaQuery.of(context).size.height * .2,
                           child: Image.asset("assets/images/petcareLogi.png")),
                       Text(
-                        "Create an account",
+                        createAccountStr,
                         style: TextStyle(fontSize: 25),
                       ),
 
@@ -53,7 +53,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         },
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return "Please enter your name";
+                            return;
                           }
                           return null;
                         },
@@ -125,10 +125,10 @@ class _SignUpPageState extends State<SignUpPage> {
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "Please enter your confirm Password";
-                          }else if(signUpProvider.password!=value){
+                          } else if (signUpProvider.password != value) {
                             return "Password doesn't match";
                           }
-                        
+
                           return null;
                         },
                         prefixIcon: Icon(Icons.lock),
@@ -166,18 +166,24 @@ class _SignUpPageState extends State<SignUpPage> {
                                 if (_formKey.currentState!.validate()) {
                                   await signUpProvider
                                       .sendUserLoginValueToFireBase();
-
-                                  if (signUpProvider.signUpUtil ==
-                                      StatusUtil.success) {
-                                    Helper.snackBar(
-                                        successfullySavedStr, context);
-                                    Navigator.of(context).pushAndRemoveUntil(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                BottomNavBar()),
-                                        (Route<dynamic> route) => false);
-                                  } else {
-                                    Helper.snackBar(failedToSaveStr, context);
+                                  try {
+                                    if (signUpProvider.signUpUtil ==
+                                        StatusUtil.success) {
+                                      Helper.snackBar(
+                                          "Successfully created an account",
+                                          context);
+                                      Navigator.of(context).pushAndRemoveUntil(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LoginPage()),
+                                          (Route<dynamic> route) => false);
+                                    } else if (signUpProvider.signUpUtil == StatusUtil.error) {
+                                      Helper.snackBar(
+                                          "Failed to create an account",
+                                          context);
+                                    }
+                                  } catch (e) {
+                                    Helper.snackBar(e.toString(), context);
                                   }
                                 }
                               },

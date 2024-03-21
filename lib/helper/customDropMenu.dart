@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-// ignore: must_be_immutable
 class CustomDropDown extends StatelessWidget {
   final String? labelText;
   final String? hintText;

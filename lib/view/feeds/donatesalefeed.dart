@@ -30,19 +30,19 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
     await getFeed();
   }
 
-  getToken() {
-    var selliingProvider =
+  void getToken() {
+    var sellingProvider =
         Provider.of<SellingPetProvider>(context, listen: false);
-    selliingProvider.getTokenFromSharedPref();
+    sellingProvider.getTokenFromSharedPref();
   }
 
   Future<void> getFeed() async {
-    var selliingProvider =
+    var sellingProvider =
         Provider.of<SellingPetProvider>(context, listen: false);
-    selliingProvider.getTokenFromSharedPref();
+    sellingProvider.getTokenFromSharedPref();
 
-    await selliingProvider.getSellingPetData();
-    await selliingProvider.getDonatePetData();
+    await sellingProvider.getSellingPetData();
+    await sellingProvider.getDonatePetData();
   }
 
   List<String> petCategoriesList = ["Dog", "Cat", "Fish"];
@@ -65,189 +65,91 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
               builder: (context, sellingPetProvider, child) =>
                   Consumer<PetCareProvider>(
                 builder: (context, petCareProvider, child) => CustomScrollView(
-                  physics: BouncingScrollPhysics(
-                      parent: AlwaysScrollableScrollPhysics()),
+                  physics: BouncingScrollPhysics(),
                   slivers: [
                     SliverAppBar(
                       backgroundColor: ColorUtil.BackGroundColorColor,
-                      expandedHeight: 50.0,
                       elevation: 0,
-                      floating: true,
-                      pinned: false,
-                      snap: true,
-                      centerTitle: false,
-                      // flexibleSpace: FlexibleSpaceBar(
-                      title: Row(
+                      pinned: true,
+                      flexibleSpace: LayoutBuilder(
+                        builder:
+                            (BuildContext context, BoxConstraints constraints) {
+                          return FlexibleSpaceBar(
+                            title: constraints.maxHeight > 50
+                                ? Row(
+                                    children: [
+                                      Text(
+                                        'PetCare',
+                                        style: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w600,
+                                          color: ColorUtil.primaryColor,
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          Icons.search,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          _DonateOrSale(context);
+                                        },
+                                        icon: Icon(
+                                          Icons.add,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : null,
+                            centerTitle: false,
+                          );
+                        },
+                      ),
+                    ),
+                    SliverPadding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      sliver: SliverList(
+                        delegate: SliverChildListDelegate(
+                          [
+                            Divider(
+                              thickness: 6,
+                            ),
+                            TabBar(
+                              controller: _tabController,
+                              labelColor: ColorUtil.primaryColor,
+                              unselectedLabelColor: Colors.black,
+                              indicatorColor: ColorUtil.primaryColor,
+                              tabs: [
+                                Tab(child: Text('Selling Pet')),
+                                Tab(child: Text('Donated Pet')),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SliverFillRemaining(
+                      child: TabBarView(
+                        controller: _tabController,
                         children: [
-                          Text(
-                            'PetCare',
-                            style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w600,
-                                color: ColorUtil.primaryColor),
+                          ListView.builder(
+                            itemCount: sellingPetProvider.sellingPetList.length,
+                            itemBuilder: (context, index) =>
+                                sellingPet(sellingPetProvider, index, context),
                           ),
-                          Spacer(),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.search,
-                              color: Colors.black,
-                            ),
+                          ListView.builder(
+                            itemCount: sellingPetProvider.donatePetList.length,
+                            itemBuilder: (context, index) =>
+                                donatePet(sellingPetProvider, index, context),
                           ),
-                          IconButton(
-                            onPressed: () {
-                              _DonateOrSale(context);
-                            },
-                            icon: Icon(
-                              Icons.add,
-                              color: Colors.black,
-                            ),
-                          )
                         ],
                       ),
                     ),
-                    // SliverList(
-                    //   delegate: SliverChildListDelegate(
-                    //     [
-                    //       Padding(
-                    //         padding: const EdgeInsets.symmetric(horizontal: 10),
-                    //         child: Row(
-                    //           children: [
-                    //             ClipRRect(
-                    //               borderRadius: BorderRadius.circular(100),
-                    //               child: Container(
-                    //                 height: 60,
-                    //                 width: 60,
-                    //                 child: petCareProvider.profilePicture !=
-                    //                         null
-                    //                     ? Image.network(
-                    //                         petCareProvider.profilePicture ??
-                    //                             "",
-                    //                         fit: BoxFit.cover,
-                    //                       )
-                    //                     : Image.asset(
-                    //                         "assets/images/emptypp.png",
-                    //                         fit: BoxFit.cover,
-                    //                       ),
-                    //               ),
-                    //             ),
-                    //             SizedBox(
-                    //               width: 10,
-                    //             ),
-                    //             Text("You have something about pet?"),
-                    //           ],
-                    //         ),
-                    //       ),
-                    //       Divider(
-                    //         thickness: 3,
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        return DefaultTabController(
-                          // animationDuration: Duration(seconds: 9),
-                          length: 2, // Number of tabs
-                          child: Column(
-                            children: [
-                              Divider(
-                                thickness: 6,
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: TabBar(
-                                  controller: _tabController,
-                                  labelColor: ColorUtil.primaryColor,
-                                  unselectedLabelColor: Colors.black,
-                                  indicatorColor: ColorUtil.primaryColor,
-                                  tabs: [
-                                    Tab(child: Text('Selling Pet')),
-                                    Tab(child: Text('Donated Pet')),
-                                    // Tab(child: Text('Last Visited')),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                height: MediaQuery.of(context).size.height,
-                                child: Expanded(
-                                  child: TabBarView(
-                                    controller: _tabController,
-                                    children: [
-                                      sellingPetProvider
-                                              .sellingPetList.isNotEmpty
-                                          ? Expanded(
-                                              child: ListView.builder(
-                                                physics:
-                                                    NeverScrollableScrollPhysics(),
-                                                // scrollDirection: Axis.vertical,
-                                                itemCount: sellingPetProvider
-                                                    .sellingPetList.length,
-                                                itemBuilder: (context, index) =>
-                                                    sellingPet(
-                                                        sellingPetProvider,
-                                                        index,
-                                                        context),
-                                              ),
-                                            )
-                                          : Expanded(
-                                              child: ListView.builder(
-                                                  physics:
-                                                      NeverScrollableScrollPhysics(),
-                                                  // scrollDirection: Axis.vertical,
-                                                  itemCount: feedProvider
-                                                      .feedList.length,
-                                                  itemBuilder: (context,
-                                                          index) =>
-                                                      fromFireBase(
-                                                          feedProvider,
-                                                          sellingPetProvider,
-                                                          index,
-                                                          context)),
-                                            ),
-                                      sellingPetProvider
-                                              .donatePetList.isNotEmpty
-                                          ? Expanded(
-                                              child: ListView.builder(
-                                                physics:
-                                                    NeverScrollableScrollPhysics(),
-                                                // scrollDirection: Axis.vertical,
-                                                itemCount: sellingPetProvider
-                                                    .donatePetList.length,
-                                                itemBuilder: (context, index) =>
-                                                    donatePet(
-                                                        sellingPetProvider,
-                                                        index,
-                                                        context),
-                                              ),
-                                            )
-                                          : Expanded(
-                                              child: ListView.builder(
-                                                  physics:
-                                                      NeverScrollableScrollPhysics(),
-                                                  // scrollDirection: Axis.vertical,
-                                                  itemCount: feedProvider
-                                                      .feedList.length,
-                                                  itemBuilder: (context,
-                                                          index) =>
-                                                      fromFireBase(
-                                                          feedProvider,
-                                                          sellingPetProvider,
-                                                          index,
-                                                          context)),
-                                            ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                      childCount: 1,
-                    )),
                   ],
                 ),
               ),
@@ -260,378 +162,79 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
 
   Widget sellingPet(
       SellingPetProvider sellingPetProvider, int index, BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Row(
-              children: [
-                Container(
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(shape: BoxShape.circle),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      sellingPetProvider.sellingPetList[index].imageUrl ?? " ",
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  sellingPetProvider.sellingPetList[index].petName ?? " ",
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  overflow: TextOverflow.ellipsis, // Handle overflow gracefully
-                ),
-              ],
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Row(
+            children: [
+              Container(
+                height: 500,
+                width: 300,
+                decoration: BoxDecoration(shape: BoxShape.circle),
+                child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: GestureDetector(
-                    // onDoubleTap: () {
-                    //   feedProvider.handleDoubleTap(index);
-                    // },
-                    child: sellingPetProvider.sellingPetList[index].imageUrl !=
-                            null
-                        ? Image.network(
-                            sellingPetProvider.sellingPetList[index].imageUrl ??
-                                " ",
-                            fit: BoxFit.cover,
-                          )
-                        : SizedBox(),
+                  child: Image.network(
+                    sellingPetProvider.sellingPetList[index].imageUrl ?? " ",
+                    fit: BoxFit.cover,
                   ),
                 ),
-
-                Icon(
-                  Icons.favorite_rounded,
-                  color: Colors.red,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                sellingPetProvider.sellingPetList[index].petName ?? " ",
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
                 ),
-                // : Icon(Icons.favorite_outline),
-                Container(
-                  width: MediaQuery.of(context).size.width * .4,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        sellingPetProvider.sellingPetList[index].location ??
-                            " ",
-                        style: const TextStyle(
-                          overflow: TextOverflow.ellipsis,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      const SizedBox(height: 5),
-                      // Container(
-                      //   width: MediaQuery.of(context)
-                      //           .size
-                      //           .width *
-                      //       .7,
-                      //   child: Row(
-                      //     children: [
-                      //       Icon(
-                      //         Icons.location_on_outlined,
-                      //         size: 15,
-                      //         color: ColorUtil.primaryColor,
-                      //       ),
-                      //       const SizedBox(
-                      //         width: 2,
-                      //       ),
-                      //       Flexible(
-                      //         child: Text(
-                      //           feedProvider.feedList[index]
-                      //                   .contains ??
-                      //               "",
-                      //           maxLines: 1,
-                      //           overflow:
-                      //               TextOverflow.ellipsis,
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
           ),
-          // if (index != sellingPetProvider.sellingPetList.length)
-          //   Divider(
-          //     thickness: 3,
-          //   ),
-        ],
-      ),
+        ),
+        // Other widgets for selling pet
+      ],
     );
   }
 
   Widget donatePet(
       SellingPetProvider sellingPetProvider, int index, BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Row(
-              children: [
-                Container(
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(shape: BoxShape.circle),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      sellingPetProvider.donatePetList[index].imageUrl ?? " ",
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  sellingPetProvider.donatePetList[index].petName ?? " ",
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  overflow: TextOverflow.ellipsis, // Handle overflow gracefully
-                ),
-              ],
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Row(
+            children: [
+              Container(
+                height: 40,
+                width: 40,
+                decoration: BoxDecoration(shape: BoxShape.circle),
+                child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: GestureDetector(
-                    // onDoubleTap: () {
-                    //   feedProvider.handleDoubleTap(index);
-                    // },
-                    child: sellingPetProvider.donatePetList[index].imageUrl !=
-                            null
-                        ? Image.network(
-                            sellingPetProvider.donatePetList[index].imageUrl ??
-                                " ",
-                            fit: BoxFit.cover,
-                          )
-                        : SizedBox(),
+                  child: Image.network(
+                    sellingPetProvider.donatePetList[index].imageUrl ?? " ",
+                    fit: BoxFit.cover,
                   ),
                 ),
-                // feedProvider.feedList[index].isDoubleTapped?
-                Icon(
-                  Icons.favorite_rounded,
-                  color: Colors.red,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                sellingPetProvider.donatePetList[index].petName ?? " ",
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
                 ),
-                // : Icon(Icons.favorite_outline),
-                Container(
-                  width: MediaQuery.of(context).size.width * .4,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        sellingPetProvider.donatePetList[index].location ?? " ",
-                        style: const TextStyle(
-                          overflow: TextOverflow.ellipsis,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      const SizedBox(height: 5),
-                      // Container(
-                      //   width: MediaQuery.of(context)
-                      //           .size
-                      //           .width *
-                      //       .7,
-                      //   child: Row(
-                      //     children: [
-                      //       Icon(
-                      //         Icons.location_on_outlined,
-                      //         size: 15,
-                      //         color: ColorUtil.primaryColor,
-                      //       ),
-                      //       const SizedBox(
-                      //         width: 2,
-                      //       ),
-                      //       Flexible(
-                      //         child: Text(
-                      //           feedProvider.feedList[index]
-                      //                   .contains ??
-                      //               "",
-                      //           maxLines: 1,
-                      //           overflow:
-                      //               TextOverflow.ellipsis,
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
           ),
-          if (index != sellingPetProvider.donatePetList.length)
-            Divider(
-              thickness: 3,
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget fromFireBase(FeedProvider feedProvider,
-      SellingPetProvider sellingPetProvider, int index, BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Row(
-              children: [
-                Container(
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(shape: BoxShape.circle),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      feedProvider.feedList[index].profile ?? " ",
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  feedProvider.feedList[index].name ?? "",
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  overflow: TextOverflow.ellipsis, // Handle overflow gracefully
-                ),
-              ],
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: GestureDetector(
-                    onDoubleTap: () {
-                      feedProvider.handleDoubleTap(index);
-                    },
-                    child: feedProvider.feedList[index].image != null
-                        ? Image.network(
-                            feedProvider.feedList[index].image!,
-                            fit: BoxFit.cover,
-                          )
-                        : SizedBox(),
-                  ),
-                ),
-                feedProvider.feedList[index].isDoubleTapped
-                    ? Icon(
-                        Icons.favorite_rounded,
-                        color: Colors.red,
-                      )
-                    : Icon(Icons.favorite_outline),
-                Container(
-                  width: MediaQuery.of(context).size.width * .4,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        feedProvider.feedList[index].contains ?? "",
-                        style: const TextStyle(
-                          overflow: TextOverflow.ellipsis,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      const SizedBox(height: 5),
-                      // Container(
-                      //   width: MediaQuery.of(context)
-                      //           .size
-                      //           .width *
-                      //       .7,
-                      //   child: Row(
-                      //     children: [
-                      //       Icon(
-                      //         Icons.location_on_outlined,
-                      //         size: 15,
-                      //         color: ColorUtil.primaryColor,
-                      //       ),
-                      //       const SizedBox(
-                      //         width: 2,
-                      //       ),
-                      //       Flexible(
-                      //         child: Text(
-                      //           feedProvider.feedList[index]
-                      //                   .contains ??
-                      //               "",
-                      //           maxLines: 1,
-                      //           overflow:
-                      //               TextOverflow.ellipsis,
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          if (index != feedProvider.feedList.length)
-            Divider(
-              thickness: 3,
-            ),
-        ],
-      ),
+        ),
+        // Other widgets for donated pet
+      ],
     );
   }
 

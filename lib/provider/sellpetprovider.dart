@@ -18,9 +18,9 @@ class SellingPetProvider extends ChangeNotifier {
   String? errorMessage;
   XFile? image;
   String token = "";
+  int? id;
 
-  String? id,
-      petName,
+  String? petName,
       petAge,
       petAgeTime,
       petGender,
@@ -33,10 +33,24 @@ class SellingPetProvider extends ChangeNotifier {
       ownerName,
       ownerLocation,
       petPrice;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController petNameController = TextEditingController();
+  TextEditingController petAgeController = TextEditingController();
+  TextEditingController petAgeTimeController = TextEditingController();
+  TextEditingController petWeightController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController petPriceController = TextEditingController();
+  TextEditingController ownerLocationController = TextEditingController();
+
+  // TextEditingController userNController = TextEditingController();
+  // TextEditingController petNameController = TextEditingController();
 
   StatusUtil _uploadImageUtil = StatusUtil.idle;
   StatusUtil _saveSellingPetUtil = StatusUtil.idle;
   StatusUtil _getSellingPetUtil = StatusUtil.idle;
+
+  StatusUtil _deleteDonatedPetUtil = StatusUtil.idle;
+  StatusUtil _deleteSellingPetUtil = StatusUtil.idle;
 
   StatusUtil _saveDonatePetUtil = StatusUtil.idle;
   StatusUtil _getDonatePetUtil = StatusUtil.idle;
@@ -44,6 +58,8 @@ class SellingPetProvider extends ChangeNotifier {
   StatusUtil get saveSellingPetutil => _saveSellingPetUtil;
   StatusUtil get getSellingPetUtil => _getSellingPetUtil;
   StatusUtil get uploadImageUtil => _uploadImageUtil;
+  StatusUtil get deletedDonatedPetUtil => _deleteDonatedPetUtil;
+  StatusUtil get deleteSellingPetUtil => _deleteSellingPetUtil;
 
   StatusUtil get saveDonatePet => _saveDonatePetUtil;
   StatusUtil get getDonatePet => _getDonatePetUtil;
@@ -73,6 +89,16 @@ class SellingPetProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  setDeletedDonatedPetUtil(StatusUtil statusUtil) {
+    _deleteDonatedPetUtil = statusUtil;
+    notifyListeners();
+  }
+
+  setDeleteSellingPetUtil(StatusUtil statusUtil) {
+    _deleteSellingPetUtil = statusUtil;
+    notifyListeners();
+  }
+
   setImage(XFile? image) {
     this.image = image;
     notifyListeners();
@@ -80,6 +106,11 @@ class SellingPetProvider extends ChangeNotifier {
 
   setImageUrl(String? imageUrl) {
     this.imageUrl = imageUrl;
+    notifyListeners();
+  }
+
+  setId(int id) {
+    this.id = id;
     notifyListeners();
   }
 
@@ -145,19 +176,20 @@ class SellingPetProvider extends ChangeNotifier {
     }
   }
 
-  sendSellingPet() async {
+  Future<void> sendSellingPet() async {
     await uploadAdoptImageInFireBase();
     Adopt adopt = Adopt(
-      petName: petName,
-      petAge: petAge,
+      id: id != null ? id : 0,
+      petName: petNameController.text,
+      petAge: petAgeController.text,
       petAgeTime: petAgeTime,
-      petWeight: petWeight,
+      petWeight: petWeightController.text,
       gender: petGender,
       categories: petCategories,
       petBreed: petBreed,
       imageUrl: imageUrl,
-      petPrice: petPrice,
-      location: ownerLocation,
+      petPrice: petPriceController.text,
+      location: ownerLocationController.text,
     );
 
     try {
@@ -175,19 +207,49 @@ class SellingPetProvider extends ChangeNotifier {
     }
   }
 
-  sendDonatePet() async {
+  setPetGender(String gender) async {
+    petGender = gender;
+    notifyListeners();
+  }
+
+  setCategory(String categories) async {
+    petCategories = categories;
+    notifyListeners();
+  }
+
+  setAgeTime(String petAgeTime) async {
+    petAgeTime = petAgeTime;
+    notifyListeners();
+  }
+
+  clearData() async {
+    petNameController.clear();
+    petAgeController.clear();
+    petAgeTime = null;
+    petAgeTime = null;
+    petWeightController.clear();
+    petGender = null;
+    petCategories = null;
+    imageUrl = null;
+    image = null;
+    petPriceController.clear();
+    ownerLocationController.clear();
+    notifyListeners();
+  }
+
+  Future<void> sendDonatePet() async {
     await uploadAdoptImageInFireBase();
     Adopt adopt = Adopt(
-     petName: petName,
-      petAge: petAge,
+      id: id != null ? id : 0,
+      petName: petNameController.text,
+      petAge: petAgeController.text,
       petAgeTime: petAgeTime,
-      petWeight: petWeight,
+      petWeight: petWeightController.text,
       gender: petGender,
       categories: petCategories,
       petBreed: petBreed,
       imageUrl: imageUrl,
-      location: ownerLocation,
-    
+      location: ownerLocationController.text,
     );
 
     try {
@@ -205,7 +267,7 @@ class SellingPetProvider extends ChangeNotifier {
     }
   }
 
-  getSellingPetData() async {
+  Future<void> getSellingPetData() async {
     if (_getSellingPetUtil != StatusUtil.loading) {
       setGetSellingPet(StatusUtil.loading);
     }
@@ -224,7 +286,7 @@ class SellingPetProvider extends ChangeNotifier {
     }
   }
 
-  getDonatePetData() async {
+  Future<void> getDonatePetData() async {
     if (_getSellingPetUtil != StatusUtil.loading) {
       setGetSellingPet(StatusUtil.loading);
     }
@@ -240,6 +302,40 @@ class SellingPetProvider extends ChangeNotifier {
     } catch (e) {
       errorMessage = e.toString();
       setGetSellingPet(StatusUtil.error);
+    }
+  }
+
+  Future<void> deletedDonatedPet(int id) async {
+    if (_deleteDonatedPetUtil != StatusUtil.loading) {
+      setDeletedDonatedPetUtil(StatusUtil.loading);
+    }
+    try {
+      ApiResponse response =
+          await petCareService.deleteDonatedPetById(id, token);
+      if (response.statusUtil == StatusUtil.success) {
+        setDeletedDonatedPetUtil(StatusUtil.success);
+        getDonatePetData();
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+      setDeletedDonatedPetUtil(StatusUtil.error);
+    }
+  }
+
+  Future<void> deleteSellingPet(int id) async {
+    if (_deleteSellingPetUtil != StatusUtil.loading) {
+      setDeleteSellingPetUtil(StatusUtil.loading);
+    }
+    try {
+      ApiResponse response =
+          await petCareService.deleteSellingPetById(id, token);
+      if (response.statusUtil == StatusUtil.success) {
+        setDeleteSellingPetUtil(StatusUtil.success);
+        getSellingPetData();
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+      setDeleteSellingPetUtil(StatusUtil.error);
     }
   }
 

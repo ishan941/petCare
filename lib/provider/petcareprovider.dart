@@ -24,7 +24,7 @@ class PetCareProvider extends ChangeNotifier {
   String? contactNumber, code, emailVerify;
   String? userProfilePicture;
 
-  String? userName, userPhone, userEmail, userLocation;
+  String? userName, userPhone, userEmail, userLocation, userFullName;
   String? otpCode;
   bool showPassword = false;
   bool confirmPassword = false;
@@ -37,11 +37,15 @@ class PetCareProvider extends ChangeNotifier {
 
   StatusUtil _statusUtil = StatusUtil.idle,
       _verificationUtil = StatusUtil.idle,
-      _userImageUtil = StatusUtil.idle;
+      _userImageUtil = StatusUtil.idle,
+      _getUserNameUtil = StatusUtil.idle,
+      _getUserEmailUtil = StatusUtil.idle;
 
   StatusUtil get dataStatusUtil => _statusUtil;
   StatusUtil get verificationUtil => _verificationUtil;
   StatusUtil get userImageUtil => _userImageUtil;
+  StatusUtil get getUserNameUtil => _getUserNameUtil;
+  StatusUtil get getUserEmailUtil => _getUserEmailUtil;
 
   setUserImageUtil(StatusUtil statusUtil) {
     _userImageUtil = statusUtil;
@@ -93,6 +97,14 @@ class PetCareProvider extends ChangeNotifier {
     _statusUtil = statusUtil;
     notifyListeners();
   }
+  setGetUserName(StatusUtil statusUtil) {
+    _getUserNameUtil = statusUtil;
+    notifyListeners();
+  }
+  setGetUserEmail(StatusUtil statusUtil) {
+    _getUserEmailUtil = statusUtil;
+    notifyListeners();
+  }
 
   setVerificationUtil(StatusUtil statusUtil) {
     _verificationUtil = statusUtil;
@@ -122,6 +134,60 @@ class PetCareProvider extends ChangeNotifier {
   setProfilePicture(String? profilePicture) {
     this.profilePicture = profilePicture;
     notifyListeners();
+  }
+   getUserName() async {
+    if (_getUserNameUtil != StatusUtil.loading) {
+      setGetUserName(StatusUtil.loading);
+    }
+    try {
+      ApiResponse response = await petCareService.getUserName(token);
+      if (response.statusUtil == StatusUtil.success) {
+        userName = response.data["name"];
+        setGetUserName(StatusUtil.success);
+      } else {
+        errorMessage = response.errorMessage;
+        setGetUserName(StatusUtil.error);
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+      setGetUserName(StatusUtil.error);
+    }
+  }
+   getUserFullName() async {
+    if (_getUserNameUtil != StatusUtil.loading) {
+      setGetUserName(StatusUtil.loading);
+    }
+    try {
+      ApiResponse response = await petCareService.getUserFullName(token);
+      if (response.statusUtil == StatusUtil.success) {
+        userFullName = response.data["name"];
+        setGetUserName(StatusUtil.success);
+      } else {
+        errorMessage = response.errorMessage;
+        setGetUserName(StatusUtil.error);
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+      setGetUserName(StatusUtil.error);
+    }
+  }
+   getUserEmail() async {
+    if (_getUserEmailUtil != StatusUtil.loading) {
+      setGetUserEmail(StatusUtil.loading);
+    }
+    try {
+      ApiResponse response = await petCareService.getUserEmail(token);
+      if (response.statusUtil == StatusUtil.success) {
+        userEmail = response.data["name"];
+        setGetUserEmail(StatusUtil.success);
+      } else {
+        errorMessage = response.errorMessage;
+        setGetUserEmail(StatusUtil.error);
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+      setGetUserEmail(StatusUtil.error);
+    }
   }
 
   Future<void> uploadeImageInFirebase() async {
@@ -223,7 +289,6 @@ class PetCareProvider extends ChangeNotifier {
   Future<void> getTokenFromSharedPref() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token') ?? "";
-
     notifyListeners();
   }
 }

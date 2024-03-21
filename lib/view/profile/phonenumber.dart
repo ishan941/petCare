@@ -21,11 +21,12 @@ class _PhoneNumberUiState extends State<PhoneNumberUi> {
     return Scaffold(
       backgroundColor: ColorUtil.BackGroundColorColor,
       appBar: AppBar(
-         iconTheme: IconThemeData.fallback(),
+        iconTheme: IconThemeData.fallback(),
         backgroundColor: ColorUtil.BackGroundColorColor,
         elevation: 0,
-        title: Text('Verification',
-        style: appBarTitle,
+        title: Text(
+          'Verification',
+          style: appBarTitle,
         ),
       ),
       body: SafeArea(
@@ -37,7 +38,9 @@ class _PhoneNumberUiState extends State<PhoneNumberUi> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text("Verify this is your account "),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -74,11 +77,13 @@ class _PhoneNumberUiState extends State<PhoneNumberUi> {
                 ],
               ),
               Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(10)),
                 height: 50,
                 width: MediaQuery.of(context).size.width * .9,
                 child: ElevatedButton(
                     onPressed: () async {
+              
                       if (_formKey.currentState!.validate()) {
                         await FirebaseAuth.instance.verifyPhoneNumber(
                           phoneNumber: phoneNumber,

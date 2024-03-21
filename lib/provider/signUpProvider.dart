@@ -80,10 +80,10 @@ class SignUpProvider extends ChangeNotifier {
 
       if (response.statusUtil == StatusUtil.success) {
         token = response.data['token'];
-       
-         SaveValueToSharedPreference();
-         saveUserToSharedPreferences();
-  
+
+        SaveValueToSharedPreference();
+        saveUserToSharedPreferences();
+
         setLoginUtil(StatusUtil.success);
         notifyListeners();
       } else {
@@ -94,30 +94,35 @@ class SignUpProvider extends ChangeNotifier {
       setLoginUtil(StatusUtil.error);
     }
   }
-   Future<void> SaveValueToSharedPreference() async {
+
+  Future<void> SaveValueToSharedPreference() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool("isUserLoggedIn", true);
     await prefs.setBool("isGoogleLoggedIn", true);
     await prefs.setString("token", token);
     notifyListeners();
   }
-   readValueFromSharedPreference() async {
+
+  readValueFromSharedPreference() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     isUserLoggedIn = prefs.getBool('isUserLoggedIn') ?? false;
     token = prefs.getString("token") ?? "";
     notifyListeners();
   }
+
   Future<void> getTokenFromSharedPref() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token') ?? "";
-   print("$token");
+    print("$token");
   }
 
-Future<void> clearLoginStatus(BuildContext context) async {
+  Future<void> clearLoginStatus(BuildContext context) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.remove("isUserLoggedIn");
       await prefs.remove("isGoogleLoggedIn");
+      await prefs.remove('token');
+
       if (googleLogIn) {
         final GoogleSignIn googleSignIn = GoogleSignIn();
 
@@ -133,6 +138,7 @@ Future<void> clearLoginStatus(BuildContext context) async {
     } catch (e) {
       print("$e");
     }
+    notifyListeners();
   }
   // checkUserLoginFromFireBase() async {
   //   if (_loginUtil != StatusUtil.loading) {
@@ -180,7 +186,6 @@ Future<void> clearLoginStatus(BuildContext context) async {
 // }
 
 //
- 
 
   Future<void> saveUserToSharedPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -207,17 +212,13 @@ Future<void> clearLoginStatus(BuildContext context) async {
     notifyListeners();
   }
 
-  
-
   SignUpProvider() {
     initilizedProvider();
   }
 
- 
-
   Future<bool> readGooogelValueFromSharedPreference() async {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      isGoogleLoggedIn = prefs.getBool('isGoogleLooggedIn') ?? false;
-      return isGoogleLoggedIn;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    isGoogleLoggedIn = prefs.getBool('isGoogleLooggedIn') ?? false;
+    return isGoogleLoggedIn;
   }
 }

@@ -85,3 +85,6 @@ const String generalStr =  "General";
 const String preferenceStr =  "Preferences";
 const String userDetailsStr =  "User Details";
 const String logOutStr=  "Logout";
+const String createAccountStr = "Create an account";
+const String nameValiStr = "Please enter your name";
+const String aboutUs = "They say happiness looks a lot like a furry little creature with a boop-able nose and a pet-able tummy. All pet owners can agree, no matter the size, age, or how messy, we all love our dogs like family. Well, who wouldn’t? These adorable pets have been with us humans for such a long time that they love us more than we love ourselves! From protectors to our faithful companions, dogs have taught us the warmth of another soul. That’s why we have special occasions to celebrate their loyalty and bravery like Kukur Tihar in Nepal. From the stone age to the modern times, these sunny creatures have shown us love in the form of waggy tails to affectionate licks.";

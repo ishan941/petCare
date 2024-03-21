@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:project_petcare/core/smooth_scrollable.dart';
 import 'package:project_petcare/firebase_options.dart';
 import 'package:project_petcare/provider/adoptprovider.dart';
@@ -107,23 +108,28 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return ScrollConfiguration(
       behavior: MyBehavior(),
-      child: MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) => PetCareProvider()),
-          ChangeNotifierProvider(create: (context) => DonateProvider()),
-          ChangeNotifierProvider(create: (context) => ShopProvider()),
-          ChangeNotifierProvider(create: (context) => OurServiceProvider()),
-          ChangeNotifierProvider(create: (context) => AdoptProvider()),
-          ChangeNotifierProvider(create: (context) => SignUpProvider()),
-          ChangeNotifierProvider(create: (context) => CategoriesProvider()),
-          ChangeNotifierProvider(create: (context) => MyPetProvider()),
-          ChangeNotifierProvider(create: (context) => FeedProvider()),
-          ChangeNotifierProvider(create: (context) =>SellingPetProvider()),
-          ChangeNotifierProvider(create: (context)=> AdsProvider())
-        ],
-        child: MaterialApp(
-            navigatorKey: firebaseNavigatorKey,
+      child: KhaltiScope(
+        navigatorKey: firebaseNavigatorKey,
+        publicKey: "test_public_key_ab4ce8ec82bf4663a471363d88b43d82",
+        builder: (context, khaltiNavigatorKey) => MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (context) => PetCareProvider()),
+            ChangeNotifierProvider(create: (context) => DonateProvider()),
+            ChangeNotifierProvider(create: (context) => ShopProvider()),
+            ChangeNotifierProvider(create: (context) => OurServiceProvider()),
+            ChangeNotifierProvider(create: (context) => AdoptProvider()),
+            ChangeNotifierProvider(create: (context) => SignUpProvider()),
+            ChangeNotifierProvider(create: (context) => CategoriesProvider()),
+            ChangeNotifierProvider(create: (context) => MyPetProvider()),
+            ChangeNotifierProvider(create: (context) => FeedProvider()),
+            ChangeNotifierProvider(create: (context) => SellingPetProvider()),
+            ChangeNotifierProvider(create: (context) => AdsProvider())
+          ],
+          child: MaterialApp(
+
+            navigatorKey: khaltiNavigatorKey,
             debugShowCheckedModeBanner: false,
+            localizationsDelegates: [KhaltiLocalizations.delegate],
             routes: {
               '/notification': (context) => ShopAll(),
             },
@@ -136,12 +142,12 @@ class _MyAppState extends State<MyApp> {
                 },
               ),
             ),
-            // home: SplashScreen(),
+            home: SplashScreen(),
             // home: LoginPage(),
-            home: BottomNavBar(),
+            // home: BottomNavBar(),
             // home: MyProfile(),
-            
-            ),
+          ),
+        ),
       ),
     );
   }
@@ -163,12 +169,10 @@ class _MyAppState extends State<MyApp> {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       showNotificationAndroid(
           message.notification!.title!, message.notification!.body!);
-    }
-    );
+    });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       firebaseNavigatorKey.currentState?.pushNamed('/notification');
-    }
-    );
+    });
   }
 }

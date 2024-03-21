@@ -37,12 +37,19 @@ class ShopProvider extends ChangeNotifier {
     _per = value;
     notifyListeners();
   }
-   bool _showAppBar = true;
+
+  bool _showAppBar = true;
 
   bool get showAppBar => _showAppBar;
 
   void setShowAppBar(bool value) {
     _showAppBar = value;
+    notifyListeners();
+  }
+
+  bool isPaymentSucessfull = false;
+  setPaymentSuccessfull(value) {
+    isPaymentSucessfull = value;
     notifyListeners();
   }
 
@@ -153,7 +160,9 @@ class ShopProvider extends ChangeNotifier {
     }
     signUp?.favourite = favoriteToJson;
 
-    response = await petCareService.updateFavourite(signUp!);
+    response = await petCareService.updateFavourite(
+      signUp!,
+    );
     if (response.statusUtil == StatusUtil.success) {
       setFavourite(true);
       await itemDetails();

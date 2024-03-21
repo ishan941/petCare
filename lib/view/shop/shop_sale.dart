@@ -5,13 +5,15 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
+import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
 import 'package:project_petcare/view/shop/nextitem.dart';
 import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
 
 class ShopSale extends StatefulWidget {
-  const ShopSale({super.key});
+  final Shop? shop;
+   ShopSale({super.key, this.shop});
 
   @override
   State<ShopSale> createState() => _ShopSaleState();

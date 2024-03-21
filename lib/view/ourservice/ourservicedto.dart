@@ -7,18 +7,20 @@ import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/simmer.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/model/ourservice.dart';
+import 'package:project_petcare/model/ourservicedto.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
 import 'package:project_petcare/view/ourservice/profession.dart';
-import 'package:project_petcare/view/ourservice/serviceDetail.dart';
 import 'package:project_petcare/view/search_here.dart';
 import 'package:provider/provider.dart';
 
 class OurServicesUiDto extends StatefulWidget {
   final OurService? ourService;
+  final OurServiceDto? ourServiceDto;
 
   OurServicesUiDto({
     Key? key,
     this.ourService,
+    this.ourServiceDto,
   }) : super(key: key);
 
   @override
@@ -45,6 +47,7 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
     var ourServiceProvider =
         Provider.of<OurServiceProvider>(context, listen: false);
     await ourServiceProvider.getTokenFromSharedPref();
+    await ourServiceProvider.getOurServiceDto();
   }
 
   @override
@@ -75,7 +78,7 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => YourProfession()));
               },
-              icon: Icon(Icons.person_add_alt_1_rounded),
+              icon: Icon(Icons.add),
             ),
             SizedBox(width: 5),
           ],
@@ -132,9 +135,9 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                     children: [
                       TabBar(
                         controller: _tabController,
-                        labelColor: Colors.red,
+                        labelColor: ColorUtil.secondaryColor,
                         unselectedLabelColor: Colors.black,
-                        indicatorColor: Colors.red,
+                        indicatorColor: ColorUtil.secondaryColor,
                         tabs: [
                           Tab(child: Text('Popular')),
                           Tab(child: Text('Nearby')),
@@ -164,7 +167,7 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
   }
 
   Widget popular(OurServiceProvider ourServiceProvider) {
-    List<OurService> filteredList = ourServiceProvider.filteredProfessionData;
+    // List<OurService> filteredList = ourServiceProvider.filteredProfessionData;
     return Expanded(
       child: Consumer<OurServiceProvider>(
         builder: (context, ourServiceProvider, child) => Column(
@@ -174,22 +177,22 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                 child: ListView.builder(
                   itemCount: ourServiceProvider.ourServiceDtoList.length,
                   itemBuilder: (context, index) => ourServiceProvider
-                              .getProfessionUtil ==
+                              .getOurServiceUtil ==
                           StatusUtil.loading
                       ? SimmerEffect.shimmerEffect()
-                      : ourServiceProvider.getProfessionUtil == StatusUtil.error
+                      : ourServiceProvider.getOurServiceUtil == StatusUtil.error
                           ? Text("Error: ${ourServiceProvider.errorMessage}")
                           : Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 15, vertical: 7),
                               child: InkWell(
                                 onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ServiceDetails(
-                                              ourService:
-                                                  filteredList[index])));
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //         builder: (context) => ServiceDetails(
+                                  //             ourService:
+                                  //                 filteredList[index])));
                                 },
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(12),

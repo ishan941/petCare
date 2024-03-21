@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:project_petcare/core/smooth_scrollable.dart';
-import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/constSearch.dart';
-import 'package:project_petcare/helper/simmer.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
@@ -26,8 +24,9 @@ class _ShopAllState extends State<ShopAll> {
 
   @override
   void initState() {
+     getShopData();
     super.initState();
-    getShopData();
+   
   }
 
   getShopData() async {
@@ -84,9 +83,10 @@ class _ShopAllState extends State<ShopAll> {
                                     builder: (context) => ShopFavourite()));
                           },
                           icon: Icon(
-                            Icons.favorite,
-                            color: Colors.red,
+                            Icons.favorite_border_outlined,
+                            color: ColorUtil.primaryColor,
                           )),
+                          SizedBox(width: 10,)
                     ],
                   ),
                 ),
@@ -239,7 +239,7 @@ class _ShopAllState extends State<ShopAll> {
                   ),
                   Text(
                     shopProvider.shopItemsList[index].price ?? "",
-                    style: subTitleText,
+                    style: mainTitleText,
                   ),
                 ],
               ),

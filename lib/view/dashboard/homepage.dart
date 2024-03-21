@@ -55,8 +55,10 @@ class _HomePageState extends State<HomePage> {
 
   getGreeting() async {
     var petCareProvider = Provider.of<PetCareProvider>(context, listen: false);
+    await petCareProvider.getTokenFromSharedPref();
+    await petCareProvider.getUserName();
     await petCareProvider.updateGreeting();
-    await petCareProvider.getProfilePicture();
+    // await petCareProvider.getProfilePicture();
   }
 
   getdata() async {
@@ -97,8 +99,10 @@ class _HomePageState extends State<HomePage> {
     await adsProvider.getTokenFromSharedPref();
     await adsProvider.getAdsImage();
   }
-  getDashService()async{
-    var ourServiceProvider = Provider.of<OurServiceProvider>(context, listen: false);
+
+  getDashService() async {
+    var ourServiceProvider =
+        Provider.of<OurServiceProvider>(context, listen: false);
     await ourServiceProvider.getTokenFromSharedPref();
     await ourServiceProvider.getDashService();
   }
@@ -120,7 +124,7 @@ class _HomePageState extends State<HomePage> {
               controller: _scrollController,
               slivers: [
                 SliverAppBar(
-                  backgroundColor: ColorUtil.primaryColor,
+                  backgroundColor:  ColorUtil.primaryColor,
                   expandedHeight: 130,
                   pinned: true,
                   elevation: 0,
@@ -130,17 +134,18 @@ class _HomePageState extends State<HomePage> {
                       centerTitle: true,
                       title: Row(
                         children: [
-                          SizedBox(width: 15,),
+                          SizedBox(
+                            width: 15,
+                          ),
                           Column(
                             // mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SizedBox(
                                 height: 10,
                               ),
-                              Text("Pet Care",
-                              style: TextStyle(
-                                fontSize: 25
-                              ),
+                              Text(
+                                "Pet Care",
+                                style: TextStyle(fontSize: 25),
                               )
                               // Text(
                               //     "Hello ${Provider.of<SignUpProvider>(context).userName}"),
@@ -214,17 +219,34 @@ class _HomePageState extends State<HomePage> {
                                           const SizedBox(
                                             height: 15,
                                           ),
-                                          Column(
-                                            children: [
-                                              categories(categoriesProvider),
-                                              ads(adsProvider),
-                                              ourservice(context),
-                                              _ourservice(context),
-                                              SizedBox(
-                                                height: 300,
-                                              )
-                                            ],
-                                          ),
+                                          categoriesProvider
+                                                      .categoriesList.isEmpty &&
+                                                  adsProvider
+                                                      .adsImageList.isEmpty &&
+                                                  ourServiceProvider
+                                                      .dashApiServiceList
+                                                      .isEmpty
+                                              ? Column(
+                                                  children: [
+                                                    Image.asset(
+                                                        "assets/images/sadpet.webp"),
+                                                    Text(
+                                                        'No data availabele at the moment...')
+                                                  ],
+                                                )
+                                              : Column(
+                                                  children: [
+                                                    categories(
+                                                        categoriesProvider),
+                                                    ads(adsProvider),
+                                                    // ourservice(context),
+                                                    _ourservice(context,
+                                                        ourServiceProvider),
+                                                    SizedBox(
+                                                      height: 300,
+                                                    )
+                                                  ],
+                                                ),
                                           categoriesProvider
                                                       .categoriesList.isEmpty ||
                                                   adsProvider
@@ -524,7 +546,7 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Hello ${signUpProvider.userName},",
+                    "Hello ${petCareProvider.userName},",
                     style: TextStyle(fontSize: 20),
                   ),
                   Text(
@@ -1064,156 +1086,173 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
-  Widget _ourservice(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-          child: Row(
+
+  Widget _ourservice(
+      BuildContext context, OurServiceProvider ourServiceProvider) {
+    return ourServiceProvider.dashApiServiceList.isEmpty
+        ? Text("No data available")
+        : Column(
             children: [
-              const Text(
-                ourServiceStr,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                child: Row(
+                  children: [
+                    const Text(
+                      ourServiceStr,
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                    ),
+                    const Spacer(),
+                    InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OurServiceSeeMore()));
+                        },
+                        child: Text(
+                          seeAllStr,
+                          style: TextStyle(
+                              fontSize: 18, color: ColorUtil.primaryColor),
+                        )),
+                    const SizedBox(
+                      width: 5,
+                    )
+                  ],
+                ),
               ),
-              const Spacer(),
-              InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => OurServiceSeeMore()));
-                  },
-                  child: Text(
-                    seeAllStr,
-                    style:
-                        TextStyle(fontSize: 18, color: ColorUtil.primaryColor),
-                  )),
-              const SizedBox(
-                width: 5,
-              )
-            ],
-          ),
-        ),
-        Consumer<OurServiceProvider>(
-          builder: (context, ourServiceProvider, child) => SizedBox(
-            height: MediaQuery.of(context).size.height * .26,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: ourServiceProvider.dashApiServiceList.length,
-              itemBuilder: (context, index) => Padding(
-                padding: const EdgeInsets.only(
-                    right: 15, top: 7, bottom: 7, left: 5),
+              Consumer<OurServiceProvider>(
+                builder: (context, ourServiceProvider, child) => SizedBox(
+                  height: MediaQuery.of(context).size.height * .26,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: ourServiceProvider.dashApiServiceList.length,
+                    itemBuilder: (context, index) => Padding(
+                      padding: const EdgeInsets.only(
+                          right: 15, top: 7, bottom: 7, left: 5),
 
-                //full ourservice container
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => OurServicesUiDto(
-                                  ourService:
-                                      ourServiceProvider.dashApiServiceList[index],
-                                )));
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            spreadRadius: 0,
-                            blurRadius: 3,
-                            color: Colors.grey.withOpacity(0.5),
-                            offset: Offset(2, 4),
-                          ),
-                        ],
-                        color: const Color.fromARGB(255, 248, 248, 248),
-                        borderRadius: BorderRadius.circular(20)),
-                    width: MediaQuery.of(context).size.width * .33,
+                      //full ourservice container
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OurServicesUiDto(
+                                        ourService: ourServiceProvider
+                                            .dashApiServiceList[index],
+                                      )));
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  spreadRadius: 0,
+                                  blurRadius: 3,
+                                  color: Colors.grey.withOpacity(0.5),
+                                  offset: Offset(2, 4),
+                                ),
+                              ],
+                              color: const Color.fromARGB(255, 248, 248, 248),
+                              borderRadius: BorderRadius.circular(20)),
+                          width: MediaQuery.of(context).size.width * .33,
 
-                    //inside container
-                    child: Stack(
-                      children: [
-                        Column(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              //image container
-                              child: Padding(
-                                padding: const EdgeInsets.all(5),
-                                child: Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * .12,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: ourServiceProvider.dashServiceUtil ==
-                                            StatusUtil.loading
-                                        ? SimmerEffect.normalSimmer(context)
-                                        : Image.network(
-                                            ourServiceProvider
-                                                    .dashApiServiceList[index]
-                                                    .cpImage ??
-                                                "",
-                                            fit: BoxFit.cover,
-                                          ),
+                          //inside container
+                          child: Stack(
+                            children: [
+                              Column(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    //image container
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5),
+                                      child: Container(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                .12,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: ourServiceProvider
+                                                      .dashServiceUtil ==
+                                                  StatusUtil.loading
+                                              ? SimmerEffect.normalSimmer(
+                                                  context)
+                                              : Image.network(
+                                                  ourServiceProvider
+                                                          .dashApiServiceList[
+                                                              index]
+                                                          .cpImage ??
+                                                      "",
+                                                  fit: BoxFit.cover,
+                                                ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
+                                  //end image container
+                                  SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.037),
+
+                                  Text(
+                                    ourServiceProvider.dashApiServiceList[index]
+                                            .service ??
+                                        "",
+                                    textAlign: TextAlign.center,
+                                  ),
+
+                                  const SizedBox(
+                                    height: 8,
+                                  ),
+                                  // view ourservice
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        color: ColorUtil.primaryColor,
+                                        borderRadius: BorderRadius.circular(7)),
+                                    height: 25,
+                                    width:
+                                        MediaQuery.of(context).size.width * .2,
+                                    child: Center(
+                                      child: Text(
+                                        viewStr,
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 16),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const Center(
+                                child: CircleAvatar(
+                                  radius: 35,
+                                  backgroundColor:
+                                      Color.fromARGB(255, 252, 252, 252),
                                 ),
                               ),
-                            ),
-                            //end image container
-                            SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.037),
-
-                            Text(
-                              ourServiceProvider
-                                      .dashApiServiceList[index].service ??
-                                  "",
-                              textAlign: TextAlign.center,
-                            ),
-
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            // view ourservice
-                            Container(
-                              decoration: BoxDecoration(
-                                  color: ColorUtil.primaryColor,
-                                  borderRadius: BorderRadius.circular(7)),
-                              height: 25,
-                              width: MediaQuery.of(context).size.width * .2,
-                              child: Center(
-                                child: Text(
-                                  viewStr,
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 16),
+                              Center(
+                                child: CircleAvatar(
+                                  radius: 30,
+                                  backgroundImage: NetworkImage(
+                                      ourServiceProvider
+                                              .dashApiServiceList[index]
+                                              .ppImage ??
+                                          ""),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const Center(
-                          child: CircleAvatar(
-                            radius: 35,
-                            backgroundColor: Color.fromARGB(255, 252, 252, 252),
+                            ],
                           ),
                         ),
-                        Center(
-                          child: CircleAvatar(
-                            radius: 30,
-                            backgroundImage: NetworkImage(ourServiceProvider
-                                    .dashApiServiceList[index].ppImage ??
-                                ""),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ),
-        ),
-      ],
-    );
+            ],
+          );
   }
 }

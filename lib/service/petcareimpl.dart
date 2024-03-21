@@ -762,10 +762,13 @@ class PetCareImpl extends PetCareService {
         .post(BASEURL + saveOurServiceUrl, ourService.toJson(), token: token);
     return response;
   }
-   @override
-  Future<ApiResponse> saveOurServiceDto(OurServiceDto ourServiceDto, String token) async{
-   ApiResponse response = await api
-        .post(BASEURL + saveOurServiceDtoUrl, ourServiceDto.toJson(), token: token);
+
+  @override
+  Future<ApiResponse> saveOurServiceDto(
+      OurServiceDto ourServiceDto, String token) async {
+    ApiResponse response = await api.post(
+        BASEURL + saveOurServiceDtoUrl, ourServiceDto.toJson(),
+        token: token);
     return response;
   }
 
@@ -773,6 +776,25 @@ class PetCareImpl extends PetCareService {
   Future<ApiResponse> saveAdsImage(Ads ads, String token) async {
     ApiResponse response =
         await api.post(BASEURL + saveAdsImageUrl, ads.toJson(), token: token);
+    return response;
+  }
+
+  @override
+  Future<ApiResponse> getUserName(String token) async {
+    ApiResponse response =
+        await api.get(BASEURL + getUsernameUrl, token: token);
+    return response;
+  }
+  @override
+  Future<ApiResponse> getUserFullName(String token) async {
+    ApiResponse response =
+        await api.get(BASEURL + getUserFullNameUrl, token: token);
+    return response;
+  }
+  @override
+  Future<ApiResponse> getUserEmail(String token) async {
+    ApiResponse response =
+        await api.get(BASEURL + getUserEmailUrl, token: token);
     return response;
   }
 
@@ -826,12 +848,22 @@ class PetCareImpl extends PetCareService {
 
   @override
   Future<ApiResponse> getDashService(String token) async {
-    ApiResponse response =
-        await api.get(BASEURL + getServideUrl, token: token);
+    ApiResponse response = await api.get(BASEURL + getServideUrl, token: token);
     return response;
   }
 
- 
+  @override
+  Future<ApiResponse> getOurServiceDto(String token) async {
+    ApiResponse response =
+        await api.get(BASEURL + getOurServiceDtoUrl, token: token);
+    return response;
+  }
+  @override
+  Future<ApiResponse> getCategoriesById( Categories categories, int id, String token) async {
+    ApiResponse response =
+        await api.post(BASEURL + getCategoryByIdUrl,categories.toJson(), token: token, );
+    return response;
+  }
 
 // @override
 // Future<ApiResponse> getCategoriesDetails() async {
@@ -856,4 +888,61 @@ class PetCareImpl extends PetCareService {
 //         statusUtil: StatusUtil.error, errorMessage: noInternetStr);
 //   }
 // }
+// @override
+//   Future<ApiResponse> d(String id) async {
+//     try {
+//       await FirebaseFirestore.instance
+//           .collection("AdoptDetails")
+//           .doc(id)
+//           .delete();
+
+//       return FireResponse(statusUtil: StatusUtil.success);
+//     } catch (e) {
+//       return FireResponse(
+//           statusUtil: StatusUtil.error, errorMessage: e.toString());
+//     }
+//   }
+
+  @override
+  Future<ApiResponse> deleteCategoryById(int id, String token) async {
+    ApiResponse response =
+        await api.delete(BASEURL + deleteCategoryUrl + id.toString() ,  token: token);
+    return response;
+  }
+   @override
+  Future<ApiResponse> deleteAdsById(int id, String token) async{
+    ApiResponse response =
+        await api.delete(BASEURL + deleteAdsUrl + id.toString() ,  token: token);
+    return response;
+  }
+    @override
+  Future<ApiResponse> deleteOurServiceById(int id, String token) async{
+    ApiResponse response =
+        await api.delete(BASEURL + deleteAdsUrl + id.toString() ,  token: token);
+    return response;
+  }
+  
+  @override
+  Future<ApiResponse> deleteOurServiceDtoById(int id, String token) async{
+   ApiResponse response =
+        await api.delete(BASEURL + deleteAdsUrl + id.toString() ,  token: token);
+    return response;
+  }
+  
+  @override
+  Future<ApiResponse> deleteDonatedPetById(int id, String token) async{
+    ApiResponse response =
+        await api.delete(BASEURL + deleteDonatedPetUrl + id.toString(), token: token);
+    return response;
+  }
+  
+  @override
+  Future<ApiResponse> deleteSellingPetById(int id, String token) async{
+   ApiResponse response =
+        await api.delete(BASEURL + deleteSellingPetUrl + id.toString(), token: token);
+    return response;
+  }
+  
+
+ 
 }

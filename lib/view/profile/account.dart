@@ -11,10 +11,11 @@ import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/model/signUp.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
+import 'package:project_petcare/view/edit/adminedit.dart';
+import 'package:project_petcare/view/profile/about_us.dart';
 import 'package:project_petcare/view/profile/changepassword.dart';
 import 'package:project_petcare/view/form_collections.dart';
 import 'package:project_petcare/view/profile/myprofile.dart';
-import 'package:project_petcare/view/profile/settingsAndPrivacy.dart';
 import 'package:project_petcare/view/shop/shopFavourite.dart';
 import 'package:provider/provider.dart';
 
@@ -28,6 +29,22 @@ class Account extends StatefulWidget {
 
 class _AccountState extends State<Account> {
   bool isSwitched = false;
+  @override
+  void initState() {
+    Future.delayed(Duration.zero, () {
+      getUser();
+    });
+
+    super.initState();
+  }
+
+  getUser() async {
+    var petCareProvider = Provider.of<PetCareProvider>(context, listen: false);
+    await petCareProvider.getTokenFromSharedPref();
+    await petCareProvider.getUserEmail();
+    await petCareProvider.getUserName();
+    await petCareProvider.getUserFullName();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,10 +78,9 @@ class _AccountState extends State<Account> {
                                 topLeft: Radius.circular(10),
                                 topRight: Radius.circular(10)),
                             child: Container(
-                                color: ColorUtil.BackGroundColorColor,
-                                height: MediaQuery.of(context).size.height,
-                     
-                                  ),
+                              color: ColorUtil.BackGroundColorColor,
+                              height: MediaQuery.of(context).size.height,
+                            ),
                           ),
                         ],
                       ),
@@ -180,10 +196,10 @@ class _AccountState extends State<Account> {
               children: [
                 // Text("My Profile"),
                 Text(
-                  signUpProvider.fullName,
+                  petCareProvider.userFullName ?? "User",
                   style: mainTitleText,
                 ),
-                Text(signUpProvider.userEmail),
+                Text(petCareProvider.userEmail ?? " email"),
               ],
             ),
           ],
@@ -213,7 +229,7 @@ class _AccountState extends State<Account> {
                 _userDetails(context),
                 _changePassword(context),
                 _myFavourites(context),
-                _settingsAndPrivacy(context),
+                _aboutUs(context),
               ],
             ),
           ),
@@ -419,13 +435,13 @@ class _AccountState extends State<Account> {
     );
   }
 
-  Widget _settingsAndPrivacy(BuildContext context) {
+  Widget _aboutUs(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: InkWell(
         onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => SettingsAndPrivacy()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AboutUs()));
         },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
@@ -443,12 +459,12 @@ class _AccountState extends State<Account> {
                             borderRadius: BorderRadius.circular(30)),
                         height: 45,
                         width: 45,
-                        child: Icon(Icons.new_releases_outlined)),
+                        child: Icon(Icons.pets)),
                     SizedBox(
                       width: 15,
                     ),
                     Text(
-                      "Settings and Privacy",
+                      "About us",
                       style: TextStyle(fontSize: 16),
                     ),
                     Spacer(),
@@ -569,7 +585,8 @@ class _AccountState extends State<Account> {
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: InkWell(
         onTap: () {
-          dialogBuilder(context);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => EditListUi()));
         },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),

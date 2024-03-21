@@ -6,12 +6,14 @@ import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
+import 'package:project_petcare/model/ads.dart';
 import 'package:project_petcare/provider/ads_provider.dart';
 import 'package:project_petcare/view/buttomnav.dart';
 import 'package:provider/provider.dart';
 
 class AdsForm extends StatefulWidget {
-  const AdsForm({super.key});
+  final Ads? ads;
+   AdsForm({super.key, this.ads});
 
   @override
   State<AdsForm> createState() => _AdsFormState();
@@ -83,7 +85,7 @@ class _AdsFormState extends State<AdsForm> {
                                 ),
                                 ElevatedButton(
                                     onPressed: () {
-                                      adsProvider.clearImage();
+                                     
                                       Helper.loadingAnimation(context);
                                       adsProvider.sendAdsImage();
                                       if (adsProvider.saveAdsUtil ==
@@ -96,6 +98,7 @@ class _AdsFormState extends State<AdsForm> {
                                             (route) => false);
                                         Helper.snackBar(
                                             successfullySavedStr, context);
+                                             adsProvider.clearImage();
                                         
                                       } else {
                                         Helper.snackBar(failedToSaveStr, context);

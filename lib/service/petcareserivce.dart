@@ -56,12 +56,23 @@ abstract class PetCareService {
   Future<ApiResponse> saveDonatePet(Adopt adopt, String token);
   Future<ApiResponse> saveAdsImage(Ads ads, String token);
 
+  Future<ApiResponse> getUserName(String token);
+  Future<ApiResponse> getUserFullName(String token);
+  Future<ApiResponse> getUserEmail(String token);
   Future<ApiResponse> getSellingPet(String token);
   Future<ApiResponse> getOurService(String token);
   Future<ApiResponse> getDonatePet(String token);
   Future<ApiResponse> getCategoriesDetails(String token);
   Future<ApiResponse> getAdsImage(String token);
   Future<ApiResponse> getDashService(String token);
-  
+  Future<ApiResponse> getOurServiceDto(String token);
 
+  Future<ApiResponse> getCategoriesById(Categories categories,int id, String token);
+
+  Future<ApiResponse> deleteCategoryById(int id, String token);
+  Future<ApiResponse> deleteAdsById(int id, String token);
+  Future<ApiResponse> deleteOurServiceById(int id, String token);
+  Future<ApiResponse> deleteOurServiceDtoById(int id, String token);
+  Future<ApiResponse> deleteDonatedPetById(int id, String token);
+  Future<ApiResponse> deleteSellingPetById(int id, String token);
 }

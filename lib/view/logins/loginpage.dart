@@ -10,6 +10,7 @@ import 'package:project_petcare/view/customs/customform.dart';
 import 'package:project_petcare/view/buttomnav.dart';
 import 'package:project_petcare/view/googleAuth.dart';
 import 'package:project_petcare/view/logins/signup.dart';
+import 'package:project_petcare/view/profile/phonenumber.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -104,7 +105,9 @@ class _LoginPageState extends State<LoginPage> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context)=> PhoneNumberUi()));
+                                    },
                                     child: Text("Forget Password ?"))
                               ],
                             ),
@@ -135,6 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                                            await signUpProvider
                                                 .SaveValueToSharedPreference();
                                                 await signUpProvider.saveUserToSharedPreferences();
+                                                Helper.snackBar("Successfully Logged in!!", context);
                                             Navigator.pushAndRemoveUntil(
                                                 context,
                                                 MaterialPageRoute(
@@ -330,7 +334,7 @@ class _LoginPageState extends State<LoginPage> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('The Provider Username or Password is incorrect. '),
+                Text('The provided Username or Password is incorrect!! '),
               ],
             ),
           ),

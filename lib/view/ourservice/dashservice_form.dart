@@ -4,12 +4,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
+import 'package:project_petcare/model/ourservice.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
 import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
 
 class ServiceForm extends StatefulWidget {
-  const ServiceForm({Key? key}) : super(key: key);
+ final OurService? ourService;
+  ServiceForm({Key? key, this.ourService}) : super(key: key);
 
   @override
   State<ServiceForm> createState() => _ServiceFormState();
@@ -26,9 +28,16 @@ class _ServiceFormState extends State<ServiceForm> {
     super.initState();
   }
 
-  gettoken() {
-    var provider = Provider.of<OurServiceProvider>(context, listen: false);
-    provider.getTokenFromSharedPref();
+  gettoken() async{
+    var ourServiceProvider = Provider.of<OurServiceProvider>(context, listen: false);
+    await ourServiceProvider.getTokenFromSharedPref();
+    await ourServiceProvider.serviceController.text;
+     if (widget.ourService != null) {
+      ourServiceProvider.serviceController.text = widget.ourService!.service ?? "";
+      // ourServiceProvider.setImageUrl(cpimageUrl) = widget.categories!.categoriesImage;
+      ourServiceProvider.setPpImageUrl(widget.ourService!.ppImage ?? "");
+      ourServiceProvider.setImageUrl(widget.ourService!.cpImage ?? "");
+    }
   }
 
   @override
@@ -61,9 +70,10 @@ class _ServiceFormState extends State<ServiceForm> {
                     padding: const EdgeInsets.all(20),
                     child: ShopTextForm(
                       labelText: selectServiceReqStr,
-                      onChanged: (value) {
-                        ourServiceProvider.service = value;
-                      },
+                      controller: ourServiceProvider.serviceController ,
+                      // onChanged: (value) {
+                      //   ourServiceProvider.service = value;
+                      // },
                       validator: (value) {
                         if (value!.isEmpty) {
                           return selectServiceValiStr;

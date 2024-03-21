@@ -34,16 +34,6 @@ class AdoptProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  // TextEditingController petnameController = TextEditingController();
-  // TextEditingController petAgeController = TextEditingController();
-  // TextEditingController petweightController = TextEditingController();
-  // // TextEditingController petBreadController = TextEditingController();
-  // // TextEditingController petAgeTimeController = TextEditingController();
-  // TextEditingController ownerNameController = TextEditingController();
-  // TextEditingController ownerPhoneController = TextEditingController();
-  // TextEditingController ownerLocationController = TextEditingController();
-  // TextEditingController imageUrlConroller = TextEditingController();
 
   List<Adopt> adoptDetailsList = [];
 

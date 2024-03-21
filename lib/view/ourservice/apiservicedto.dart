@@ -7,6 +7,8 @@ import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/customDropMenu.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
+import 'package:project_petcare/model/ourservice.dart';
+import 'package:project_petcare/model/ourservicedto.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
 import 'package:project_petcare/view/ourservice/formForMedical.dart';
 import 'package:project_petcare/view/ourservice/formForShop.dart';
@@ -15,7 +17,8 @@ import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
 
 class OurServiceDtoForm extends StatefulWidget {
-  const OurServiceDtoForm({Key? key}) : super(key: key);
+  OurServiceDto? ourServiceDto;
+   OurServiceDtoForm({Key? key, this.ourServiceDto}) : super(key: key);
 
   @override
   State<OurServiceDtoForm> createState() => _OurServiceDtoFormState();

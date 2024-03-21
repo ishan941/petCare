@@ -2,14 +2,12 @@ import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/customDropMenu.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
-import 'package:project_petcare/view/ourservice/formForMedical.dart';
-import 'package:project_petcare/view/ourservice/formForShop.dart';
-import 'package:project_petcare/view/ourservice/formForTrainer.dart';
 import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +21,7 @@ class YourProfession extends StatefulWidget {
 class _YourProfessionState extends State<YourProfession> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<String> professionList = ["Shop", "Medical", "Trainer"];
- 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,7 +95,6 @@ class _YourProfessionState extends State<YourProfession> {
                           height: 5,
                         ),
                         CustomDropDown(
-                          
                             onChanged: (value) {
                               ourServiceProvider.profession = value;
                             },
@@ -132,7 +129,9 @@ class _YourProfessionState extends State<YourProfession> {
                           height: 10,
                         ),
                         Text(uploadforPpStr),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Row(
                           children: [
                             GestureDetector(
@@ -176,7 +175,9 @@ class _YourProfessionState extends State<YourProfession> {
                                     : Container()),
                           ],
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Text(tapToEditStr),
                         Text(tapandHoldRearrangeStr)
                       ],
@@ -187,35 +188,46 @@ class _YourProfessionState extends State<YourProfession> {
                   height: 50,
                   width: MediaQuery.of(context).size.width * .9,
                   child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          if (ourServiceProvider.profilePicture != null) {
-                            if (ourServiceProvider.profession == "Medical") {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => FormForMedical()));
-                            } else if (ourServiceProvider.profession ==
-                                "Shop") {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => FormForShop()));
-                            } else if (ourServiceProvider.profession ==
-                                "Trainer") {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => FormForTrainner()));
-                            }
-                          } else
-                            Helper.snackBar(
-                                "Please Provide your Photo for Profile Picture",
-                                context);
-                        } else
-                          Helper.snackBar("Please Fill your Details", context);
+                          await ourServiceProvider.saveOurServiceDto();
+                          if (ourServiceProvider.ourServiceDtoUtil ==
+                              StatusUtil.success) {
+                            Helper.snackBar(successfullySavedStr, context);
+                            Navigator.pop(context);
+                          } else if (ourServiceProvider.ourServiceDtoUtil ==
+                              StatusUtil.error) {
+                            Helper.snackBar(failedToSaveStr, context);
+                          }
+                        }
+                        // if (_formKey.currentState!.validate()) {
+                        //   if (ourServiceProvider.profilePicture != null) {
+                        //     if (ourServiceProvider.profession == "Medical") {
+                        //       Navigator.push(
+                        //           context,
+                        //           MaterialPageRoute(
+                        //               builder: (context) => FormForMedical()));
+                        //     } else if (ourServiceProvider.profession ==
+                        //         "Shop") {
+                        //       Navigator.push(
+                        //           context,
+                        //           MaterialPageRoute(
+                        //               builder: (context) => FormForShop()));
+                        //     } else if (ourServiceProvider.profession ==
+                        //         "Trainer") {
+                        //       Navigator.push(
+                        //           context,
+                        //           MaterialPageRoute(
+                        //               builder: (context) => FormForTrainner()));
+                        //     }
+                        //   } else
+                        //     Helper.snackBar(
+                        //         "Please Provide your Photo for Profile Picture",
+                        //         context);
+                        // } else
+                        //   Helper.snackBar("Please Fill your Details", context);
                       },
-                      child: Text(nextStr)),
+                      child: Text(submitStr)),
                 )
               ],
             ),

@@ -1,4 +1,4 @@
-const BASEURL = "https://7258-2404-7c00-49-bde1-19ab-fcd0-63ad-2c45.ngrok-free.app/api/v1/";
+const BASEURL = "https://e90e-103-90-147-95.ngrok-free.app/api/v1/";
 
 const saveUserUrl = "saveUsers";
 const loginUrl = "login";
@@ -10,10 +10,25 @@ const saveAdsImageUrl = "saveAdsImage";
 const saveOurServiceUrl = "addService";
 const saveOurServiceDtoUrl = "saveServiceDto";
 
+
 const getCategoryUrl ="getCategory";
 const getDonationPetUrl ="getDonationPet";
 const getSellingPetUrl ="getSellingPet";
 const getAdsImageUrl ="getAdsImage";
 const getServideUrl = "getServices";
+const getOurServiceDtoUrl = "getServiceDto";
 
+
+
+const deleteCategoryUrl = "deleteCategory/";
+const deleteAdsUrl = "deleteAds/";
+const deleteOurServiceUrl = "deleteAds/";
+const deleteOurServiceDtoUrl = "deleteAds/";
+const deleteSellingPetUrl = "deleteSellingPet/{id}";
+const deleteDonatedPetUrl = "deleteDonatedPet/{id}";
+
+const getUsernameUrl = "username";
+const getUserFullNameUrl = "userFullName";
+const getUserEmailUrl = "userEmail";
 const getServiceByNameApi = "getServiceByName/{key}";
+const getCategoryByIdUrl = "getCategoryById/{id}" ;

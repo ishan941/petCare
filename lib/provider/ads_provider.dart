@@ -21,10 +21,12 @@ class AdsProvider extends ChangeNotifier {
   StatusUtil _saveAdsUtil = StatusUtil.idle;
   StatusUtil _getAdsUtil = StatusUtil.idle;
   StatusUtil _uploadeImageUtil = StatusUtil.idle;
+  StatusUtil _deleteAdsUtil = StatusUtil.idle;
 
   StatusUtil get saveAdsUtil => _saveAdsUtil;
   StatusUtil get getAdsUtil => _getAdsUtil;
   StatusUtil get uploadeImageUtil => _uploadeImageUtil;
+  StatusUtil get deleteAdsUtil => _deleteAdsUtil;
 
   setSaveAdsUtil(StatusUtil statusUtil) {
     _saveAdsUtil = statusUtil;
@@ -35,13 +37,17 @@ class AdsProvider extends ChangeNotifier {
     _getAdsUtil = statusUtil;
     notifyListeners();
   }
+  setDeleteAds(StatusUtil statusUtil) {
+    _getAdsUtil = statusUtil;
+    notifyListeners();
+  }
 
   setUploadeImageUtil(StatusUtil statusUtil) {
     _uploadeImageUtil = statusUtil;
     notifyListeners();
   }
 
-  setImage(XFile? image) {
+  setImage(XFile image) {
     this.image = image;
     notifyListeners();
   }
@@ -50,20 +56,25 @@ class AdsProvider extends ChangeNotifier {
     this.imageUrl = imageUrl;
     notifyListeners();
   }
+   Future<void> getTokenFromSharedPref() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token') ?? "";
+    notifyListeners();
+  }
 
   Future<void> uploadeImageInFireBase() async {
     if (_uploadeImageUtil == StatusUtil.loading) {
       setUploadeImageUtil(StatusUtil.loading);
     }
     try {
-      if (image != null) {
+      // if (image != null) {
         final adsImageStorageRef = FirebaseStorage.instance.ref();
         var imageStorageRef = adsImageStorageRef.child("${image!.name}");
         await imageStorageRef.putFile(File(image!.path));
         final downloadeUrl = await imageStorageRef.getDownloadURL();
         imageUrl = downloadeUrl;
         setSaveAdsUtil(StatusUtil.success);
-      }
+      // }
     } catch (e) {
       errorMessage = "$e";
       setUploadeImageUtil(StatusUtil.error);
@@ -110,9 +121,20 @@ class AdsProvider extends ChangeNotifier {
       }
    
   }
-   Future<void> getTokenFromSharedPref() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    token = prefs.getString('token') ?? "";
-    notifyListeners();
+    Future<void> deleteCategory(int id) async {
+    if (_deleteAdsUtil != StatusUtil.loading) {
+      setDeleteAds(StatusUtil.loading);
+    }
+    try {
+      ApiResponse response = await petCareService.deleteAdsById(id, token);
+      if (response.statusUtil == StatusUtil.success) {
+        setDeleteAds(StatusUtil.success);
+        getAdsImage();
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+      setDeleteAds(StatusUtil.error);
+    }
   }
+  
 }

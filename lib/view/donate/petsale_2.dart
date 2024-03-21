@@ -32,6 +32,32 @@ class _DonateOrSaleState extends State<DonateOrSale> {
   }
 
   @override
+  void initState() {
+    Future.delayed(Duration.zero, () {
+      controller();
+    });
+
+    super.initState();
+  }
+
+  controller() {
+    var sellingPetProvider =
+        Provider.of<SellingPetProvider>(context, listen: false);
+    if (widget.adopt != null) {
+      sellingPetProvider.petNameController.text = widget.adopt!.petName!;
+      sellingPetProvider.petAgeController.text = widget.adopt!.petAge!;
+      sellingPetProvider.petWeightController.text = widget.adopt!.petWeight!;
+      sellingPetProvider.ownerLocationController.text = widget.adopt!.location!;
+      sellingPetProvider.petPriceController.text = widget.adopt!.petPrice!;
+      sellingPetProvider.setImageUrl(widget.adopt!.imageUrl);
+      sellingPetProvider.setId(widget.adopt!.id!);
+      sellingPetProvider.setPetGender(widget.adopt!.gender!);
+      sellingPetProvider.setCategory(widget.adopt!.categories!);
+      sellingPetProvider.setAgeTime(widget.adopt!.petAgeTime!);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorUtil.BackGroundColorColor,
@@ -100,42 +126,47 @@ class _DonateOrSaleState extends State<DonateOrSale> {
                           pickImageFromGalleryForDonate(sellingPetProvider);
                         },
                         child: Container(
-                          height: 200,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
+                            height: 200,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all()),
+                            child:
+                                // adoptProvider.image != null
+                                //     ? Image.file(
+                                //         File(adoptProvider.image!.path),
+                                //         fit: BoxFit.cover,
+                                //       ):
+                                //        Icon(
+                                //                 Icons.photo_library_outlined,
+                                //                 size: 70,
+                                //                 color:
+                                //                     Colors.black.withOpacity(0.5),
+                                //               ),
+                                ClipRRect(
                               borderRadius: BorderRadius.circular(10),
-                              border: Border.all()),
-                          child:
-                              //
-                              adoptProvider.image != null
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: adoptProvider.imageUrl != null &&
-                                              adoptProvider.image != null
-                                          ? Image.network(
-                                              adoptProvider.imageUrl!)
-                                          : adoptProvider.image != null
-                                              ? Image.file(
-                                                  File(adoptProvider
-                                                      .image!.path),
-                                                  fit: BoxFit.cover,
-                                                )
-                                              : SizedBox())
-                                  : Icon(
-                                      Icons.photo_library_outlined,
-                                      size: 70,
-                                      color: Colors.black.withOpacity(0.5),
-                                    ),
-                        ),
+                              child: sellingPetProvider.imageUrl != null
+                                  ? Image.network(
+                                      sellingPetProvider.imageUrl!,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : sellingPetProvider.image != null
+                                      ? Image.file(
+                                          File(sellingPetProvider.image!.path),
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Icon(Icons.add_a_photo),
+                            )),
                       ),
                       const SizedBox(
                         height: 20,
                       ),
                       const Text(locationStr),
                       ShopTextForm(
-                        onChanged: (value) {
-                          sellingPetProvider.ownerLocation = value;
-                        },
+                        controller: sellingPetProvider.ownerLocationController,
+                        // onChanged: (value) {
+                        //   sellingPetProvider.ownerLocation = value;
+                        // },
                       ),
                       if (widget.choice == 'Sale')
                         Column(
@@ -144,9 +175,10 @@ class _DonateOrSaleState extends State<DonateOrSale> {
                             const SizedBox(height: 20),
                             const Text('Pet Price'),
                             ShopTextForm(
-                              onChanged: (value) {
-                                sellingPetProvider.petPrice = value;
-                              },
+                              controller: sellingPetProvider.petPriceController,
+                              // onChanged: (value) {
+                              //   sellingPetProvider.petPrice = value;
+                              // },
                             ),
                           ],
                         ),
@@ -166,7 +198,9 @@ class _DonateOrSaleState extends State<DonateOrSale> {
                                   MaterialPageRoute(
                                     builder: (context) =>
                                         DonateOrSaleConfirmation(
-                                            choice: 'Sale'),
+                                            choice: 'Sale',
+                                             adopt: sellingPetProvider.sellingPetList.first,
+                                            ),
                                   ),
                                 );
                               } else if (widget.choice == 'Donate') {
@@ -176,6 +210,7 @@ class _DonateOrSaleState extends State<DonateOrSale> {
                                   MaterialPageRoute(
                                     builder: (context) =>
                                         DonateOrSaleConfirmation(
+                                           adopt: sellingPetProvider.donatePetList.first,
                                             choice: 'Donate'),
                                   ),
                                 );

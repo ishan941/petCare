@@ -66,15 +66,15 @@ await getFCMToken().then((value)async {
     var json={
 "email":email,
 "password":password,
-"username":"test",
-"role":"user",
-"name":"ishan",
+"username":"beee",
+"role":"auser",
+"name":"bijay",
 "gender":"male",
 "fcmToken":value
 
   };
   print("token $value");
-final response = await dio.post('https://2864-2400-1a00-b060-2cf7-14b4-3214-6947-b33d.ngrok-free.app/api/v1/createUser',data: json);
+final response = await dio.post('https://b715-2400-1a00-b060-2cf7-7cc4-2de7-1594-e8c7.ngrok-free.app/api/v1/createUser',data: json);
   print(response);
 
 });

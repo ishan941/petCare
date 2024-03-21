@@ -13,7 +13,9 @@ class CategoriesProvider extends ChangeNotifier {
   PetCareService petCareService = PetCareImpl();
 
   String? errorMessage;
+  int? id;
   String? categoryImage, categoryName;
+  String? category;
 
   XFile? image;
   String token = "";
@@ -23,12 +25,26 @@ class CategoriesProvider extends ChangeNotifier {
 
   StatusUtil _categoriesUtil = StatusUtil.idle;
   StatusUtil _getCategoriesUtil = StatusUtil.idle;
+  StatusUtil _deleteCategoriesUtil = StatusUtil.idle;
+  StatusUtil _editCategoriesUtil = StatusUtil.idle;
 
   StatusUtil get categoriesUtil => _categoriesUtil;
   StatusUtil get getCategoriesUtil => _getCategoriesUtil;
+  StatusUtil get deleteCategoriesUtil => _deleteCategoriesUtil;
+  StatusUtil get editCategoriesUtil => _editCategoriesUtil;
 
   setCategoriesUtil(StatusUtil statusUtil) {
     _categoriesUtil = statusUtil;
+    notifyListeners();
+  }
+
+  setDeleteCategoryUtil(StatusUtil statusUtil) {
+    _deleteCategoriesUtil = statusUtil;
+    notifyListeners();
+  }
+
+  setEditCategoryUtil(StatusUtil statusUtil) {
+    _editCategoriesUtil = statusUtil;
     notifyListeners();
   }
 
@@ -42,17 +58,45 @@ class CategoriesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  setCategory(String? categoryName) {
+    this.categoryName = categoryName;
+    notifyListeners();
+  }
+
   setImageUrl(String? imageUrl) {
     this.imageUrl = imageUrl;
+    notifyListeners();
   }
+
+  setItd(int? id) {
+    this.id = id;
+    notifyListeners();
+  }
+
+  void clearImage() {
+    image = null;
+    imageUrl = null;
+    notifyListeners();
+  }
+
+  void clearField() {
+    categoriesNameController.clear();
+    notifyListeners();
+  }
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController categoriesNameController = TextEditingController();
 
   Future<void> saveCategory() async {
     if (_categoriesUtil != StatusUtil.loading) {
       setCategoriesUtil(StatusUtil.loading);
     }
     await uploadImageInFireBase();
-    Categories categories =
-        Categories(categoriesImage: imageUrl, categoriesName: categoryName);
+
+    Categories categories = Categories(
+        categoriesImage: imageUrl,
+        categoriesName: categoriesNameController.text,
+        id: id != null ? id : 0);
     try {
       ApiResponse response =
           await petCareService.categoriesDetails(categories, token);
@@ -90,7 +134,7 @@ class CategoriesProvider extends ChangeNotifier {
   Future<void> getTokenFromSharedPref() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token') ?? "";
-   notifyListeners();
+    notifyListeners();
   }
 
   Future<void> uploadImageInFireBase() async {
@@ -109,6 +153,42 @@ class CategoriesProvider extends ChangeNotifier {
         errorMessage = e.toString();
         setCategoriesUtil(StatusUtil.error);
       }
+    }
+  }
+
+  // Future<void> getCategoriesById(int id) async {
+  //   if (_editCategoriesUtil != StatusUtil.loading) {
+  //     setEditCategoryUtil(StatusUtil.loading);
+  //   }
+
+  //   Categories categories = Categories(
+  //       categoriesImage: imageUrl,
+  //       categoriesName: categoriesNameController.text,
+  //       id: id != null ? id : 0);
+  //   try {
+  //     ApiResponse response = await petCareService.getCategoriesById(categories, id, token);
+  //     if (response.statusUtil == StatusUtil.success) {
+  //       setEditCategoryUtil(StatusUtil.success);
+  //     }
+  //   } catch (e) {
+  //     errorMessage = e.toString();
+  //     setEditCategoryUtil(StatusUtil.error);
+  //   }
+  // }
+
+  Future<void> deleteCategory(int id) async {
+    if (_deleteCategoriesUtil != StatusUtil.loading) {
+      setDeleteCategoryUtil(StatusUtil.loading);
+    }
+    try {
+      ApiResponse response = await petCareService.deleteCategoryById(id, token);
+      if (response.statusUtil == StatusUtil.success) {
+        setDeleteCategoryUtil(StatusUtil.success);
+        getCategoriesData();
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+      setDeleteCategoryUtil(StatusUtil.error);
     }
   }
 }

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:project_petcare/core/statusutil.dart';
@@ -36,12 +35,24 @@ class _DonateOrSaleConfirmationState extends State<DonateOrSaleConfirmation> {
   @override
   void initState() {
   gettoken();
+
     super.initState();
   }
   gettoken(){
-    var provider = Provider.of<SellingPetProvider>(context, listen: false);
-    provider.getTokenFromSharedPref();
+    var sellingPetProvider = Provider.of<SellingPetProvider>(context, listen: false);
+    sellingPetProvider.getTokenFromSharedPref();
+    if (widget.adopt != null) {
+      sellingPetProvider.petNameController.text = widget.adopt!.petName!;
+      sellingPetProvider.petAgeController.text = widget.adopt!.petAge!;
+      sellingPetProvider.setImageUrl(widget.adopt!.imageUrl);
+      sellingPetProvider.setId(widget.adopt!.id!);
+      // sellingPetProvider.setPetGender(widget.adopt!.gender ?? "");
+      // sellingPetProvider.set(widget.adopt!.petBreed ?? "");
+
+    }
   }
+ 
+    
 
   @override
   Widget build(BuildContext context, ) {
@@ -86,7 +97,7 @@ class _DonateOrSaleConfirmationState extends State<DonateOrSaleConfirmation> {
                   const SizedBox(
                     width: 20,
                   ),
-                  const Column(
+                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text("Your Details"),
@@ -94,6 +105,10 @@ class _DonateOrSaleConfirmationState extends State<DonateOrSaleConfirmation> {
                         height: 5,
                       ),
                       Text("Next Step: Confirmation"),
+                      Text(sellingPetProvider.petAgeController.text),
+                      Text(sellingPetProvider.petNameController.text),
+                      Text(sellingPetProvider.petWeightController.text),
+                      Text(sellingPetProvider.petPriceController.text ?? ""),
                     ],
                   ),
                 ]),
@@ -130,6 +145,7 @@ class _DonateOrSaleConfirmationState extends State<DonateOrSaleConfirmation> {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => BottomNavBar()),
           (Route<dynamic> route) => false);
+          sellingPetProvider.clearData();
       //  adoptProvider.formKey!.currentState!.reset();
     } else {
       Helper.snackBar(sellingPetProvider.errorMessage!, context);
@@ -142,6 +158,7 @@ class _DonateOrSaleConfirmationState extends State<DonateOrSaleConfirmation> {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => BottomNavBar()),
           (Route<dynamic> route) => false);
+          sellingPetProvider.clearData();
       //  adoptProvider.formKey!.currentState!.reset();
     } else {
       Helper.snackBar(sellingPetProvider.errorMessage!, context);

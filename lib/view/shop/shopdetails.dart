@@ -4,8 +4,6 @@ import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/provider/donateprovider.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
-import 'package:project_petcare/view/shop/mycart.dart';
-import 'package:project_petcare/view/shop/shopBuyNow.dart';
 import 'package:project_petcare/view/shop/shopall.dart';
 import 'package:provider/provider.dart';
 
@@ -142,21 +140,28 @@ class _ShopDetailsState extends State<ShopDetails> {
                                         height: 10,
                                       ),
                                       Text(
+                                        widget.shop!.condition!,
+                                        style: subTitleText,
+                                      ),
+                                      Text(
                                         widget.shop!.description!,
                                         style: titleText,
+                                        maxLines: 10,
+                                        overflow: TextOverflow.clip,
                                       ),
-                                      SizedBox(
-                                        height: 20,
-                                      )
                                     ],
                                   ),
                                 ),
                               ),
+                              SizedBox(
+                                height: 100,
+                              )
                             ],
                           ),
                         ),
                       ),
                     ),
+                    // SizedBox(height: 100),
                   ],
                 ),
                 InkWell(
@@ -334,43 +339,28 @@ class _ShopDetailsState extends State<ShopDetails> {
         return AlertDialog(
           title: Text(
             "Do you want to buy " + widget.shop!.product!,
-            maxLines: 1,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
           content: Text(
             "Choose a payment Method",
           ),
           actions: [
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        "assets/images/esewa.png",
-                        height: 40,
-                        width: 70
-                      ),
-                      SizedBox(width: 10,),
-                       Image.asset(
-                            "assets/images/khalti.png",
-                            height: 40,
-                            width: 70
-                          ),
-                     
-
-                      
-                    ],
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text("Cancel"),
-                ),
-              ],
+            Center(
+              child: InkWell(
+                onTap: () {
+                  Helper().pay(
+                      context, int.parse(widget.shop!.price!), shopProvider);
+                },
+                child: Image.asset("assets/images/khalti.png",
+                    height: 40, width: 70),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
             ),
           ],
         );

@@ -17,6 +17,7 @@ class OurServiceProvider extends ChangeNotifier {
   SignUpProvider signUpProvider = SignUpProvider();
   PetCareProvider petCareProvider = PetCareProvider();
   String token = "";
+  int? id;
 
   String? errorMessage;
   String? service;
@@ -33,7 +34,8 @@ class OurServiceProvider extends ChangeNotifier {
   List<OurService> dashServiceList = [];
   List<OurService> dashApiServiceList = [];
   List<OurService> professionDataList = [];
-  List<OurService> ourServiceDtoList = [];
+  List<OurServiceDto> ourServiceDtoList = [];
+
   List<OurService> _filteredProfessionData = [];
   List<OurService> get filteredProfessionData => _filteredProfessionData;
 
@@ -42,6 +44,9 @@ class OurServiceProvider extends ChangeNotifier {
   //       .where((data) => data.profession == chosenProfession)
   //       .toList();
   // }
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController serviceController = TextEditingController();
 
   Future<void> getTokenFromSharedPref() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -56,6 +61,8 @@ class OurServiceProvider extends ChangeNotifier {
   StatusUtil _professionUtil = StatusUtil.idle;
   StatusUtil _getProfessionUtil = StatusUtil.idle;
   StatusUtil _verificationUtil = StatusUtil.idle;
+  StatusUtil _getOurServiceDtoUtil = StatusUtil.idle;
+  StatusUtil _deleteOurServiceUtil = StatusUtil.idle;
 
   StatusUtil get dashServiceUtil => _dashServiceUtil;
   StatusUtil get ourServiceDtoUtil => _ourServiceDtoUtil;
@@ -64,6 +71,8 @@ class OurServiceProvider extends ChangeNotifier {
   StatusUtil get professionUtil => _professionUtil;
   StatusUtil get getProfessionUtil => _getProfessionUtil;
   StatusUtil get verificationUtil => _verificationUtil;
+  StatusUtil get getOurServiceUtil => _getOurServiceDtoUtil;
+  StatusUtil get deleteOurServiceUtil => _deleteOurServiceUtil;
 
   setFilteredProfessionData(List<OurService> filteredData) {
     _filteredProfessionData = filteredData;
@@ -84,6 +93,7 @@ class OurServiceProvider extends ChangeNotifier {
     _dashServiceUtil = statusUtil;
     notifyListeners();
   }
+
   setOurServiceDto(StatusUtil statusUtil) {
     _ourServiceDtoUtil = statusUtil;
     notifyListeners();
@@ -101,6 +111,16 @@ class OurServiceProvider extends ChangeNotifier {
 
   setGetProfessionUtil(StatusUtil statusUtil) {
     _getProfessionUtil = statusUtil;
+    notifyListeners();
+  }
+
+  setGetOurServiceDtoUtil(StatusUtil statusUtil) {
+    _getOurServiceDtoUtil = statusUtil;
+    notifyListeners();
+  }
+
+  setDeleteOurService(StatusUtil statusUtil) {
+    _deleteOurServiceUtil = statusUtil;
     notifyListeners();
   }
 
@@ -156,7 +176,7 @@ class OurServiceProvider extends ChangeNotifier {
     OurService ourService = OurService(
       cpImage: cpimageUrl,
       ppImage: ppimageUrl,
-      service: service,
+      service: serviceController.text,
     );
     try {
       ApiResponse response =
@@ -172,6 +192,7 @@ class OurServiceProvider extends ChangeNotifier {
       setDashServiceUtil(StatusUtil.error);
     }
   }
+
   Future<void> saveOurServiceDto() async {
     if (_professionUtil != StatusUtil.loading) {
       setOurServiceDto(StatusUtil.loading);
@@ -180,12 +201,12 @@ class OurServiceProvider extends ChangeNotifier {
     try {
       await uploadProfilePictureInFireBase();
       OurServiceDto ourServiceDto = OurServiceDto(
-        profession: profession,
+        // profession: profession,
         fullName: userName,
         email: email,
         phone: phone,
         location: loaction,
-        profilePicture: profilePictureUrl,
+        image: profilePictureUrl,
         description: description,
       );
 
@@ -221,6 +242,43 @@ class OurServiceProvider extends ChangeNotifier {
     } catch (e) {
       errorMessage = "$e";
       setGetDashServiceUtil(StatusUtil.error);
+    }
+  }
+
+  Future<void> getOurServiceDto() async {
+    if (_ourServiceDtoUtil != StatusUtil.loading) {
+      setGetOurServiceDtoUtil(StatusUtil.loading);
+    }
+    try {
+      ApiResponse response = await petCareService.getOurServiceDto(token);
+      if (response.statusUtil == StatusUtil.success) {
+        ourServiceDtoList = OurServiceDto.listFromJson(response.data['data']);
+        setGetOurServiceDtoUtil(StatusUtil.success);
+      } else if (response.statusUtil == StatusUtil.error) {
+        errorMessage = response.errorMessage;
+        setGetOurServiceDtoUtil(StatusUtil.error);
+      }
+    } catch (e) {
+      errorMessage = "$e";
+      setGetOurServiceDtoUtil(StatusUtil.error);
+    }
+  }
+
+  Future<void> deletOurService(int id) async {
+    if (_deleteOurServiceUtil == StatusUtil.loading) {
+      setDeleteOurService(StatusUtil.loading);
+    }
+    try {
+      ApiResponse response =
+          await petCareService.deleteOurServiceById(id, token);
+      if (response.statusUtil == StatusUtil.success) {
+        setDeleteOurService(StatusUtil.success);
+        getDashService();
+      } else
+        setDeleteOurService(StatusUtil.error);
+    } catch (e) {
+      errorMessage = e.toString();
+      setDeleteOurService(StatusUtil.error);
     }
   }
 
