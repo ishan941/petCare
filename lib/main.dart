@@ -13,6 +13,7 @@ import 'package:project_petcare/provider/donateprovider.dart';
 import 'package:project_petcare/provider/feedprovider.dart';
 import 'package:project_petcare/provider/mypet_provider.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
+import 'package:project_petcare/provider/payment_provider.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/sellpetprovider.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
@@ -123,7 +124,8 @@ class _MyAppState extends State<MyApp> {
             ChangeNotifierProvider(create: (context) => MyPetProvider()),
             ChangeNotifierProvider(create: (context) => FeedProvider()),
             ChangeNotifierProvider(create: (context) => SellingPetProvider()),
-            ChangeNotifierProvider(create: (context) => AdsProvider())
+            ChangeNotifierProvider(create: (context) => AdsProvider()),
+            ChangeNotifierProvider(create: (context)=> PaymentProvider())
           ],
           child: MaterialApp(
 
@@ -142,9 +144,9 @@ class _MyAppState extends State<MyApp> {
                 },
               ),
             ),
-            home: SplashScreen(),
+            // home: SplashScreen(),
             // home: LoginPage(),
-            // home: BottomNavBar(),
+            home: BottomNavBar(),
             // home: MyProfile(),
           ),
         ),

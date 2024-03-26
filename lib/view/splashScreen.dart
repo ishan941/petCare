@@ -51,33 +51,38 @@ class _SplashScreenState extends State<SplashScreen>
     });
   }
 
-  readValue() async {
+   readValue() async {
     var signUpProvider = Provider.of<SignUpProvider>(context, listen: false);
-    // bool isLogin = await signUpProvider.readValueFromSharedPreference();
-    await signUpProvider.readValueFromSharedPreference();
-    // String token = await signUpProvider.readValueFromSharedPreference();
-    // bool isGoogleIn =
-      //  bool isLogin = await signUpProvider.readValueFromSharedPreference();
-    Future.delayed(Duration(seconds: 2), ()async {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => signUpProvider.isUserLoggedIn? BottomNavBar() :LoginPage()),
-            (route) => false);
-           await signUpProvider.SaveValueToSharedPreference();
-      // if (isLogin || isGoogleIn) {
-      //   Navigator.pushAndRemoveUntil(
-      //       context,
-      //       MaterialPageRoute(builder: (context) => BottomNavBar()),
-      //       (route) => false);
-      // } 
-      // else {
-      //   Navigator.pushAndRemoveUntil(
-      //       context,
-      //       MaterialPageRoute(builder: (context) => LoginPage()),
-      //       (route) => false);
-      // }
-    });
+    try {
+      await signUpProvider.readValueFromSharedPreference();
+
+      // Wait for 2 seconds before navigating to enhance user experience
+      await Future.delayed(Duration(seconds: 2));
+
+      if (signUpProvider.isUserLoggedIn) {
+        // If the user is logged in, navigate to the home screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => BottomNavBar()),
+        );
+      } else {
+        // If the user is not logged in, navigate to the login page
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LoginPage()),
+        );
+      }
+
+      // Ensure that the user's login status is saved after navigation
+      await signUpProvider.SaveValueToSharedPreference(true);
+    } catch (e) {
+      // Handle any errors gracefully
+      print("Error: $e");
+      // You might want to display an error message to the user
+    }
+    // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> LoginPage()), (route) => false);
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +93,7 @@ class _SplashScreenState extends State<SplashScreen>
             scale: _scaleAnimation,
             child: FadeTransition(
               opacity: _fadeAnimation,
-              child: Expanded(
+              child: Flexible(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

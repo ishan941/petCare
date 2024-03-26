@@ -30,10 +30,12 @@ class SignUpProvider extends ChangeNotifier {
   StatusUtil _signUpUtil = StatusUtil.idle,
       _loginUtil = StatusUtil.idle,
       _userDetailsStatus = StatusUtil.idle;
+  StatusUtil _verifyEmailUtil = StatusUtil.idle;
 
   StatusUtil get signUpUtil => _signUpUtil;
   StatusUtil get loginUtil => _loginUtil;
   StatusUtil get userDetailsStatus => _userDetailsStatus;
+  StatusUtil get verifyEmailUtil => _verifyEmailUtil;
 
   setSignUpUtil(StatusUtil statusUtil) {
     _signUpUtil = statusUtil;
@@ -47,6 +49,11 @@ class SignUpProvider extends ChangeNotifier {
 
   setUserDetailsStatus(StatusUtil statusUtil) {
     _userDetailsStatus = statusUtil;
+    notifyListeners();
+  }
+
+  setVeryfyEmailUtil(StatusUtil statusUtil) {
+    _verifyEmailUtil = statusUtil;
     notifyListeners();
   }
 
@@ -81,8 +88,7 @@ class SignUpProvider extends ChangeNotifier {
       if (response.statusUtil == StatusUtil.success) {
         token = response.data['token'];
 
-        SaveValueToSharedPreference();
-        saveUserToSharedPreferences();
+        SaveValueToSharedPreference(true);
 
         setLoginUtil(StatusUtil.success);
         notifyListeners();
@@ -95,13 +101,37 @@ class SignUpProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> SaveValueToSharedPreference() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool("isUserLoggedIn", true);
-    await prefs.setBool("isGoogleLoggedIn", true);
-    await prefs.setString("token", token);
-    notifyListeners();
+  Future<void> sendVerificationByEmail() async {
+    if (_verifyEmailUtil != StatusUtil.loading) {
+      setVeryfyEmailUtil(StatusUtil.loading);
+    }
+    SignUp signUp = SignUp(email: email, phone: phone
+    );
+
+    try {
+      ApiResponse response = await petCareService.verifyEmail(signUp);
+
+      if (response.statusUtil == StatusUtil.success) {
+        setVeryfyEmailUtil(StatusUtil.success);
+        notifyListeners();
+      } else {
+        setVeryfyEmailUtil(StatusUtil.error);
+      }
+    } catch (e) {
+      errorMessage = "$e";
+      setVeryfyEmailUtil(StatusUtil.error);
+    }
   }
+
+ Future<void> SaveValueToSharedPreference(bool isLoggedIn) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setBool("isUserLoggedIn", isLoggedIn);
+  await prefs.setBool("isGoogleLoggedIn", isLoggedIn); // Adjust this if necessary
+  await prefs.setString("token", isLoggedIn ? token : ""); // Adjust this if necessary
+  notifyListeners();
+}
+
+  
 
   readValueFromSharedPreference() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

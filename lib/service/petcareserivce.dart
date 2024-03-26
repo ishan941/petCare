@@ -7,6 +7,7 @@ import 'package:project_petcare/model/feed.dart';
 import 'package:project_petcare/model/mypet.dart';
 import 'package:project_petcare/model/ourservice.dart';
 import 'package:project_petcare/model/ourservicedto.dart';
+import 'package:project_petcare/model/payment.dart';
 import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/model/signUp.dart';
 import 'package:project_petcare/model/verificationTools.dart';
@@ -50,6 +51,7 @@ abstract class PetCareService {
   Future<ApiResponse> userLogin(SignUp signUp, String token);
   Future<ApiResponse> userLoginDetails(SignUp signUp, String token);
   Future<ApiResponse> saveUserDetails(SignUp signUp, String token);
+  Future<ApiResponse> savePaymentDetails(Payment payment, String token);
   Future<ApiResponse> saveSellingPet(Adopt adopt, String token);
   Future<ApiResponse> saveDashOurService(OurService ourService, String token);
   Future<ApiResponse> saveOurServiceDto(
@@ -57,13 +59,22 @@ abstract class PetCareService {
   Future<ApiResponse> saveDonatePet(Adopt adopt, String token);
   Future<ApiResponse> saveAdsImage(Ads ads, String token);
 
+
+  Future<ApiResponse> verifyEmail(SignUp signUp);
+  Future<ApiResponse> changePasswordByEmail(SignUp signUp);
+
   Future<ApiResponse> getUserName(String token);
   Future<ApiResponse> getUserFullName(String token);
+  Future<ApiResponse> getUserPhone(String token);
   Future<ApiResponse> getUserEmail(String token);
   Future<ApiResponse> getSellingPet(String token);
   Future<ApiResponse> getOurService(String token);
   Future<ApiResponse> getDonatePet(String token);
   Future<ApiResponse> getCategoriesDetails(String token);
+  Future<ApiResponse> getAllCategory(String key ,String token);
+  Future<ApiResponse> getDogCategory(String token);
+  Future<ApiResponse> getCatCategory(String token);
+  Future<ApiResponse> getFishCategory(String token);
   Future<ApiResponse> getAdsImage(String token);
   Future<ApiResponse> getDashService(String token);
   Future<ApiResponse> getOurServiceDto(String token);
@@ -73,6 +84,8 @@ abstract class PetCareService {
       Categories categories, int id, String token);
   Future<ApiResponse> getApprovedDonatedPet(String token);
   Future<ApiResponse> getApprovedSellingPet(String token);
+  Future<ApiResponse> getMyPaymentDetails(String token);
+  Future<ApiResponse> getPaymentDetails(String token);
  
 
   Future<ApiResponse> deleteCategoryById(int id, String token);
@@ -88,4 +101,7 @@ abstract class PetCareService {
 
   Future<ApiResponse> searchSellingPets(String token);
   Future<ApiResponse> searchDonatedPets(String token);
+  
+
+
 }

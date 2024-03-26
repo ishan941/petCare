@@ -44,24 +44,25 @@ class _CategoriesContainState extends State<CategoriesContain> {
   Widget category_Dog() {
     return Column(
       children: [
-        Text(
-          "Dog-specific content",
-        ),
-        DropdownButton<String>(
-          hint: Text("Select a dog breed"),
-          value: selectedDogBreed,
-          onChanged: (value) {
-            setState(() {
-              selectedDogBreed = value!;
-            });
-          },
-          items: dogBreedList.map((breed) {
-            return DropdownMenuItem<String>(
-              value: breed,
-              child: Text(breed),
-            );
-          }).toList(),
-        ),
+        // Text(
+        //   "Dog-specific content",
+        // ),
+        // DropdownButton<String>(
+        //   hint: Text("Select a dog breed"),
+        //   value: selectedDogBreed,
+        //   onChanged: (value) {
+        //     setState(() {
+        //       selectedDogBreed = value!;
+        //     });
+        //   },
+        //   items: dogBreedList.map((breed) {
+        //     return DropdownMenuItem<String>(
+        //       value: breed,
+        //       child: Text(breed),
+        //     );
+        //   }).toList(),
+        // ),
+        
       ],
     );
   }

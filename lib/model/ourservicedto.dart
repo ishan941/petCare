@@ -22,7 +22,7 @@ class OurServiceDto {
     fullName = json['fullName'];
     phone = json['phone'];
     email = json['email'];
-    image = json['profilePictureUrl'];
+    image = json['image'];
     description = json['description'];
     location = json['location'];
   }
@@ -34,7 +34,7 @@ class OurServiceDto {
     data['fullName'] = this.fullName;
     data['phone'] = this.phone;
     data['email'] = this.email;
-    data['profilePictureUrl'] = this.image;
+    data['image'] = this.image;
     data['description'] = this.description;
     data['location'] = this.location;
     return data;

@@ -12,7 +12,7 @@ import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/model/ourservice.dart';
 import 'package:project_petcare/model/ourservicedto.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
-import 'package:project_petcare/view/ourservice/profession.dart';
+import 'package:project_petcare/view/ourservice/ourserdto_form.dart';
 import 'package:project_petcare/view/ourservice/serviceDetail.dart';
 import 'package:project_petcare/view/search_here.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +41,7 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
 
   @override
   void initState() {
-    Future.delayed(Duration(milliseconds: 100), () {
+    Future.delayed(Duration.zero, () {
       getValue();
       SchedulerBinding.instance.addPostFrameCallback((_) {});
     });
@@ -55,6 +55,7 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
         Provider.of<OurServiceProvider>(context, listen: false);
     await ourServiceProvider.getTokenFromSharedPref();
     await ourServiceProvider.getOurServiceDto().then((value) {
+      ourServiceProvider.setIsValueDisplayed(false);
       getCurrentLocation(ourServiceProvider);
     });
   }
@@ -157,8 +158,10 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                         child: TabBarView(
                           controller: _tabController,
                           children: [
+                            // popular(ourServiceProvider),
                             popular(ourServiceProvider),
                             nearby(ourServiceProvider),
+                            // nearby(ourServiceProvider),
                             // nearby(ourServiceProvider),
                             // lastVisited(ourServiceProvider),
                           ],
@@ -229,7 +232,7 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                 child: ListView.builder(
                   itemCount: ourServiceProvider.distanceServiceList.length,
                   itemBuilder: (context, index) => ourServiceProvider
-                              .getOurServiceUtil ==
+                              .getOurServiceUtil==
                           StatusUtil.loading
                       ? SimmerEffect.shimmerEffect()
                       : ourServiceProvider.getOurServiceUtil == StatusUtil.error
@@ -426,11 +429,11 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                         const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
                     child: InkWell(
                       onTap: () {
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => ServiceDetails(
-                        //             ourService: filteredList[index])));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ServiceDetails(
+                                    ourServiceDto: ourServiceProvider.ourServiceDtoList[index])));
                       },
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
@@ -483,11 +486,11 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                                         Icon(
                                           Icons.phone_in_talk_outlined,
                                           size: 15,
+                                        ),SizedBox(width: 5,),
+                                        Text(
+                                          ourServiceProvider.ourServiceDtoList[index].phone ?? "",
+                                          style: textStyleSmallSized,
                                         ),
-                                        // Text(
-                                        //   " -  ${filteredList[index].phone!}",
-                                        //   style: textStyleSmallSized,
-                                        // ),
                                       ],
                                     ),
                                     Row(
@@ -496,6 +499,7 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                                           Icons.email_outlined,
                                           size: 15,
                                         ),
+                                        SizedBox(width: 5,),
                                         Text(
                                            ourServiceProvider.ourServiceDtoList[index].email ?? "",
                                             style: textStyleSmallSized),
@@ -524,7 +528,7 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                                           size: 15,
                                           color: Colors.black.withOpacity(0.5),
                                         ),
-                                        // Text(filteredList[index].location ?? "")
+                                        Text(ourServiceProvider.ourServiceDtoList[index].location ?? "")
                                       ],
                                     ),
                                   ],
@@ -544,30 +548,6 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
       ),
     );
   }
-
-  // _searchHere(OurServiceProvider ourServiceProvider) async {
-  //   String query = _searchController.text.toLowerCase();
-  //   try {
-  //     String chosenProfession = widget.ourService!.service!;
-  //     List<OurService> filteredList =
-  //         ourServiceProvider.filterByProfession(chosenProfession);
-  //     ourServiceProvider.setFilteredProfessionData(filteredList);
-  //     await ourServiceProvider.getProfessionData();
-  //     if (ourServiceProvider.getProfessionUtil == StatusUtil.success) {
-  //       List<OurService> professionData = ourServiceProvider.professionDataList;
-  //       List<OurService> searchResult = professionData
-  //           .where((service) =>
-  //               service.fullName!.toLowerCase().contains(query) ||
-  //               service.location!.toString().contains(query))
-  //           .toList();
-  //       ourServiceProvider.setFilteredProfessionData(searchResult);
-  //     } else {
-  //       print("Error: ${ourServiceProvider.errorMessage}");
-  //     }
-  //   } catch (e) {
-  //     print("Exception: $e");
-  //   }
-  // }
 }
 
 class DistanceService {

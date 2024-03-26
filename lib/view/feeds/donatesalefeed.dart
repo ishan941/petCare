@@ -4,7 +4,7 @@ import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/provider/feedprovider.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/sellpetprovider.dart';
-import 'package:project_petcare/view/donate/petsale_1.dart';
+import 'package:project_petcare/view/feeds/petsale_1.dart';
 import 'package:project_petcare/view/feeds/ds_details.dart';
 import 'package:project_petcare/view/search_here.dart';
 import 'package:provider/provider.dart';
@@ -45,6 +45,7 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
 
     await sellingProvider.getSellingPetData();
     await sellingProvider.getDonatePetData();
+    // await sellingProvider.get
   }
 
   List<String> petCategoriesList = ["Dog", "Cat", "Fish"];
@@ -90,8 +91,12 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
                                       ),
                                       Spacer(),
                                       IconButton(
-                                        onPressed: () async{
-                                          Navigator.push(context, MaterialPageRoute(builder: (context)=> SearchHere()));
+                                        onPressed: () async {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SearchHere()));
                                           // await sellingPetProvider.searchSellingPet();
                                         },
                                         icon: Icon(
@@ -198,7 +203,7 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  sellingPetProvider.sellingPetList[index].petName ?? " ",
+                  sellingPetProvider.sellingPetList[index].ownerName ?? " ",
                   style: const TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w500,
@@ -207,7 +212,7 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
                 ),
                 Row(
                   children: [
-                    Icon(Icons.phone),
+                    // Icon(Icons.phone),
                     Text(
                       sellingPetProvider.sellingPetList[index].ownerPhone ??
                           "Phone Number",
@@ -249,6 +254,7 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               height: 250,
@@ -266,8 +272,14 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
               width: 10,
             ),
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              
               children: [
+                
+                Text(
+                  sellingPetProvider.donatePetList[index].ownerName ?? " ",
+                  style: mainTitleText,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 Text(
                   sellingPetProvider.donatePetList[index].petName ?? " ",
                   style: const TextStyle(
@@ -275,16 +287,6 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
                     fontWeight: FontWeight.w500,
                   ),
                   overflow: TextOverflow.ellipsis,
-                ),
-                Row(
-                  children: [
-                    Icon(Icons.phone),
-                    Text(
-                      sellingPetProvider.donatePetList[index].ownerPhone ??
-                          "Phone Number",
-                      style: categoriesTitleText,
-                    )
-                  ],
                 ),
               ],
             ),

@@ -4,7 +4,7 @@ import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/provider/categoryprovider.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
-import 'package:project_petcare/view/shop/shop_sale.dart';
+import 'package:project_petcare/view/shop/post_item.dart';
 import 'package:provider/provider.dart';
 
 class EditShop extends StatefulWidget {

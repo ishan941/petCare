@@ -5,10 +5,8 @@ import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/view/feeds/donatesalefeed.dart';
 import 'package:project_petcare/view/feeds/feed.dart';
 import 'package:project_petcare/view/dashboard/homepage.dart';
-import 'package:project_petcare/view/feeds/feedForm.dart';
 import 'package:project_petcare/view/profile/account.dart';
-import 'package:project_petcare/view/form_collections.dart';
-import 'package:project_petcare/view/shop/shopFavourite.dart';
+
 
 import 'package:project_petcare/view/shop/shopall.dart';
 import 'package:provider/provider.dart';

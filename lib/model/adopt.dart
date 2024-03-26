@@ -44,9 +44,9 @@ class Adopt {
         gender = json['gender'],
         petBreed = json['petBread'],
         imageUrl = json['imageUrl'],
-        ownerPhone = json['phone'],
+        ownerPhone = json['ownerPhone'],
         location = json['location'],
-        ownerName = json['name'],
+        ownerName = json['ownerName'],
         id = json['id'],
         categories = json['categories'],
         petAgeTime = json['petAgeTime'],
@@ -64,9 +64,9 @@ class Adopt {
     data['gender'] = this.gender;
     data['petBread'] = this.petBreed;
     data['imageUrl'] = this.imageUrl;
-    data['phone'] = this.ownerPhone;
+    data['ownerPhone'] = this.ownerPhone;
     data['location'] = this.location;
-    data['name'] = this.ownerName;
+    data['ownerName'] = this.ownerName;
     data['description'] = this.description;
     data['id'] = this.id;
     data['petAgeTime'] = this.petAgeTime;

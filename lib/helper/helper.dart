@@ -8,8 +8,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
+import 'package:project_petcare/provider/payment_provider.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
+import 'package:project_petcare/view/shop/shopall.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -61,10 +65,15 @@ class Helper {
     );
   }
   void onPaymentSuccess(
-      String token, BuildContext context, ShopProvider shopProvider) {
+      String token, BuildContext context, ShopProvider shopProvider) async{
     verify(token);
     displaySnackBar("Payment Successful", context, Icons.check, ColorUtil.primaryColor);
     shopProvider.setPaymentSuccessfull(true);
+    var paymentProvider = Provider.of<PaymentProvider>(context, listen: false);
+    await paymentProvider.savePaymentDetails();
+    // if(paymentProvider.savePaymentUtil == StatusUtil.success){
+    //   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> ShopAll()), (route) => false);
+    // }
   }
 
   void onPaymentFailure(BuildContext context) {

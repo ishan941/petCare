@@ -70,33 +70,47 @@ class _EditShopState extends State<DonatedApprove> {
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(12),
                                         child: Container(
-                                            // height: 180,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                .2,
-                                            child: Column(
-                                              children: [
-                                                Image.network(sellingPetProvider
-                                                        .approvalDonatePetList[index]
-                                                        .imageUrl ??
-                                                    " "),
-                                                Text(sellingPetProvider
-                                                        .approvalDonatePetList[index]
-                                                        .petName ??
-                                                    ""),
-                                                Text(sellingPetProvider
-                                                        .approvalDonatePetList[index]
-                                                        .petAge ??
-                                                    ""),
-                                                Text(sellingPetProvider
-                                                        .approvalDonatePetList[index]
-                                                        .petWeight ??
-                                                    ""),
-                                              ],
-                                            )),
+                                          // height: 180,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              .2,
+                                          child: Column(
+                                            children: [
+                                              Image.network(sellingPetProvider
+                                                      .approvalDonatePetList[
+                                                          index]
+                                                      .imageUrl ??
+                                                  " "),
+                                            ],
+                                          ),
+                                        ),
                                       ),
                                     ),
+                                    Column(
+                                      children: [
+                                        Text(sellingPetProvider
+                                                .approvalDonatePetList[index]
+                                                .petName ??
+                                            ""),
+                                        Text(sellingPetProvider
+                                                .approvalDonatePetList[index]
+                                                .ownerName ??
+                                            ""),
+                                        Text(sellingPetProvider
+                                                .approvalDonatePetList[index]
+                                                .ownerPhone ??
+                                            ""),
+                                        Text(sellingPetProvider
+                                                .approvalDonatePetList[index]
+                                                .petAge ??
+                                            ""),
+                                        Text(sellingPetProvider
+                                                .approvalDonatePetList[index]
+                                                .petWeight ??
+                                            ""),
+                                      ],
+                                    )
                                   ],
                                 ),
                               ),
@@ -110,18 +124,26 @@ class _EditShopState extends State<DonatedApprove> {
                                 onPressed: () async {
                                   // await sellingPetProvider.setIsAccepted(true);
 
-                                  await sellingPetProvider.approveDonate(sellingPetProvider.approvalDonatePetList[index].id!);
-                                  if(sellingPetProvider.approveDonatedPetUtil == StatusUtil.success){
-                                    Helper.snackBar("SuccessFully Approved", context);
-                                   
-                                  }else if(sellingPetProvider.approveDonatedPetUtil == StatusUtil.error){
+                                  await sellingPetProvider.approveDonate(
+                                      sellingPetProvider
+                                          .approvalDonatePetList[index].id!);
+                                  if (sellingPetProvider
+                                          .approveDonatedPetUtil ==
+                                      StatusUtil.success) {
+                                    Helper.snackBar(
+                                        "SuccessFully Approved", context);
+                                  } else if (sellingPetProvider
+                                          .approveDonatedPetUtil ==
+                                      StatusUtil.error) {
                                     Helper.snackBar("Failed", context);
                                   }
                                 },
                                 child: Text("Approve")),
                             ElevatedButton(
                                 onPressed: () async {
-                                  await sellingPetProvider.declineDonate(sellingPetProvider.approvalDonatePetList[index].id!);
+                                  await sellingPetProvider.declineDonate(
+                                      sellingPetProvider
+                                          .approvalDonatePetList[index].id!);
                                 },
                                 child: Text("Decline"))
                           ],

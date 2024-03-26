@@ -14,6 +14,7 @@ import 'package:project_petcare/model/feed.dart';
 import 'package:project_petcare/model/mypet.dart';
 import 'package:project_petcare/model/ourservice.dart';
 import 'package:project_petcare/model/ourservicedto.dart';
+import 'package:project_petcare/model/payment.dart';
 import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/model/signUp.dart';
 import 'package:project_petcare/model/verificationTools.dart';
@@ -732,11 +733,32 @@ class PetCareImpl extends PetCareService {
         await api.post(BASEURL + saveUserUrl, signUp.toJson(), token: token);
     return response;
   }
+  @override
+  Future<ApiResponse> verifyEmail(SignUp signUp)async {
+     ApiResponse response =
+        await api.post(BASEURL + verifyEmailApi, signUp.toJson());
+    return response;
+  }
+  @override
+  Future<ApiResponse> changePasswordByEmail(SignUp signUp)async {
+     ApiResponse response =
+        await api.post(BASEURL + newpasswordApi, signUp.toJson());
+    return response;
+  }
+  
+  
 
   @override
   Future<ApiResponse> saveSellingPet(Adopt adopt, String token) async {
     ApiResponse response = await api
         .post(BASEURL + saveSellingPetUrl, adopt.toJson(), token: token);
+    return response;
+  }
+
+  @override
+  Future<ApiResponse> savePaymentDetails(Payment payment, String token) async {
+    ApiResponse response = await api
+        .post(BASEURL + savePaymentDetailsApi, payment.toJson(), token: token);
     return response;
   }
 
@@ -792,6 +814,18 @@ class PetCareImpl extends PetCareService {
         await api.get(BASEURL + getApproveSellingListUrl, token: token);
     return response;
   }
+    @override
+  Future<ApiResponse> getMyPaymentDetails(String token) async{
+     ApiResponse response =
+        await api.get(BASEURL + getMyPaymentsApi, token: token);
+    return response;
+  }
+    @override
+  Future<ApiResponse> getPaymentDetails(String token) async{
+     ApiResponse response =
+        await api.get(BASEURL + getPaymentsDetailsApi, token: token);
+    return response;
+  }
  
 
   @override
@@ -829,6 +863,12 @@ class PetCareImpl extends PetCareService {
   Future<ApiResponse> getUserEmail(String token) async {
     ApiResponse response =
         await api.get(BASEURL + getUserEmailUrl, token: token);
+    return response;
+  }
+  @override
+  Future<ApiResponse> getUserPhone(String token) async {
+    ApiResponse response =
+        await api.get(BASEURL + getUserPhoneApi, token: token);
     return response;
   }
 
@@ -905,7 +945,24 @@ class PetCareImpl extends PetCareService {
         await api.post(BASEURL + getCategoryByIdUrl,categories.toJson(), token: token, );
     return response;
   }
-
+@override
+  Future<ApiResponse> getDogCategory(String token)async {
+    ApiResponse response = await api.get(BASEURL + getAllCategoryApi + "Dog", token: token);
+    return response;
+   
+  }
+@override
+  Future<ApiResponse> getCatCategory(String token)async {
+    ApiResponse response = await api.get(BASEURL + getAllCategoryApi + "Cat", token: token);
+    return response;
+   
+  }
+@override
+  Future<ApiResponse> getFishCategory(String token)async {
+    ApiResponse response = await api.get(BASEURL + getAllCategoryApi + "Fish", token: token);
+    return response;
+   
+  }
 
  
 
@@ -946,16 +1003,16 @@ class PetCareImpl extends PetCareService {
 //           statusUtil: StatusUtil.error, errorMessage: e.toString());
 //     }
 //   }
- @override
-  Future<ApiResponse> searchDonationPets(  String token) async {
-    ApiResponse response =
-        await api.get(BASEURL + searchDonationPetsApi, token: token);
-    return response;
-  }
   @override
   Future<ApiResponse> searchSellingPets(  String token) async {
     ApiResponse response =
         await api.get(BASEURL + searchSellingPetsApi, token: token);
+    return response;
+  }
+  @override
+  Future<ApiResponse> searchDonatedPets(String token) async{
+    ApiResponse response =
+        await api.get(BASEURL + searchDonationPetsApi, token: token, );
     return response;
   }
 
@@ -999,6 +1056,16 @@ class PetCareImpl extends PetCareService {
         await api.delete(BASEURL + deleteSellingPetUrl + id.toString(), token: token);
     return response;
   }
+  
+  @override
+  Future<ApiResponse> getAllCategory(String key, String token) {
+    // TODO: implement getAllCategory
+    throw UnimplementedError();
+  }
+  
+  
+  
+  
   
  
   

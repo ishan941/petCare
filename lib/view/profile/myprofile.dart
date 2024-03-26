@@ -31,6 +31,7 @@ class _MyProfileState extends State<MyProfile> {
   void initState() {
     Future.delayed(Duration.zero, () {
       // getMyPetData();
+      getData();
       getMyPet();
     });
     super.initState();
@@ -39,7 +40,6 @@ class _MyProfileState extends State<MyProfile> {
   getMyPetData() async {
     var myPetProvider = Provider.of<MyPetProvider>(context, listen: false);
     await myPetProvider.getMyPetDetailsFromFireBase();
-    // await myPetProvider.getPetData();
   }
 
   getMyPet() async {
@@ -47,7 +47,13 @@ class _MyProfileState extends State<MyProfile> {
         Provider.of<SellingPetProvider>(context, listen: false);
     await sellingPetProvider.getTokenFromSharedPref();
     await sellingPetProvider.getMyPet();
-    // await myPetProvider.getPetData();
+  }
+
+  getData() async {
+    var petCareProvider = Provider.of<PetCareProvider>(context, listen: false);
+    petCareProvider.getTokenFromSharedPref();
+    await petCareProvider.getUserFullName();
+    await petCareProvider.getUserEmail();
   }
 
   @override
@@ -82,9 +88,9 @@ class _MyProfileState extends State<MyProfile> {
                           pinned: true,
                           centerTitle: true,
                           flexibleSpace: FlexibleSpaceBar(
-                            centerTitle: true,
+                            centerTitle: false,
                             title: Text(
-                              signUpProvider.userName,
+                              'My Profile',
                               style: TextStyle(color: ColorUtil.primaryColor),
                             ),
                             background: Stack(
@@ -207,14 +213,16 @@ class _MyProfileState extends State<MyProfile> {
                   width: 10,
                 ),
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(signUpProvider.fullName,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: textStyleSmallSized),
-                    Text(signUpProvider.userEmail, style: textStyleMini)
+                    // Text("My Profile"),
+                    Text(
+                      petCareProvider.userFullName ?? "User",
+                      style: mainTitleText,
+                    ),
+                    Text(petCareProvider.userEmail ?? " No email found"),
+                
                   ],
                 ),
               ],

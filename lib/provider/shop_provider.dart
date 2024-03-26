@@ -158,8 +158,10 @@ class ShopProvider extends ChangeNotifier {
       notifyListeners();
       favoriteToJson =
           jsonEncode(favouriteList.map((e) => e.toJson()).toList());
+        
     } else {
       favouriteList.add(shop);
+      notifyListeners();
       favoriteToJson =
           jsonEncode(favouriteList.map((e) => e.toJson()).toList());
     }

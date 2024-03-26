@@ -4,7 +4,7 @@ import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/provider/feedprovider.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/sellpetprovider.dart';
-import 'package:project_petcare/view/donate/petsale_1.dart';
+import 'package:project_petcare/view/feeds/petsale_1.dart';
 import 'package:provider/provider.dart';
 
 class NewsFeed extends StatefulWidget {

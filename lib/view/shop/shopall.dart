@@ -254,4 +254,5 @@ class _ShopAllState extends State<ShopAll> {
       ),
     );
   }
+  
 }

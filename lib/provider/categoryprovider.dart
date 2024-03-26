@@ -123,7 +123,7 @@ class CategoriesProvider extends ChangeNotifier {
         setGetCategoriesUtil(StatusUtil.success);
       } else {
         errorMessage = response.errorMessage;
-        setCategoriesUtil(StatusUtil.error);
+        setGetCategoriesUtil(StatusUtil.error);
       }
     } catch (e) {
       errorMessage = e.toString();

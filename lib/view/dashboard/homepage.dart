@@ -3,6 +3,7 @@ import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:project_petcare/core/smooth_scrollable.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/constSearch.dart';
+import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/simmer.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/string_const.dart';
@@ -68,6 +69,7 @@ class _HomePageState extends State<HomePage> {
 
   getUserName() async {
     var signUpProvider = Provider.of<SignUpProvider>(context, listen: false);
+    await signUpProvider.getTokenFromSharedPref();
     await signUpProvider.readUserFromSharedPreferences();
   }
 
@@ -124,7 +126,7 @@ class _HomePageState extends State<HomePage> {
               controller: _scrollController,
               slivers: [
                 SliverAppBar(
-                  backgroundColor:  ColorUtil.primaryColor,
+                  backgroundColor: ColorUtil.primaryColor,
                   expandedHeight: 130,
                   pinned: true,
                   elevation: 0,
@@ -147,12 +149,6 @@ class _HomePageState extends State<HomePage> {
                                 "Pet Care",
                                 style: TextStyle(fontSize: 25),
                               )
-                              // Text(
-                              //     "Hello ${Provider.of<SignUpProvider>(context).userName}"),
-                              // Text(
-                              //   Provider.of<PetCareProvider>(context).greeting,
-                              //   style: TextStyle(fontSize: 12),
-                              // ),
                             ],
                           ),
                         ],
@@ -168,8 +164,10 @@ class _HomePageState extends State<HomePage> {
                   delegate: SliverChildListDelegate(
                     [
                       Consumer<OurServiceProvider>(
-                        builder: (context, ourServiceProvider, child) => ui(),
-                      ),
+                          builder: (context, ourServiceProvider, child) =>
+                              Stack(
+                                children: [ui(), loader(ourServiceProvider)],
+                              )),
                     ],
                   ),
                 ),
@@ -179,6 +177,14 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  Widget loader(OurServiceProvider ourServiceProvider) {
+    return ourServiceProvider.getDashServiceUtil == StatusUtil.loading
+        ? Center(
+            child: Helper.backdropFilter(context), // Loading indicator
+          )
+        : SizedBox();
   }
 
   Widget ui() {
@@ -201,71 +207,72 @@ class _HomePageState extends State<HomePage> {
                           Consumer<AdoptProvider>(
                         builder: (context, adoptProvider, child) => Column(
                           children: [
-                            Column(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(20),
-                                      topRight: Radius.circular(20)),
-                                  child: Container(
-                                    color: Color(0XFFE5E8FF),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const SizedBox(
-                                            height: 15,
-                                          ),
-                                          categoriesProvider
-                                                      .categoriesList.isEmpty &&
-                                                  adsProvider
-                                                      .adsImageList.isEmpty &&
-                                                  ourServiceProvider
-                                                      .dashApiServiceList
-                                                      .isEmpty
-                                              ? Column(
-                                                  children: [
-                                                    Image.asset(
-                                                        "assets/images/sadpet.webp"),
-                                                    Text(
-                                                        'No data availabele at the moment...')
-                                                  ],
-                                                )
-                                              : Column(
-                                                  children: [
-                                                    categories(
-                                                        categoriesProvider),
-                                                    ads(adsProvider),
-                                                    // ourservice(context),
-                                                    _ourservice(context,
-                                                        ourServiceProvider),
-                                                    SizedBox(
-                                                      height: 300,
-                                                    )
-                                                  ],
-                                                ),
-                                          categoriesProvider
-                                                      .categoriesList.isEmpty ||
-                                                  adsProvider
-                                                      .adsImageList.isEmpty
-                                              ? SizedBox(
-                                                  height: 350,
-                                                  child: Center(
-                                                      child: Text(
-                                                          "No data Available")),
-                                                )
-                                              : SizedBox(
-                                                  height: 10,
-                                                )
-                                        ],
+                            ClipRRect(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20)),
+                              child: Container(
+                                color: ColorUtil.BackGroundColorColor,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(
+                                        height: 15,
                                       ),
-                                    ),
+                                      categoriesProvider
+                                                  .categoriesList.isEmpty &&
+                                              adsProvider
+                                                  .adsImageList.isEmpty &&
+                                              ourServiceProvider
+                                                  .dashApiServiceList.isEmpty
+                                          ? Column(
+                                              children: [
+                                                Center(
+                                                  child: Text(
+                                                      'No data availabele at the moment...'),
+                                                ),
+                                                Text("Loading")
+                                              ],
+                                            )
+                                          : Column(
+                                              children: [
+                                                categories(categoriesProvider),
+                                                // ads(adsProvider),
+                                                // ourservice(context),
+                                                // Image.asset(assets/images/streetpets.png),
+                                                Container(
+                                                  child: Image.asset(
+                                                      "assets/images/streetpets.png"),
+                                                ),
+                                                _ourservice(context,
+                                                    ourServiceProvider),
+                                                SizedBox(
+                                                  height: 70,
+                                                )
+                                              ],
+                                            ),
+                                      categoriesProvider
+                                                  .categoriesList.isEmpty ||
+                                              adsProvider.adsImageList.isEmpty
+                                          ? SizedBox(
+                                              height: MediaQuery.of(context)
+                                                  .size
+                                                  .height,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                            )
+                                          : SizedBox(
+                                              height: 10,
+                                            )
+                                    ],
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
                           ],
                         ),
@@ -279,248 +286,6 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-  }
-
-  Widget myFavourite(ShopProvider shopProvider) {
-    return shopProvider.getshopIemsUtil == StatusUtil.loading
-        ? SimmerEffect.shimmerEffect()
-        : Container(
-            height: MediaQuery.of(context).size.height * .325,
-            width: MediaQuery.of(context).size.width,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        "My Favourite",
-                        style: subTitleText,
-                      ),
-                      Spacer(),
-                      Text(
-                        "View All",
-                        style: TextStyle(color: ColorUtil.BackGroundColorColor),
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Container(
-                          // color: Colors.red,
-                          child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: shopProvider.favouriteList.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                // int itemIndex = shopProvider.shopItemsList
-                                //     .indexOf(favouriteItems[index]);
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => ShopDetails(
-                                                  shop: shopProvider
-                                                      .favouriteList[index],
-                                                )));
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                      right: 25,
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(12),
-                                      child: Container(
-                                        // height: MediaQuery.of(context).size.height*.2,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .45,
-                                        color: Colors.white,
-                                        child: Stack(
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      .134,
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    child: Image.network(
-                                                      shopProvider
-                                                          .favouriteList[index]
-                                                          .images!,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(10),
-                                                  child: Container(
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            .1191,
-                                                    // color: Colors.red,
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          // " ",
-                                                          shopProvider
-                                                              .favouriteList[
-                                                                  index]
-                                                              .product!,
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: titleText,
-                                                        ),
-                                                        SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                        Text(
-                                                          '',
-                                                          // favouriteItems[index]
-                                                          //     .description!,
-                                                          maxLines: 2,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: textStyleMini,
-                                                        ),
-                                                        Spacer(),
-                                                        Row(
-                                                          children: [
-                                                            Text(
-                                                              "Rs. ${shopProvider.favouriteList[index].price!}",
-                                                              maxLines: 1,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              style: titleText,
-                                                            ),
-                                                            Spacer(),
-                                                            ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5),
-                                                              child: Container(
-                                                                color: ColorUtil
-                                                                    .primaryColor,
-                                                                width: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width *
-                                                                    .06,
-                                                                height: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .height *
-                                                                    .03,
-                                                                child: Icon(
-                                                                  Icons.add,
-                                                                  color: Colors
-                                                                      .white,
-                                                                ),
-                                                              ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Positioned(
-                                              top: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  .3,
-                                              left: 120,
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(100),
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: Colors.black
-                                                              .withOpacity(
-                                                                  0.9), // Shadow color
-                                                          offset: Offset(6,
-                                                              0), // Offset in x and y directions
-                                                          blurRadius:
-                                                              10, // Blur radius
-                                                          spreadRadius: 6,
-                                                        )
-                                                      ]),
-                                                  height: 30,
-                                                  width: 30,
-                                                  child: Align(
-                                                    alignment: Alignment.center,
-                                                    child: Transform.translate(
-                                                      offset: Offset(-5, -5),
-                                                      child: IconButton(
-                                                          onPressed: () async {
-                                                            shopProvider
-                                                                .updateFavouriteList(
-                                                                    shopProvider
-                                                                            .favouriteList[
-                                                                        index]);
-                                                          },
-                                                          icon: Icon(
-                                                              shopProvider.checkFavourite(
-                                                                      shopProvider.favouriteList[
-                                                                          index])
-                                                                  ? Icons
-                                                                      .favorite
-                                                                  : Icons
-                                                                      .favorite_border_rounded,
-                                                              color: shopProvider.checkFavourite(
-                                                                      shopProvider
-                                                                              .favouriteList[
-                                                                          index])
-                                                                  ? Colors.red
-                                                                  : Colors
-                                                                      .white)),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          );
   }
 
   Widget dashHead(SignUpProvider signUpProvider, BuildContext context,
@@ -613,17 +378,17 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Spacer(),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CategoriesExplore()));
-                      },
-                      child: Text(exploreStr,
-                          style: TextStyle(
-                              color: ColorUtil.primaryColor, fontSize: 18)),
-                    ),
+                    // InkWell(
+                    //   onTap: () {
+                    //     Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //             builder: (context) => CategoriesExplore()));
+                    //   },
+                    //   child: Text(exploreStr,
+                    //       style: TextStyle(
+                    //           color: ColorUtil.primaryColor, fontSize: 18)),
+                    // ),
                   ],
                 ),
               ),
@@ -710,227 +475,21 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget ads(AdsProvider adsProvider) {
-    return adsProvider.adsImageList.isEmpty
-        ? Column(
-            children: [
-              Center(
-                child: Column(
-                  children: [
-                    Text("No ads available RightNow"),
-                    Text("Check your internet Connection or try again later")
-                  ],
+    return Container(
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+      height: 200,
+      width: MediaQuery.of(context).size.width,
+      child: ListView.builder(
+          itemCount: adsProvider.adsImageList.length,
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) => Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.network(
+                  adsProvider.adsImageList[index].adsImage ??
+                      "No data available",
+                  fit: BoxFit.cover,
                 ),
-              ),
-            ],
-          )
-        : ExpandableCarousel(
-            options: CarouselOptions(
-              // height: 400.0,
-
-              // aspectRatio: 16 / 9,
-              viewportFraction: 1.0,
-              initialPage: 0,
-              enableInfiniteScroll: true,
-              reverse: false,
-              autoPlay: true,
-              autoPlayInterval: const Duration(seconds: 3),
-              autoPlayAnimationDuration: const Duration(milliseconds: 8000),
-              autoPlayCurve: Curves.decelerate,
-              enlargeCenterPage: false,
-              controller: CarouselController(),
-              pageSnapping: true,
-              // scrollDirection: Axis.horizontal,
-              pauseAutoPlayOnTouch: true,
-              pauseAutoPlayOnManualNavigate: true,
-              pauseAutoPlayInFiniteScroll: false,
-              // enlargeStrategy: CenterPageEnlargeStrategy.scale,
-              disableCenter: false,
-              showIndicator: true,
-              slideIndicator: CircularSlideIndicator(itemSpacing: 20),
-            ),
-            items: [1, 2, 3, 4].map((i) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return Container(
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(12)),
-                    height: 200,
-                    width: MediaQuery.of(context).size.width,
-                    child: ListView.builder(
-                        itemCount: adsProvider.adsImageList.length,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) => Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.network(
-                                adsProvider.adsImageList[index].adsImage ??
-                                    "No data available",
-                                fit: BoxFit.cover,
-                              ),
-                            )),
-                  );
-                },
-              );
-            }).toList(),
-          );
-  }
-
-  Widget adoptdetails(AdoptProvider adoptProvider) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Row(
-            children: [
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    adoptStr,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  // Text("Your favourite pet",style: TextStyle(fontSize: 16),)
-                ],
-              ),
-              Spacer(),
-              InkWell(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => AdoptAll()));
-                  },
-                  child: Text(
-                    seeAllStr,
-                    style:
-                        TextStyle(fontSize: 18, color: ColorUtil.primaryColor),
-                  ))
-            ],
-          ),
-        ),
-        adoptProvider.adoptDetailsList.isEmpty
-            ? Center(child: Text("No Data available for adopt"))
-            : Container(
-                height: 150,
-                // width: double.infinity,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: adoptProvider.adoptDetailsList.length,
-                  itemBuilder: (context, index) => GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AdoptDetails(
-                                    adopt:
-                                        adoptProvider.adoptDetailsList[index],
-                                  )));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                spreadRadius: 0,
-                                blurRadius: 3,
-                                color: Colors.grey.withOpacity(0.5),
-                                offset: Offset(2, 4),
-                              ),
-                            ]),
-                        // height: MediaQuery.of(context).size.height * .18,
-                        // width: MediaQuery.of(context).size.width*0.8,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Container(
-                                  height: MediaQuery.of(context).size.height,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.36,
-                                  child: Image.network(
-                                    adoptProvider
-                                            .adoptDetailsList[index].imageUrl ??
-                                        "",
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width * .4,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      adoptProvider.adoptDetailsList[index]
-                                              .petBreed ??
-                                          "",
-                                      style: const TextStyle(
-                                          overflow: TextOverflow.ellipsis,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      adoptProvider.adoptDetailsList[index]
-                                              .petName ??
-                                          "",
-                                      style: const TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500),
-
-                                      overflow: TextOverflow
-                                          .ellipsis, // Handle overflow gracefully
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          .7,
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.location_on_outlined,
-                                              size: 15,
-                                              color: ColorUtil.primaryColor),
-                                          const SizedBox(
-                                            width: 2,
-                                          ),
-                                          Flexible(
-                                            child: Text(
-                                              adoptProvider
-                                                      .adoptDetailsList[index]
-                                                      .location ??
-                                                  "",
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-      ],
+              )),
     );
   }
 

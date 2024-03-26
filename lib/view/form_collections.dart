@@ -6,10 +6,10 @@ import 'package:project_petcare/view/donate/donate_1.dart';
 import 'package:project_petcare/view/logins/normalloginform.dart';
 import 'package:project_petcare/view/ourservice/apiservicedto.dart';
 import 'package:project_petcare/view/ourservice/ourservicedto.dart';
-import 'package:project_petcare/view/ourservice/profession.dart';
+import 'package:project_petcare/view/ourservice/ourserdto_form.dart';
 import 'package:project_petcare/view/ourservice/dashservice_form.dart';
 import 'package:project_petcare/view/profile/adsform.dart';
-import 'package:project_petcare/view/shop/shop_sale.dart';
+import 'package:project_petcare/view/shop/post_item.dart';
 import 'package:project_petcare/view/test.dart/testPage.dart';
 
 class FormCollection extends StatefulWidget {
@@ -86,9 +86,10 @@ class _UiTestState extends State<FormCollection> {
                     professionServiceForm(context),
                     shopItemForm(context),
                     serviceDash(context),
+                     ourServiceDto(context),
                     adsForm(context),
                     normalForm(context),
-                    ourServiceDto(context)
+                   
                   ],
                 ),
               ],
@@ -370,7 +371,7 @@ class _UiTestState extends State<FormCollection> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text("Normal Form"),
+                      Text("Our ServiceDtio"),
                       Spacer(),
                       Icon(Icons.arrow_forward_rounded)
                     ],

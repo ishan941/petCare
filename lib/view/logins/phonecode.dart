@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/helper.dart';
+import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/view/logins/loginpage.dart';
-import 'package:project_petcare/view/profile/account.dart';
 import 'package:provider/provider.dart';
 
 class PhoneCode extends StatefulWidget {
@@ -25,31 +25,39 @@ class _PhoneCodeState extends State<PhoneCode> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorUtil.BackGroundColorColor,
+      appBar: AppBar(),
       body: Center(
         child: Consumer<SignUpProvider>(
           builder: (context, signUpProvider, child) => Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('We have sent 6 digit code to \n${widget.phoneNumber}'),
+              Text('We have sent 6 digit code to'),
+              Text('${widget.phoneNumber}'),
               SizedBox(
                 height: 20,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: PinCodeTextField(
+                  
                   appContext: context,
                   length: 6,
                   obscureText: false,
                   animationType: AnimationType.fade,
                   pinTheme: PinTheme(
+                    inactiveFillColor: Colors.white,
+                    
+                    activeColor: Colors.white,
                     shape: PinCodeFieldShape.box,
                     borderRadius: BorderRadius.circular(5),
                     fieldHeight: 50,
                     fieldWidth: 40,
                     activeFillColor: Colors.white,
+                    
                   ),
                   animationDuration: Duration(milliseconds: 300),
-                  backgroundColor: Colors.blue.shade50,
+                  
                   enableActiveFill: true,
                   // errorAnimationController: errorController,
                   // controller: textEditingController,

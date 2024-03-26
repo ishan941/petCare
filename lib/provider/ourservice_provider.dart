@@ -17,10 +17,10 @@ class OurServiceProvider extends ChangeNotifier {
   PetCareService petCareService = PetCareImpl();
   SignUpProvider signUpProvider = SignUpProvider();
   PetCareProvider petCareProvider = PetCareProvider();
-  bool isValueDisplayed=false;
+  bool isValueDisplayed = false;
   String token = "";
   int? id;
-  List<DistanceService> distanceServiceList=[];
+  List<DistanceService> distanceServiceList = [];
 
   String? errorMessage;
   String? service;
@@ -48,10 +48,11 @@ class OurServiceProvider extends ChangeNotifier {
   //       .toList();
   // }
 
-void setIsValueDisplayed(bool value){
-  isValueDisplayed=value;
-  notifyListeners();
-}
+  void setIsValueDisplayed(bool value) {
+    isValueDisplayed = value;
+    notifyListeners();
+  }
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController serviceController = TextEditingController();
 
@@ -178,6 +179,9 @@ void setIsValueDisplayed(bool value){
   //   }
   // }
   saveDashOurService() async {
+    if (_dashServiceUtil != StatusUtil.loading) {
+      setDashServiceUtil(StatusUtil.loading);
+    }
     await uploadImageInFireBaseForDashService();
     await uploadImageInFirebaseForPpImage();
     OurService ourService = OurService(
@@ -199,7 +203,8 @@ void setIsValueDisplayed(bool value){
       setDashServiceUtil(StatusUtil.error);
     }
   }
-  clearOurServiceData(){
+
+  clearOurServiceData() {
     cpimageUrl = null;
     cpimage = null;
     ppimage = null;
@@ -207,11 +212,10 @@ void setIsValueDisplayed(bool value){
     serviceController.clear();
     service = null;
     notifyListeners();
-    
   }
 
   Future<void> saveOurServiceDto() async {
-    if (_professionUtil != StatusUtil.loading) {
+    if (_ourServiceDtoUtil != StatusUtil.loading) {
       setOurServiceDto(StatusUtil.loading);
     }
 
@@ -221,6 +225,7 @@ void setIsValueDisplayed(bool value){
         // profession: profession,
         fullName: userName,
         email: email,
+        service: service,
         phone: phone,
         location: loaction,
         image: profilePictureUrl,
@@ -231,6 +236,7 @@ void setIsValueDisplayed(bool value){
           await petCareService.saveOurServiceDto(ourServiceDto, token);
       if (response.statusUtil == StatusUtil.success) {
         setOurServiceDto(StatusUtil.success);
+        // getOurServiceDto();
       } else if (response.statusUtil == StatusUtil.error) {
         errorMessage = response.errorMessage;
         setOurServiceDto(
@@ -242,7 +248,17 @@ void setIsValueDisplayed(bool value){
       setOurServiceDto(StatusUtil.error);
     }
   }
-  
+
+  clearOurServiceDtoData() {
+    userName = null;
+    email = null;
+    phone = null;
+    loaction = null;
+    profilePicture = null;
+    profilePictureUrl = null;
+    description = null;
+    notifyListeners();
+  }
 
   Future<void> getDashService() async {
     if (_dashServiceUtil != StatusUtil.loading) {

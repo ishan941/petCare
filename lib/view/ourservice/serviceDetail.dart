@@ -16,56 +16,78 @@ class _ServiceDetailsState extends State<ServiceDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 40,
-          ),
-          Row(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Stack(
             children: [
-              IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(Icons.arrow_back_ios_new)),
-                  // Text(widget.ourService!.fullName ?? "",
-                // style: subTitleText,
-                
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        child: Image.network(
+                          widget.ourServiceDto!.image ?? "",
+                          fit: BoxFit.cover,
+                        ),
+                        height: MediaQuery.of(context).size.height * .4,
+                        width: MediaQuery.of(context).size.width,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                                "Name -  ${widget.ourServiceDto!.phone ?? "Phone Number not available"}"),
+                            Text(
+                              widget.ourServiceDto!.service ?? "",
+                              style: mainTitleText,
+                            ),
+                          ],
+                        ),
+                        Text(
+                            "Phone Number -  ${widget.ourServiceDto!.phone ?? "Phone Number not available"}"),
+                        Text(
+                            "Email -  ${widget.ourServiceDto!.email ?? "Email not available"}"),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Text(
+                          "About",
+                          style: mainTitleText,
+                        ),
+                        Text(widget.ourServiceDto!.description ??
+                            "Description not available ..."),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(Icons.arrow_back_ios_new)),
+                  Text(
+                    widget.ourServiceDto!.fullName ?? "",
+                    style: subTitleText,
+                  )
+                ],
+              ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Container(
-                // child: Image.network(
-                //   widget.ourService!.profilePicture ?? "Image Not available",
-                //   fit: BoxFit.cover,
-                // ),
-                height: MediaQuery.of(context).size.height * .4,
-                width: MediaQuery.of(context).size.width,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                
-                // Text(widget.ourService!.profession ?? ""),
-                SizedBox(height: 15,),
-                Text("About",
-                style: mainTitleText,
-                ),
-                // Text(widget.ourService!.description ?? "Description not available ..."),
-                // Text("Phone Number -  ${widget.ourService!.phone ?? "Phone Number not available"}")
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

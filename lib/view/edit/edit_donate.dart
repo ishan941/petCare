@@ -5,7 +5,7 @@ import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/provider/categoryprovider.dart';
 import 'package:project_petcare/provider/sellpetprovider.dart';
 import 'package:project_petcare/view/donate/donate_1.dart';
-import 'package:project_petcare/view/donate/petsale_1.dart';
+import 'package:project_petcare/view/feeds/petsale_1.dart';
 import 'package:provider/provider.dart';
 
 class EditDonate extends StatefulWidget {

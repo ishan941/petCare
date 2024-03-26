@@ -8,6 +8,7 @@ import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/sharedpref.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
+import 'package:project_petcare/model/payment.dart';
 import 'package:project_petcare/model/signUp.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
@@ -17,7 +18,9 @@ import 'package:project_petcare/view/feeds/approvel.dart';
 import 'package:project_petcare/view/profile/about_us.dart';
 import 'package:project_petcare/view/profile/changepassword.dart';
 import 'package:project_petcare/view/form_collections.dart';
+import 'package:project_petcare/view/profile/mypayments.dart';
 import 'package:project_petcare/view/profile/myprofile.dart';
+import 'package:project_petcare/view/profile/paymentlist.dart';
 import 'package:project_petcare/view/shop/shopFavourite.dart';
 import 'package:provider/provider.dart';
 
@@ -46,6 +49,7 @@ class _AccountState extends State<Account> {
     await petCareProvider.getUserEmail();
     await petCareProvider.getUserName();
     await petCareProvider.getUserFullName();
+    await petCareProvider.getUserPhone();
   }
 
   @override
@@ -107,7 +111,9 @@ class _AccountState extends State<Account> {
                           ),
                           _general(context),
                           _preferences(context, petCareProvider),
-                          _forms(context, petCareProvider)
+                          petCareProvider.userEmail == "admin@gmail.com" ? 
+                          _forms(context, petCareProvider):
+                          SizedBox()
                         ],
                       ),
                     ],
@@ -201,7 +207,8 @@ class _AccountState extends State<Account> {
                   petCareProvider.userFullName ?? "User",
                   style: mainTitleText,
                 ),
-                Text(petCareProvider.userEmail ?? " email"),
+                Text(petCareProvider.userEmail ?? " No email found"),
+                Text(petCareProvider.userPhone ?? " No phone found"),
               ],
             ),
           ],
@@ -229,7 +236,8 @@ class _AccountState extends State<Account> {
                         color: Colors.grey)),
                 SizedBox(height: 15),
                 _userDetails(context),
-                _changePassword(context),
+                // _changePassword(context),
+                _myPayments(context),
                 _myFavourites(context),
                 _aboutUs(context),
               ],
@@ -287,6 +295,7 @@ class _AccountState extends State<Account> {
                         color: Colors.grey)),
                 SizedBox(height: 15),
                 _formCollection(context, petCareProvider),
+                _payments(context, petCareProvider),
                 _formsEdit(context, petCareProvider),
                 _approveDonate(context, petCareProvider),
                 _approveSelling(context, petCareProvider)
@@ -375,6 +384,52 @@ class _AccountState extends State<Account> {
                     ),
                     Text(
                       "Change Password",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  Widget _myPayments(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => MyPayments()));
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                            color: ColorUtil.primaryColor.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(30)),
+                        height: 45,
+                        width: 45,
+                        child: Icon(Icons.lock_outlined)),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      "My Payments",
                       style: TextStyle(fontSize: 16),
                     ),
                     Spacer(),
@@ -567,6 +622,54 @@ class _AccountState extends State<Account> {
                     ),
                     Text(
                       "Form Collection",
+                      style: TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  Widget _payments(
+      BuildContext context, PetCareProvider petCareProvider) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => Payments()));
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 244, 54, 54)
+                                .withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(30)),
+                        height: 45,
+                        width: 45,
+                        child: Icon(Icons.logout_outlined)),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      "Pay ments",
                       style: TextStyle(fontSize: 16, color: Colors.black),
                     ),
                     Spacer(),

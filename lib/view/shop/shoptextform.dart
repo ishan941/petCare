@@ -26,7 +26,9 @@ class ShopTextForm extends StatelessWidget {
         controller: controller,
         onChanged: onChanged,
         validator: validator,
+        
         decoration: InputDecoration(
+          
           hintText: hintText,
           prefixIcon: prefixIcon,
           labelText: labelText,

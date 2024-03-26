@@ -38,7 +38,7 @@ Future<void> dialogBuilder(BuildContext context) {
                 ),
                 child: const Text("Yes"),
                 onPressed: () async {
-                  signUpProvider.clearLoginStatus(context);
+                  signUpProvider.SaveValueToSharedPreference(false);
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => LoginPage()),

@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/constBread.dart';
 import 'package:project_petcare/model/adopt.dart';
+import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/response/response.dart';
 import 'package:project_petcare/service/petcareimpl.dart';
 import 'package:project_petcare/service/petcareserivce.dart';
@@ -13,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SellingPetProvider extends ChangeNotifier {
   PetCareService petCareService = PetCareImpl();
+  PetCareProvider petCareProvider = PetCareProvider();
   List<Adopt> donatePetList = [];
   List<Adopt> approvalDonatePetList = [];
   List<Adopt> searchDonatePetList = [];
@@ -20,11 +22,18 @@ class SellingPetProvider extends ChangeNotifier {
   List<Adopt> searchSellingPetList = [];
   List<Adopt> myPetList = [];
   List<Adopt> sellingPetList = [];
+  List<Adopt> categoryDogList = [];
+  List<Adopt> categoryCatList = [];
+  List<Adopt> categoryFishList = [];
   List<Adopt> filteredSearchList = [];
   String? errorMessage;
   XFile? image;
   String token = "";
+  String key = "Dog";
   int? id;
+
+  String userName = "";
+  String userPhone = "";
 
   String? petName,
       petAge,
@@ -47,6 +56,7 @@ class SellingPetProvider extends ChangeNotifier {
   TextEditingController descriptionController = TextEditingController();
   TextEditingController petPriceController = TextEditingController();
   TextEditingController ownerLocationController = TextEditingController();
+  TextEditingController ownerPhoneController = TextEditingController();
 
   // TextEditingController userNController = TextEditingController();
   // TextEditingController petNameController = TextEditingController();
@@ -217,35 +227,37 @@ class SellingPetProvider extends ChangeNotifier {
         return [];
     }
   }
-
-  getSearchSellingPet() async {
-    try {
-      ApiResponse response = await petCareService.searchSellingPets(token);
-      if (response.statusUtil == StatusUtil.success) {
-        searchSellingPetList = Adopt.listFromJson(response.data['data']);
-        setSearchSellingPet(StatusUtil.success);
-      } else if (response.statusUtil == StatusUtil.error) {
-        setSearchSellingPet(StatusUtil.error);
-      }
-    } catch (e) {
-      errorMessage = e.toString();
+Future<void> getSearchSellingPet(String token) async {
+  try {
+    ApiResponse response = await petCareService.searchSellingPets(token);
+    if (response.statusUtil == StatusUtil.success) {
+      sellingPetList = Adopt.listFromJson(response.data['data']);
+      setSearchSellingPet(StatusUtil.success);
+    } else if (response.statusUtil == StatusUtil.error) {
       setSearchSellingPet(StatusUtil.error);
     }
+  } catch (e) {
+    errorMessage = e.toString();
+    setSearchSellingPet(StatusUtil.error);
   }
-  getSearchDonatePet() async {
-    try {
-      ApiResponse response = await petCareService.searchDonatedPets(token);
-      if (response.statusUtil == StatusUtil.success) {
-        searchDonatePetList = Adopt.listFromJson(response.data['data']);
-        setSearchDonatedPet(StatusUtil.success);
-      } else if (response.statusUtil == StatusUtil.error) {
-        setSearchDonatedPet(StatusUtil.error);
-      }
-    } catch (e) {
-      errorMessage = e.toString();
+}
+
+Future<void> getSearchDonatePet(String token) async {
+  try {
+    ApiResponse response = await petCareService.searchDonatedPets(token);
+    if (response.statusUtil == StatusUtil.success) {
+      donatePetList = Adopt.listFromJson(response.data['data']);
+      setSearchDonatedPet(StatusUtil.success);
+    } else if (response.statusUtil == StatusUtil.error) {
       setSearchDonatedPet(StatusUtil.error);
     }
+  } catch (e) {
+    errorMessage = e.toString();
+    setSearchDonatedPet(StatusUtil.error);
   }
+}
+
+
 
   Future<void> uploadAdoptImageInFireBase() async {
     if (_uploadImageUtil != StatusUtil.loading) {
@@ -276,8 +288,12 @@ class SellingPetProvider extends ChangeNotifier {
       petWeight: petWeightController.text,
       gender: petGender,
       categories: petCategories,
+      ownerName: userName,
+      ownerPhone: userPhone,
       petBreed: petBreed,
       imageUrl: imageUrl,
+      description: descriptionController.text,
+      
       petPrice: petPriceController.text,
       location: ownerLocationController.text,
     );
@@ -312,12 +328,22 @@ class SellingPetProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  setUserPhone(String userPhone){
+    this.userPhone = userPhone;
+    notifyListeners();
+  }
+  setUserName(String userName){
+    this.userName = userName;
+    notifyListeners();
+  }
+
   clearData() async {
     petNameController.clear();
     petAgeController.clear();
     petAgeTime = null;
     petAgeTime = null;
     petWeightController.clear();
+    descriptionController.clear();
     petGender = null;
     petCategories = null;
     imageUrl = null;
@@ -335,9 +361,12 @@ class SellingPetProvider extends ChangeNotifier {
       petAge: petAgeController.text,
       petAgeTime: petAgeTime,
       petWeight: petWeightController.text,
+       description: descriptionController.text,
       gender: petGender,
       categories: petCategories,
       petBreed: petBreed,
+      ownerName: userName,
+      ownerPhone: userPhone,
       imageUrl: imageUrl,
       location: ownerLocationController.text,
     );
@@ -468,6 +497,60 @@ class SellingPetProvider extends ChangeNotifier {
       ApiResponse response = await petCareService.getDonatePet(token);
       if (response.statusUtil == StatusUtil.success) {
         donatePetList = Adopt.listFromJson(response.data['data']);
+        setGetSellingPet(StatusUtil.success);
+      } else {
+        errorMessage = response.errorMessage;
+        setGetSellingPet(StatusUtil.error);
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+      setGetSellingPet(StatusUtil.error);
+    }
+  }
+  Future<void> getCategoryDog() async {
+    if (_getSellingPetUtil != StatusUtil.loading) {
+      setGetSellingPet(StatusUtil.loading);
+    }
+    try {
+      ApiResponse response = await petCareService.getDogCategory(token);
+      if (response.statusUtil == StatusUtil.success) {
+        categoryDogList = Adopt.listFromJson(response.data['data']);
+        setGetSellingPet(StatusUtil.success);
+      } else {
+        errorMessage = response.errorMessage;
+        setGetSellingPet(StatusUtil.error);
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+      setGetSellingPet(StatusUtil.error);
+    }
+  }
+  Future<void> getCategoryCat() async {
+    if (_getSellingPetUtil != StatusUtil.loading) {
+      setGetSellingPet(StatusUtil.loading);
+    }
+    try {
+      ApiResponse response = await petCareService.getCatCategory(token);
+      if (response.statusUtil == StatusUtil.success) {
+        categoryCatList = Adopt.listFromJson(response.data['data']);
+        setGetSellingPet(StatusUtil.success);
+      } else {
+        errorMessage = response.errorMessage;
+        setGetSellingPet(StatusUtil.error);
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+      setGetSellingPet(StatusUtil.error);
+    }
+  }
+  Future<void> getCategoryFish() async {
+    if (_getSellingPetUtil != StatusUtil.loading) {
+      setGetSellingPet(StatusUtil.loading);
+    }
+    try {
+      ApiResponse response = await petCareService.getFishCategory(token);
+      if (response.statusUtil == StatusUtil.success) {
+        categoryFishList = Adopt.listFromJson(response.data['data']);
         setGetSellingPet(StatusUtil.success);
       } else {
         errorMessage = response.errorMessage;

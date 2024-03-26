@@ -39,13 +39,15 @@ class PetCareProvider extends ChangeNotifier {
       _verificationUtil = StatusUtil.idle,
       _userImageUtil = StatusUtil.idle,
       _getUserNameUtil = StatusUtil.idle,
-      _getUserEmailUtil = StatusUtil.idle;
+      _getUserEmailUtil = StatusUtil.idle,
+      _getUserPhoneUtil = StatusUtil.idle;
 
   StatusUtil get dataStatusUtil => _statusUtil;
   StatusUtil get verificationUtil => _verificationUtil;
   StatusUtil get userImageUtil => _userImageUtil;
   StatusUtil get getUserNameUtil => _getUserNameUtil;
   StatusUtil get getUserEmailUtil => _getUserEmailUtil;
+  StatusUtil get getUserPhoneUtil => _getUserPhoneUtil;
 
   setUserImageUtil(StatusUtil statusUtil) {
     _userImageUtil = statusUtil;
@@ -78,7 +80,7 @@ class PetCareProvider extends ChangeNotifier {
   }
 
   // NOtification on or off
-  bool _isSwitched = false;
+  bool _isSwitched = true;
   bool get isSwitched => _isSwitched;
   void getToggledSwitch() {
     _isSwitched = !_isSwitched;
@@ -97,12 +99,19 @@ class PetCareProvider extends ChangeNotifier {
     _statusUtil = statusUtil;
     notifyListeners();
   }
+
   setGetUserName(StatusUtil statusUtil) {
     _getUserNameUtil = statusUtil;
     notifyListeners();
   }
+
   setGetUserEmail(StatusUtil statusUtil) {
     _getUserEmailUtil = statusUtil;
+    notifyListeners();
+  }
+
+  setGetUserPhone(StatusUtil statusUtil) {
+    _getUserPhoneUtil = statusUtil;
     notifyListeners();
   }
 
@@ -135,7 +144,17 @@ class PetCareProvider extends ChangeNotifier {
     this.profilePicture = profilePicture;
     notifyListeners();
   }
-   getUserName() async {
+
+  setUserPhone(String? userPhone) {
+    this.userPhone = userPhone;
+    notifyListeners();
+  }
+  setUserName(String? userName) {
+    this.userName = userName;
+    notifyListeners();
+  }
+
+  getUserName() async {
     if (_getUserNameUtil != StatusUtil.loading) {
       setGetUserName(StatusUtil.loading);
     }
@@ -153,7 +172,8 @@ class PetCareProvider extends ChangeNotifier {
       setGetUserName(StatusUtil.error);
     }
   }
-   getUserFullName() async {
+
+  getUserFullName() async {
     if (_getUserNameUtil != StatusUtil.loading) {
       setGetUserName(StatusUtil.loading);
     }
@@ -171,7 +191,8 @@ class PetCareProvider extends ChangeNotifier {
       setGetUserName(StatusUtil.error);
     }
   }
-   getUserEmail() async {
+
+  getUserEmail() async {
     if (_getUserEmailUtil != StatusUtil.loading) {
       setGetUserEmail(StatusUtil.loading);
     }
@@ -179,7 +200,7 @@ class PetCareProvider extends ChangeNotifier {
       ApiResponse response = await petCareService.getUserEmail(token);
       if (response.statusUtil == StatusUtil.success) {
         userEmail = response.data["name"];
-        setGetUserEmail(StatusUtil.success);
+        setGetUserEmail(StatusUtil.success);         
       } else {
         errorMessage = response.errorMessage;
         setGetUserEmail(StatusUtil.error);
@@ -187,6 +208,25 @@ class PetCareProvider extends ChangeNotifier {
     } catch (e) {
       errorMessage = e.toString();
       setGetUserEmail(StatusUtil.error);
+    }
+  }
+
+  getUserPhone() async {
+    if (_getUserPhoneUtil != StatusUtil.loading) {
+      setGetUserPhone(StatusUtil.loading);
+    }
+    try {
+      ApiResponse response = await petCareService.getUserPhone(token);
+      if (response.statusUtil == StatusUtil.success) {
+        userPhone = response.data["name"];
+        setGetUserPhone(StatusUtil.success);
+      } else {
+        errorMessage = response.errorMessage;
+        setGetUserPhone(StatusUtil.error);
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+      setGetUserPhone(StatusUtil.error);
     }
   }
 

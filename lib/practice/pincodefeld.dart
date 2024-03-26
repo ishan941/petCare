@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/view/profile/account.dart';
+import 'package:project_petcare/view/profile/changepassword.dart';
 
 class pinCodeTEst extends StatefulWidget {
  final String? verificationCode, phoneNumber;
@@ -71,11 +72,11 @@ class _pinCodeTEstState extends State<pinCodeTEst> {
                    PhoneAuthCredential credential = PhoneAuthProvider.credential(
                       verificationId: widget.verificationCode!, smsCode: optCode!);
 
-                  // Sign the user in (or link) with the credential
+                  
                   FirebaseAuth auth = FirebaseAuth.instance;
                   await auth.signInWithCredential(credential);
                   
-                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> Account()), (route) => false);
+                 Navigator.push(context, MaterialPageRoute(builder: (context)=> ChangePassword()));
                  }catch(e){
                   return Helper.snackBar("Invalid code", context);
                  }

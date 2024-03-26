@@ -72,61 +72,65 @@ class _CategoriesFormsState extends State<CategoriesForms> {
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Column(
                   children: [
+                    ShopTextForm(
+                      hintText: " Category",
+                      controller: categoriesProvider.categoriesNameController,
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
                     GestureDetector(
                       onTap: () {
                         pickImageFormGallery(categoriesProvider);
                       },
                       child: DottedBorder(
-                        child: Container(
-                            height: 200,
-                            width: MediaQuery.of(context).size.width*.4,
-                            child: Stack(
-                              children: [
-                                categoriesProvider.imageUrl != null
-                                    ? Image.network(
-                                        categoriesProvider.imageUrl!,
-                                        fit: BoxFit.cover,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Container(
+                              height: 200,
+                              width: MediaQuery.of(context).size.width,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Stack(
+                                  children: [
+                                    categoriesProvider.imageUrl != null
+                                        ? Image.network(
+                                          categoriesProvider.imageUrl!,
+                                          fit: BoxFit.cover,
                                         )
-                                        
-                                    : categoriesProvider.image != null
-                                        ? Image.file(
-                                            File(
-                                                categoriesProvider.image!.path),
-                                            fit: BoxFit.cover,
-                                          )
-                                        : Icon(Icons.add_a_photo),
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: InkWell(
-                                    onTap: () {
-                                      categoriesProvider.clearImage();
-                                    },
-                                    child: CircleAvatar(
-                                      radius: 10,
-                                      backgroundColor: Colors.red,
-                                      child: Icon(
-                                        Icons.clear,
-                                        size: 20,
-                                        color: Colors.white,
+                                        : categoriesProvider.image != null
+                                            ? Image.file(
+                                                File(categoriesProvider
+                                                    .image!.path),
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Center(
+                                                child: Icon(Icons.add_a_photo)),
+                                    Align(
+                                      alignment: Alignment.topRight,
+                                      child: InkWell(
+                                        onTap: () {
+                                          categoriesProvider.clearImage();
+                                        },
+                                        child: CircleAvatar(
+                                          radius: 10,
+                                          backgroundColor: Colors.red,
+                                          child: Icon(
+                                            Icons.clear,
+                                            size: 20,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            )),
+                                    )
+                                  ],
+                                ),
+                              )),
+                        ),
                       ),
                     ),
                     SizedBox(
                       height: 15,
-                    ),
-                    ShopTextForm(
-                      hintText: " Category",
-                      controller: categoriesProvider.categoriesNameController,
-                      // onChanged: (value) {
-                      //   categoriesProvider.id == null
-                      //       ? categoriesProvider.categoryName = value
-                      //       : categoriesProvider.categoryName;
-                      // },
                     ),
                     ElevatedButton(
                         onPressed: () async {
