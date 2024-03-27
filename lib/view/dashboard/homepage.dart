@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:project_petcare/core/smooth_scrollable.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/constSearch.dart';
@@ -229,14 +231,34 @@ class _HomePageState extends State<HomePage> {
                                                   .adsImageList.isEmpty &&
                                               ourServiceProvider
                                                   .dashApiServiceList.isEmpty
-                                          ? Column(
-                                              children: [
-                                                Center(
-                                                  child: Text(
-                                                      'No data availabele at the moment...'),
+                                          ? Container(
+                                              height: MediaQuery.of(context)
+                                                  .size
+                                                  .height,
+                                              child: Center(
+                                                child: Column(
+                                                  children: [
+                                                    SizedBox(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              .3,
+                                                    ),
+                                                    // LoadingAnimationWidget
+                                                    //     .hexagonDots(
+
+                                                    //         color: ColorUtil
+                                                    //             .primaryColor,
+                                                    //         size: 100),
+                                                   Helper.primaryLoader(),
+                                                   SizedBox(height: 10,),
+                                                    Text("Loading...",
+                                                    style: appBarTitle,
+                                                    )
+                                                  ],
                                                 ),
-                                                Text("Loading")
-                                              ],
+                                              ),
                                             )
                                           : Column(
                                               children: [
@@ -250,25 +272,8 @@ class _HomePageState extends State<HomePage> {
                                                 ),
                                                 _ourservice(context,
                                                     ourServiceProvider),
-                                                SizedBox(
-                                                  height: 70,
-                                                )
                                               ],
                                             ),
-                                      categoriesProvider
-                                                  .categoriesList.isEmpty ||
-                                              adsProvider.adsImageList.isEmpty
-                                          ? SizedBox(
-                                              height: MediaQuery.of(context)
-                                                  .size
-                                                  .height,
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                            )
-                                          : SizedBox(
-                                              height: 10,
-                                            )
                                     ],
                                   ),
                                 ),

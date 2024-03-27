@@ -185,10 +185,10 @@ class _ShopAllState extends State<ShopAll> {
                     Row(
                       children: [
                         Spacer(),
-                        shopProvider.isPaymentSucessfull != true
-                            ? IconButton(
-                                onPressed: () {}, icon: Icon(Icons.solar_power))
-                            : SizedBox(),
+                        // shopProvider.isPaymentSucessfull != true
+                        //     ? IconButton(
+                        //         onPressed: () {}, icon: Icon(Icons.solar_power))
+                        //     : SizedBox(),
                         IconButton(
                             onPressed: () async {
                               shopProvider.updateFavouriteList(

@@ -90,7 +90,7 @@ class SellingPetProvider extends ChangeNotifier {
   StatusUtil get getSearchSellingPetUtil => _searchSellingPetUtil;
   StatusUtil get getSearchDonatedPetUtil => _searchDonatedPetUtil;
 
-  StatusUtil get saveDonatePet => _saveDonatePetUtil;
+  StatusUtil get saveDonatePetUtil => _saveDonatePetUtil;
   StatusUtil get getDonatePet => _getDonatePetUtil;
 
   setUploadImageUtil(StatusUtil statusUtil) {

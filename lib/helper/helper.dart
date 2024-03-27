@@ -8,17 +8,13 @@ import 'package:geolocator/geolocator.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/provider/payment_provider.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
-import 'package:project_petcare/view/shop/shopall.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class Helper {
- 
 // static showDialog ( context){
 //   var alertBox = showDialog(context: context, builder: )
 
@@ -44,6 +40,19 @@ class Helper {
     );
   }
 
+  static primaryLoader() {
+    return LoadingAnimationWidget.hexagonDots(
+      size: 100,
+      color: ColorUtil.primaryColor,
+    );
+  }
+  static emptyLoader() {
+    return LoadingAnimationWidget.bouncingBall(
+      size: 100,
+      color: ColorUtil.primaryColor,
+    );
+  }
+
   static backdropFilter(context) {
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 4, sigmaY: 3),
@@ -64,10 +73,12 @@ class Helper {
       ),
     );
   }
+
   void onPaymentSuccess(
-      String token, BuildContext context, ShopProvider shopProvider) async{
+      String token, BuildContext context, ShopProvider shopProvider) async {
     verify(token);
-    displaySnackBar("Payment Successful", context, Icons.check, ColorUtil.primaryColor);
+    displaySnackBar(
+        "Payment Successful", context, Icons.check, ColorUtil.primaryColor);
     shopProvider.setPaymentSuccessfull(true);
     var paymentProvider = Provider.of<PaymentProvider>(context, listen: false);
     await paymentProvider.savePaymentDetails();
@@ -81,12 +92,10 @@ class Helper {
   }
 
   void onPaymentCancel(BuildContext context) {
-    displaySnackBar(
-        "Payment Cancelledl", context, Icons.warning, Colors.red);
+    displaySnackBar("Payment Cancelledl", context, Icons.warning, Colors.red);
   }
 
-  void pay(
-      BuildContext context, int ammount, ShopProvider shopProvider) {
+  void pay(BuildContext context, int ammount, ShopProvider shopProvider) {
     KhaltiScope.of(context).pay(
       config: PaymentConfig(
         amount: ammount * 100,
@@ -139,6 +148,7 @@ class Helper {
       print('Error: $e');
     }
   }
+
   static displaySnackBar(
       String message, BuildContext context, IconData icon, Color color) {
     showModalBottomSheet(
@@ -160,7 +170,9 @@ class Helper {
                     ),
                     Text(
                       message,
-                      style: TextStyle(color:  ColorUtil.BackGroundColorColor,),
+                      style: TextStyle(
+                        color: ColorUtil.BackGroundColorColor,
+                      ),
                     )
                   ],
                 ),
@@ -170,8 +182,9 @@ class Helper {
       Navigator.of(context).pop();
     });
   }
-StreamSubscription<Position>? _positionStream;
-String address="";
+
+  StreamSubscription<Position>? _positionStream;
+  String address = "";
   launchMaps(String address) async {
     final query = Uri.encodeComponent(address);
     final url = "https://www.google.com/maps/search/?api=1&query=$query";
@@ -256,8 +269,6 @@ String address="";
     double distance = earthRadius * c;
     return distance;
   }
-
-  
 }
 
 class Coordinate {
@@ -265,6 +276,3 @@ class Coordinate {
   String? address;
   Coordinate({this.latitude, this.longitude, this.address});
 }
-
-
-

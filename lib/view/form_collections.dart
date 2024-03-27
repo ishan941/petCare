@@ -8,7 +8,7 @@ import 'package:project_petcare/view/ourservice/apiservicedto.dart';
 import 'package:project_petcare/view/ourservice/ourservicedto.dart';
 import 'package:project_petcare/view/ourservice/ourserdto_form.dart';
 import 'package:project_petcare/view/ourservice/dashservice_form.dart';
-import 'package:project_petcare/view/profile/adsform.dart';
+import 'package:project_petcare/view/ads/adsform.dart';
 import 'package:project_petcare/view/shop/post_item.dart';
 import 'package:project_petcare/view/test.dart/testPage.dart';
 
@@ -59,9 +59,10 @@ class _UiTestState extends State<FormCollection> {
                     Center(
                       child: GestureDetector(
                         onDoubleTap: () {
-                           Navigator.push(context, MaterialPageRoute(builder: (context)=> 
-                          TestPage()
-                           ));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TestPage()));
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -82,14 +83,14 @@ class _UiTestState extends State<FormCollection> {
                     ),
                     Text('Forms'),
                     categoriesForm(context),
-                    adoptForm(context),
-                    professionServiceForm(context),
-                    shopItemForm(context),
-                    serviceDash(context),
-                     ourServiceDto(context),
                     adsForm(context),
+                    serviceDash(context),
+                    ourServiceDto(context),
+                    shopItemForm(context),
+                    professionServiceForm(context),
+                    
+                    adoptForm(context),
                     normalForm(context),
-                   
                   ],
                 ),
               ],
@@ -194,7 +195,7 @@ class _UiTestState extends State<FormCollection> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text("Form for add profession on service"),
+                      Text("OurServiceDto Form"),
                       Spacer(),
                       Icon(Icons.arrow_forward_rounded)
                     ],
@@ -213,8 +214,8 @@ class _UiTestState extends State<FormCollection> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       child: InkWell(
         onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ShopSale()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => ShopSale()));
         },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
@@ -279,6 +280,7 @@ class _UiTestState extends State<FormCollection> {
       ),
     );
   }
+
   Widget adsForm(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
@@ -314,6 +316,7 @@ class _UiTestState extends State<FormCollection> {
       ),
     );
   }
+
   Widget normalForm(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
@@ -349,13 +352,14 @@ class _UiTestState extends State<FormCollection> {
       ),
     );
   }
+
   Widget ourServiceDto(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       child: InkWell(
         onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => OurServiceDtoForm()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => OurServiceDtoForm()));
         },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),

@@ -528,7 +528,11 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                                           size: 15,
                                           color: Colors.black.withOpacity(0.5),
                                         ),
-                                        Text(ourServiceProvider.ourServiceDtoList[index].location ?? "")
+                                        Text(ourServiceProvider.ourServiceDtoList[index].location ?? "",
+                                        
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        )
                                       ],
                                     ),
                                   ],

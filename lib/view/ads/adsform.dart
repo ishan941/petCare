@@ -9,36 +9,32 @@ import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/model/ads.dart';
 import 'package:project_petcare/provider/ads_provider.dart';
 import 'package:project_petcare/view/buttomnav.dart';
+import 'package:project_petcare/view/loader.dart';
 import 'package:provider/provider.dart';
 
 class AdsForm extends StatefulWidget {
   final Ads? ads;
-   AdsForm({super.key, this.ads});
+  AdsForm({super.key, this.ads});
 
   @override
   State<AdsForm> createState() => _AdsFormState();
 }
+
+final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 class _AdsFormState extends State<AdsForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Consumer<AdsProvider>(
-        builder: (context, adsProvider, child) => SafeArea(
-          child: Stack(
-            children: [formForAds(adsProvider, context),
-             loader(adsProvider)],
+        builder: (context, adsProvider, child) => Form(
+          key: _formKey,
+          child: SafeArea(
+            child: formForAds(adsProvider, context),
           ),
         ),
       ),
     );
-  }
-
-  Widget loader(AdsProvider adsProvider) {
-    adsProvider.saveAdsUtil == StatusUtil.loading
-        ? Helper.loadingAnimation(context)
-        : SizedBox();
-    return SizedBox();
   }
 
   Widget formForAds(AdsProvider adsProvider, BuildContext context) {
@@ -70,7 +66,8 @@ class _AdsFormState extends State<AdsForm> {
                   child: Column(
                     children: [
                       adsProvider.image == null
-                          ? Center(child: Text("Please double click for add ads"))
+                          ? Center(
+                              child: Text("Please double click for add ads"))
                           : Column(
                               children: [
                                 Container(
@@ -85,23 +82,29 @@ class _AdsFormState extends State<AdsForm> {
                                 ),
                                 ElevatedButton(
                                     onPressed: () {
-                                     
-                                      Helper.loadingAnimation(context);
-                                      adsProvider.sendAdsImage();
-                                      if (adsProvider.saveAdsUtil ==
-                                          StatusUtil.success) {
-                                        Navigator.pushAndRemoveUntil(
+                                      if (_formKey.currentState!.validate()) {
+                                        Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    BottomNavBar()),
-                                            (route) => false);
-                                        Helper.snackBar(
-                                            successfullySavedStr, context);
-                                             adsProvider.clearImage();
-                                        
-                                      } else {
-                                        Helper.snackBar(failedToSaveStr, context);
+                                                    FormLoader()));
+                                        adsProvider.sendAdsImage();
+                                        if (adsProvider.saveAdsUtil ==
+                                            StatusUtil.success) {
+                                          Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      BottomNavBar()),
+                                              (route) => false);
+                                          Helper.snackBar(
+                                              successfullySavedStr, context);
+                                          adsProvider.clearImage();
+                                        } else {
+                                          Helper.snackBar(
+                                              failedToSaveStr, context);
+                                          Navigator.pop(context);
+                                        }
                                       }
                                     },
                                     child: Text("Save"))

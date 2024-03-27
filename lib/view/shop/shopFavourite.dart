@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
 import 'package:project_petcare/view/shop/shopall.dart';
@@ -183,7 +185,11 @@ class _ShopFavouriteState extends State<ShopFavourite> {
         child: Container(
             child: Column(
           children: [
-            Text("Your Favourite List is empty"),
+            Helper.emptyLoader(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Text("Your Favourite List is empty"),
+            ),
             ElevatedButton(
                 onPressed: () {
                   Navigator.push(context,

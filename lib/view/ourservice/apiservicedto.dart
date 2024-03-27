@@ -9,12 +9,14 @@ import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/model/ourservicedto.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
+import 'package:project_petcare/view/loader.dart';
+import 'package:project_petcare/view/ourservice/ourservicedto.dart';
 import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
 
 class OurServiceDtoForm extends StatefulWidget {
   final OurServiceDto? ourServiceDto;
-   OurServiceDtoForm({Key? key, this.ourServiceDto}) : super(key: key);
+  OurServiceDtoForm({Key? key, this.ourServiceDto}) : super(key: key);
 
   @override
   State<OurServiceDtoForm> createState() => _OurServiceDtoFormState();
@@ -192,12 +194,23 @@ class _OurServiceDtoFormState extends State<OurServiceDtoForm> {
                   child: ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => FormLoader()));
+
                           await ourServiceProvider.saveOurServiceDto();
                           if (ourServiceProvider.ourServiceDtoUtil ==
                               StatusUtil.success) {
                             Helper.snackBar(successfullySavedStr, context);
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OurServicesUiDto()),
+                                (route) => false);
                           } else {
                             Helper.snackBar(failedToSaveStr, context);
+                            Navigator.pop(context);
                           }
                         } else
                           Helper.snackBar("Please Fill your Details", context);

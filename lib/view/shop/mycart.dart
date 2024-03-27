@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
+import 'package:project_petcare/view/buttomnav.dart';
 import 'package:project_petcare/view/shop/shopall.dart';
 import 'package:project_petcare/view/shop/shopdetails.dart';
 import 'package:provider/provider.dart';
@@ -16,18 +17,22 @@ class MyCart extends StatefulWidget {
 class _MyCartState extends State<MyCart> {
   @override
   void initState() {
-    Future.delayed(Duration.zero, (){
+    Future.delayed(Duration.zero, () {
       getShopCart();
     });
-   
+
     super.initState();
   }
-  getShopCart()async{
+
+  getShopCart() async {
     var shopProvider = Provider.of<ShopProvider>(context, listen: false);
-   await shopProvider.getUser();
+    await shopProvider.getUser();
   }
+
   @override
-  Widget build(BuildContext context, ) {
+  Widget build(
+    BuildContext context,
+  ) {
     var shopProvider = Provider.of<ShopProvider>(context);
 
     return Scaffold(
@@ -39,11 +44,9 @@ class _MyCartState extends State<MyCart> {
         // centerTitle: true,
         title: Text(
           "My Cart",
-          style: TextStyle(color: Colors.black,
-          fontSize: 18
-          ),
+          style: TextStyle(color: Colors.black, fontSize: 18),
         ),
-        
+
         actions: [
           IconButton(
             onPressed: () {},
@@ -59,12 +62,18 @@ class _MyCartState extends State<MyCart> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Helper.emptyLoader(),
                   Text("Your Cart Looks empty.. "),
-                  Text("Do you want to visit our shop ?"),
+                  SizedBox(
+                    height: 10,
+                  ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => ShopAll()));
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BottomNavBar()),
+                          (route) => false);
                     },
                     child: Text("Visit shop"),
                   )
@@ -134,7 +143,8 @@ class _MyCartState extends State<MyCart> {
                                           ),
                                           IconButton(
                                               onPressed: () {
-                                               _showAlertDialog(context, shopProvider, index);
+                                                _showAlertDialog(context,
+                                                    shopProvider, index);
                                               },
                                               icon: Icon(Icons.delete)),
                                         ],
@@ -152,8 +162,9 @@ class _MyCartState extends State<MyCart> {
             ),
     );
   }
-  void _showAlertDialog(BuildContext context, ShopProvider shopProvider, int index) {
- 
+
+  void _showAlertDialog(
+      BuildContext context, ShopProvider shopProvider, int index) {
     showDialog(
       context: context,
       builder: (
@@ -161,7 +172,7 @@ class _MyCartState extends State<MyCart> {
       ) {
         return AlertDialog(
           title: Text(
-           shopProvider.shopCartList[index].product!,
+            shopProvider.shopCartList[index].product!,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -177,7 +188,7 @@ class _MyCartState extends State<MyCart> {
             ),
             ElevatedButton(
               onPressed: () {
-               shopProvider.removeCart(shopProvider.shopCartList[index]);
+                shopProvider.removeCart(shopProvider.shopCartList[index]);
                 Navigator.of(context).pop();
                 Helper.snackBar(
                   "You removed items form your cart",

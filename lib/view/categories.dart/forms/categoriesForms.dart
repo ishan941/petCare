@@ -8,6 +8,7 @@ import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/model/categories.dart';
 import 'package:project_petcare/provider/categoryprovider.dart';
 import 'package:project_petcare/view/buttomnav.dart';
+import 'package:project_petcare/view/loader.dart';
 import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
 
@@ -46,116 +47,128 @@ class _CategoriesFormsState extends State<CategoriesForms> {
   //       Provider.of<CategoriesProvider>(context, listen: false);
   //   await categoriesProvider.getCategoriesById(id);
   // }
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Consumer<CategoriesProvider>(
-        builder: (context, categoriesProvider, child) => SizedBox(
-          child: Column(
-            children: [
-              Container(
-                height: 30,
-              ),
-              Row(
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        categoriesProvider.clearField();
-                        categoriesProvider.clearImage();
-                      },
-                      icon: Icon(Icons.arrow_back_ios_new_outlined)),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Column(
+        builder: (context, categoriesProvider, child) => Form(
+          key: _formKey,
+          child: SizedBox(
+            child: Column(
+              children: [
+                Container(
+                  height: 30,
+                ),
+                Row(
                   children: [
-                    ShopTextForm(
-                      hintText: " Category",
-                      controller: categoriesProvider.categoriesNameController,
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        pickImageFormGallery(categoriesProvider);
-                      },
-                      child: DottedBorder(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Container(
-                              height: 200,
-                              width: MediaQuery.of(context).size.width,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Stack(
-                                  children: [
-                                    categoriesProvider.imageUrl != null
-                                        ? Image.network(
-                                          categoriesProvider.imageUrl!,
-                                          fit: BoxFit.cover,
-                                        )
-                                        : categoriesProvider.image != null
-                                            ? Image.file(
-                                                File(categoriesProvider
-                                                    .image!.path),
-                                                fit: BoxFit.cover,
-                                              )
-                                            : Center(
-                                                child: Icon(Icons.add_a_photo)),
-                                    Align(
-                                      alignment: Alignment.topRight,
-                                      child: InkWell(
-                                        onTap: () {
-                                          categoriesProvider.clearImage();
-                                        },
-                                        child: CircleAvatar(
-                                          radius: 10,
-                                          backgroundColor: Colors.red,
-                                          child: Icon(
-                                            Icons.clear,
-                                            size: 20,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              )),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    ElevatedButton(
-                        onPressed: () async {
-                          await categoriesProvider.saveCategory();
-
-                          if (categoriesProvider.categoriesUtil ==
-                              StatusUtil.success) {
-                            Helper.snackBar(successfullySavedStr, context);
-
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => BottomNavBar()),
-                                (route) => false);
-                            categoriesProvider.clearField();
-                            categoriesProvider.clearImage();
-                          } else {
-                            Helper.snackBar(failedToSaveStr, context);
-                          }
+                    IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          categoriesProvider.clearField();
+                          categoriesProvider.clearImage();
                         },
-                        child: Text("Submit"))
+                        icon: Icon(Icons.arrow_back_ios_new_outlined)),
                   ],
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Column(
+                    children: [
+                      ShopTextForm(
+                        hintText: " Category",
+                        controller: categoriesProvider.categoriesNameController,
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          pickImageFormGallery(categoriesProvider);
+                        },
+                        child: DottedBorder(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Container(
+                                height: 200,
+                                width: MediaQuery.of(context).size.width,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Stack(
+                                    children: [
+                                      categoriesProvider.imageUrl != null
+                                          ? Image.network(
+                                              categoriesProvider.imageUrl!,
+                                              fit: BoxFit.cover,
+                                            )
+                                          : categoriesProvider.image != null
+                                              ? Image.file(
+                                                  File(categoriesProvider
+                                                      .image!.path),
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : Center(
+                                                  child:
+                                                      Icon(Icons.add_a_photo)),
+                                      Align(
+                                        alignment: Alignment.topRight,
+                                        child: InkWell(
+                                          onTap: () {
+                                            categoriesProvider.clearImage();
+                                          },
+                                          child: CircleAvatar(
+                                            radius: 10,
+                                            backgroundColor: Colors.red,
+                                            child: Icon(
+                                              Icons.clear,
+                                              size: 20,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      ElevatedButton(
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => FormLoader()));
+                              await categoriesProvider.saveCategory();
+
+                              if (categoriesProvider.categoriesUtil ==
+                                  StatusUtil.success) {
+                                Helper.snackBar(successfullySavedStr, context);
+
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => BottomNavBar()),
+                                    (route) => false);
+                                categoriesProvider.clearField();
+                                categoriesProvider.clearImage();
+                              } else {
+                                Helper.snackBar(failedToSaveStr, context);
+                                Navigator.pop(context);
+                              }
+                            }
+                          },
+                          child: Text("Submit"))
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

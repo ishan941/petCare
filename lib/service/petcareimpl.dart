@@ -15,6 +15,7 @@ import 'package:project_petcare/model/mypet.dart';
 import 'package:project_petcare/model/ourservice.dart';
 import 'package:project_petcare/model/ourservicedto.dart';
 import 'package:project_petcare/model/payment.dart';
+import 'package:project_petcare/model/scanner.dart';
 import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/model/signUp.dart';
 import 'package:project_petcare/model/verificationTools.dart';
@@ -800,6 +801,12 @@ class PetCareImpl extends PetCareService {
         await api.post(BASEURL + saveAdsImageUrl, ads.toJson(), token: token);
     return response;
   }
+  @override
+  Future<ApiResponse> saveSymptomes(Scanner scanner, String token)async {
+  ApiResponse response =
+        await api.post(BASEURL + saveAdsImageUrl ,scanner.toJson(), token: token);
+    return response;
+  }
 
 
  @override
@@ -1062,6 +1069,8 @@ class PetCareImpl extends PetCareService {
     // TODO: implement getAllCategory
     throw UnimplementedError();
   }
+
+  
   
   
   

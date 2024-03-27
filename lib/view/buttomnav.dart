@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
+import 'package:project_petcare/view/dashboard/ai_scanner.dart';
 import 'package:project_petcare/view/feeds/donatesalefeed.dart';
 import 'package:project_petcare/view/feeds/feed.dart';
 import 'package:project_petcare/view/dashboard/homepage.dart';
 import 'package:project_petcare/view/profile/account.dart';
-
 
 import 'package:project_petcare/view/shop/shopall.dart';
 import 'package:provider/provider.dart';
@@ -27,10 +27,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
           items: [
             _buildNavItem(Icons.pets, 'Home', 0),
             _buildNavItem(Icons.shopify_sharp, 'Shop', 1),
-            _buildNavItem(Icons.directions_boat_outlined, 'Adoption', 2),
-            // _buildNavItem(Icons.favorite, 'Favourite', 3),
-            _buildNavItem(Icons.account_balance_sharp, 'Profile', 3),
-            //Icon(Icons.perm_identity, size: 30, color: Colors.white,),
+            _buildNavItem(Icons.scanner, 'Scanner', 2),
+            _buildNavItem(Icons.directions_boat_outlined, 'Adoption', 3),
+            _buildNavItem(Icons.account_balance_sharp, 'Profile', 4),
           ],
           color: Colors.white,
           buttonBackgroundColor: ColorUtil.secondaryColor,
@@ -52,15 +51,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
       case 1:
         return ShopAll();
       case 2:
-        // return NewsFeed();
+        return AiScanner();
+      case 3:
         return DonateSaleFeed();
-      // case 3:
-      //   // return ShopFavourite();
-      //   return FormCollection();
-        // return FeedForm();
-        // return DonateSaleFeed();
-      default:
+      case 4:
         return Account();
+      default:
+        return HomePage();
     }
   }
 
@@ -73,7 +70,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(icon,
-              size: 30,
+              size: 25,
               color: isSelected
                   ? ColorUtil.BackGroundColorColor
                   : ColorUtil.secondaryColor),

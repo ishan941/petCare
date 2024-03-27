@@ -8,6 +8,7 @@ import 'package:project_petcare/model/mypet.dart';
 import 'package:project_petcare/model/ourservice.dart';
 import 'package:project_petcare/model/ourservicedto.dart';
 import 'package:project_petcare/model/payment.dart';
+import 'package:project_petcare/model/scanner.dart';
 import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/model/signUp.dart';
 import 'package:project_petcare/model/verificationTools.dart';
@@ -58,6 +59,7 @@ abstract class PetCareService {
       OurServiceDto ourServiceDto, String token);
   Future<ApiResponse> saveDonatePet(Adopt adopt, String token);
   Future<ApiResponse> saveAdsImage(Ads ads, String token);
+  Future<ApiResponse> saveSymptomes(Scanner scanner, String token);
 
 
   Future<ApiResponse> verifyEmail(SignUp signUp);

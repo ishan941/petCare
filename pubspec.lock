@@ -848,6 +848,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  mobile_scanner:
+    dependency: "direct main"
+    description:
+      name: mobile_scanner
+      sha256: "827765afbd4792ff3fd105ad593821ac0f6d8a7d352689013b07ee85be336312"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.1"
   modal_progress_hud_nsn:
     dependency: "direct main"
     description:
@@ -1048,6 +1056,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  quiver:
+    dependency: transitive
+    description:
+      name: quiver
+      sha256: b1c1ac5ce6688d77f65f3375a9abb9319b3cb32486bdc7a1e0fdf004d7ba4e47
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.1"
   rename:
     dependency: "direct main"
     description:
@@ -1253,6 +1269,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.3"
+  tflite_flutter_plus:
+    dependency: "direct main"
+    description:
+      name: tflite_flutter_plus
+      sha256: "72c7363df4be932541b82f8bc7e544df343f6dea1f6e614a3efa2a7dd73dff2e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
   timezone:
     dependency: transitive
     description:

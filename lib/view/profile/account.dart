@@ -21,6 +21,7 @@ import 'package:project_petcare/view/form_collections.dart';
 import 'package:project_petcare/view/profile/mypayments.dart';
 import 'package:project_petcare/view/profile/myprofile.dart';
 import 'package:project_petcare/view/profile/paymentlist.dart';
+import 'package:project_petcare/view/shop/mycart.dart';
 import 'package:project_petcare/view/shop/shopFavourite.dart';
 import 'package:provider/provider.dart';
 
@@ -111,9 +112,10 @@ class _AccountState extends State<Account> {
                           ),
                           _general(context),
                           _preferences(context, petCareProvider),
-                          petCareProvider.userEmail == "admin@gmail.com" ? 
-                          _forms(context, petCareProvider):
-                          SizedBox()
+                          // petCareProvider.userEmail == "admin@gmail.com"
+                              // ? 
+                              _forms(context, petCareProvider)
+                              // : SizedBox()
                         ],
                       ),
                     ],
@@ -239,6 +241,7 @@ class _AccountState extends State<Account> {
                 // _changePassword(context),
                 _myPayments(context),
                 _myFavourites(context),
+                _myCart(context),
                 _aboutUs(context),
               ],
             ),
@@ -400,13 +403,14 @@ class _AccountState extends State<Account> {
       ),
     );
   }
+
   Widget _myPayments(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: InkWell(
         onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => MyPayments()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => MyPayments()));
         },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
@@ -420,7 +424,7 @@ class _AccountState extends State<Account> {
                   children: [
                     Container(
                         decoration: BoxDecoration(
-                            color: ColorUtil.primaryColor.withOpacity(0.5),
+                            color: Colors.blue.withOpacity(0.5),
                             borderRadius: BorderRadius.circular(30)),
                         height: 45,
                         width: 45,
@@ -477,6 +481,53 @@ class _AccountState extends State<Account> {
                     ),
                     Text(
                       "My Favourites",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _myCart(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => MyCart()));
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                            color: Colors.orange.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(30)),
+                        height: 45,
+                        width: 45,
+                        child: Icon(Icons.favorite_border)),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      "My Cart",
                       style: TextStyle(fontSize: 16),
                     ),
                     Spacer(),
@@ -638,14 +689,14 @@ class _AccountState extends State<Account> {
       ),
     );
   }
-  Widget _payments(
-      BuildContext context, PetCareProvider petCareProvider) {
+
+  Widget _payments(BuildContext context, PetCareProvider petCareProvider) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: InkWell(
         onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => Payments()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Payments()));
         },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
@@ -734,7 +785,6 @@ class _AccountState extends State<Account> {
       ),
     );
   }
- 
 
   Widget _logOut(BuildContext context, PetCareProvider petCareProvider) {
     return Padding(
@@ -782,13 +832,14 @@ class _AccountState extends State<Account> {
       ),
     );
   }
-   Widget _approveDonate(BuildContext context, PetCareProvider petCareProvider) {
+
+  Widget _approveDonate(BuildContext context, PetCareProvider petCareProvider) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: InkWell(
         onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => DonatedApprove()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => DonatedApprove()));
         },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
@@ -829,13 +880,15 @@ class _AccountState extends State<Account> {
       ),
     );
   }
-   Widget _approveSelling(BuildContext context, PetCareProvider petCareProvider) {
+
+  Widget _approveSelling(
+      BuildContext context, PetCareProvider petCareProvider) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: InkWell(
         onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => SellingApprove()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => SellingApprove()));
         },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),

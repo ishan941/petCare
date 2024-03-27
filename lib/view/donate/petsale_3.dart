@@ -153,7 +153,7 @@ class _DonateOrSaleConfirmationState extends State<DonateOrSaleConfirmation> {
   }
    donate(SellingPetProvider sellingPetProvider) async {
     await sellingPetProvider.sendDonatePet();
-    if (sellingPetProvider.saveDonatePet == StatusUtil.success) {
+    if (sellingPetProvider.saveDonatePetUtil == StatusUtil.success) {
       Helper.snackBar(successfullySavedStr, context);
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => BottomNavBar()),

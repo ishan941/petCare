@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:project_petcare/core/smooth_scrollable.dart';
+import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/provider/feedprovider.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/sellpetprovider.dart';
-import 'package:project_petcare/view/feeds/petsale_1.dart';
+import 'package:project_petcare/view/feeds/sellingPetForm.dart';
 import 'package:project_petcare/view/feeds/ds_details.dart';
 import 'package:project_petcare/view/search_here.dart';
 import 'package:provider/provider.dart';
@@ -144,21 +145,36 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
                       ),
                     ),
                     SliverFillRemaining(
-                      child: TabBarView(
-                        controller: _tabController,
-                        children: [
-                          ListView.builder(
-                            itemCount: sellingPetProvider.sellingPetList.length,
-                            itemBuilder: (context, index) =>
-                                sellingPet(sellingPetProvider, index, context),
-                          ),
-                          ListView.builder(
-                            itemCount: sellingPetProvider.donatePetList.length,
-                            itemBuilder: (context, index) =>
-                                donatePet(sellingPetProvider, index, context),
-                          ),
-                        ],
-                      ),
+                      child: sellingPetProvider.sellingPetList.isEmpty
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Helper.primaryLoader(),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  "Please wait....",
+                                ),
+                              ],
+                            )
+                          : TabBarView(
+                              controller: _tabController,
+                              children: [
+                                ListView.builder(
+                                  itemCount:
+                                      sellingPetProvider.sellingPetList.length,
+                                  itemBuilder: (context, index) => sellingPet(
+                                      sellingPetProvider, index, context),
+                                ),
+                                ListView.builder(
+                                  itemCount:
+                                      sellingPetProvider.donatePetList.length,
+                                  itemBuilder: (context, index) => donatePet(
+                                      sellingPetProvider, index, context),
+                                ),
+                              ],
+                            ),
                     ),
                   ],
                 ),
@@ -180,64 +196,69 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
                 builder: (context) => Ds_details(
                     adopt: sellingPetProvider.sellingPetList[index])));
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-        child: Column(
-          children: [
-            Container(
-              height: 250,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(shape: BoxShape.circle),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  sellingPetProvider.sellingPetList[index].imageUrl ?? " ",
-                  fit: BoxFit.cover,
-                ),
+      child: sellingPetProvider.sellingPetList.isEmpty
+          ? Helper.primaryLoader()
+          : Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              child: Column(
+                children: [
+                  Container(
+                    height: 250,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(shape: BoxShape.circle),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        sellingPetProvider.sellingPetList[index].imageUrl ??
+                            " ",
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        sellingPetProvider.sellingPetList[index].ownerName ??
+                            " ",
+                        style: const TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Row(
+                        children: [
+                          // Icon(Icons.phone),
+                          Text(
+                            sellingPetProvider
+                                    .sellingPetList[index].ownerPhone ??
+                                "Phone Number",
+                            style: categoriesTitleText,
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Rs",
+                            style: smallTitleText,
+                          ),
+                          Text(
+                            sellingPetProvider.sellingPetList[index].petPrice ??
+                                "Free",
+                            style: mainTitleText,
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  sellingPetProvider.sellingPetList[index].ownerName ?? " ",
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Row(
-                  children: [
-                    // Icon(Icons.phone),
-                    Text(
-                      sellingPetProvider.sellingPetList[index].ownerPhone ??
-                          "Phone Number",
-                      style: categoriesTitleText,
-                    )
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "Rs",
-                      style: smallTitleText,
-                    ),
-                    Text(
-                      sellingPetProvider.sellingPetList[index].petPrice ??
-                          "Free",
-                      style: mainTitleText,
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -272,9 +293,7 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
               width: 10,
             ),
             Column(
-              
               children: [
-                
                 Text(
                   sellingPetProvider.donatePetList[index].ownerName ?? " ",
                   style: mainTitleText,

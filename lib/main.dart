@@ -15,12 +15,12 @@ import 'package:project_petcare/provider/mypet_provider.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
 import 'package:project_petcare/provider/payment_provider.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
+import 'package:project_petcare/provider/scanner_provider.dart';
 import 'package:project_petcare/provider/sellpetprovider.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/view/buttomnav.dart';
 import 'package:project_petcare/view/shop/shopall.dart';
-import 'package:project_petcare/view/splashScreen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -125,7 +125,8 @@ class _MyAppState extends State<MyApp> {
             ChangeNotifierProvider(create: (context) => FeedProvider()),
             ChangeNotifierProvider(create: (context) => SellingPetProvider()),
             ChangeNotifierProvider(create: (context) => AdsProvider()),
-            ChangeNotifierProvider(create: (context)=> PaymentProvider())
+            ChangeNotifierProvider(create: (context) => PaymentProvider()),
+            ChangeNotifierProvider(create: (context) => ScannerProvider())
           ],
           child: MaterialApp(
 

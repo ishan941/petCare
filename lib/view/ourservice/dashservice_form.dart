@@ -6,11 +6,12 @@ import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/model/ourservice.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
+import 'package:project_petcare/view/loader.dart';
 import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
 
 class ServiceForm extends StatefulWidget {
- final OurService? ourService;
+  final OurService? ourService;
   ServiceForm({Key? key, this.ourService}) : super(key: key);
 
   @override
@@ -28,12 +29,14 @@ class _ServiceFormState extends State<ServiceForm> {
     super.initState();
   }
 
-  gettoken() async{
-    var ourServiceProvider = Provider.of<OurServiceProvider>(context, listen: false);
+  gettoken() async {
+    var ourServiceProvider =
+        Provider.of<OurServiceProvider>(context, listen: false);
     await ourServiceProvider.getTokenFromSharedPref();
     await ourServiceProvider.serviceController.text;
-     if (widget.ourService != null) {
-      ourServiceProvider.serviceController.text = widget.ourService!.service ?? "";
+    if (widget.ourService != null) {
+      ourServiceProvider.serviceController.text =
+          widget.ourService!.service ?? "";
       // ourServiceProvider.setImageUrl(cpimageUrl) = widget.categories!.categoriesImage;
       ourServiceProvider.setPpImageUrl(widget.ourService!.ppImage ?? "");
       ourServiceProvider.setImageUrl(widget.ourService!.cpImage ?? "");
@@ -71,7 +74,7 @@ class _ServiceFormState extends State<ServiceForm> {
                     padding: const EdgeInsets.all(20),
                     child: ShopTextForm(
                       labelText: selectServiceReqStr,
-                      controller: ourServiceProvider.serviceController ,
+                      controller: ourServiceProvider.serviceController,
                       // onChanged: (value) {
                       //   ourServiceProvider.service = value;
                       // },
@@ -155,6 +158,11 @@ class _ServiceFormState extends State<ServiceForm> {
                   ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => FormLoader()));
+
                           await ourServiceProvider.saveDashOurService();
 
                           if (ourServiceProvider.dashServiceUtil ==
@@ -164,6 +172,7 @@ class _ServiceFormState extends State<ServiceForm> {
                           } else if (ourServiceProvider.dashServiceUtil ==
                               StatusUtil.error) {
                             Helper.snackBar(failedToSaveStr, context);
+                            Navigator.pop(context);
                           }
                         }
                       },

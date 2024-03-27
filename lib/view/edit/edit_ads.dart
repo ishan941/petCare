@@ -4,7 +4,7 @@ import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/provider/ads_provider.dart';
 import 'package:project_petcare/provider/categoryprovider.dart';
-import 'package:project_petcare/view/profile/adsform.dart';
+import 'package:project_petcare/view/ads/adsform.dart';
 import 'package:provider/provider.dart';
 
 class EditAds extends StatefulWidget {

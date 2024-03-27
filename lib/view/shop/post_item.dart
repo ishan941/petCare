@@ -10,6 +10,7 @@ import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
 import 'package:project_petcare/view/buttomnav.dart';
+import 'package:project_petcare/view/loader.dart';
 import 'package:project_petcare/view/shop/nextitem.dart';
 import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
@@ -34,12 +35,12 @@ class _ShopSaleState extends State<ShopSale> {
         backgroundColor: ColorUtil.BackGroundColorColor,
         elevation: 0,
         iconTheme: IconThemeData.fallback(),
-        title: Text("Post item",
-        style: appBarTitle,
+        title: Text(
+          "Post item",
+          style: appBarTitle,
         ),
       ),
       body: SafeArea(
-        
         child: Consumer<ShopProvider>(
           builder: (context, shopProvider, child) => Form(
             key: _formKey,
@@ -57,7 +58,9 @@ class _ShopSaleState extends State<ShopSale> {
                     Text("contain '*' must Fill"),
                     Divider(),
                     ui(shopProvider, context),
-                    SizedBox(height: 20,)
+                    SizedBox(
+                      height: 20,
+                    )
                   ],
                 ),
               ),
@@ -68,7 +71,6 @@ class _ShopSaleState extends State<ShopSale> {
     );
   }
 
- 
   Widget ui(ShopProvider shopProvider, BuildContext context) {
     return Column(
       children: [
@@ -205,7 +207,8 @@ class _ShopSaleState extends State<ShopSale> {
       ],
     );
   }
-   Widget submit(BuildContext context, ShopProvider shopProvider) {
+
+  Widget submit(BuildContext context, ShopProvider shopProvider) {
     return Column(
       children: [
         SizedBox(
@@ -214,6 +217,9 @@ class _ShopSaleState extends State<ShopSale> {
           child: ElevatedButton(
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => FormLoader()));
+
                 shopProvider.sendValueToFireBase();
                 if (shopProvider.shopIetms == StatusUtil.success) {
                   Helper.snackBar(successfullySavedStr, context);
@@ -223,9 +229,11 @@ class _ShopSaleState extends State<ShopSale> {
                       (route) => false);
                 } else {
                   Helper.snackBar(failedToSaveStr, context);
+                  Navigator.pop(context);
                 }
               } else {
                 Helper.snackBar(valiPriceStr, context);
+                Navigator.pop(context);
               }
             },
             style: ElevatedButton.styleFrom(
@@ -246,7 +254,6 @@ class _ShopSaleState extends State<ShopSale> {
       ],
     );
   }
-
 
   pickImageForShop(ShopProvider shopProvider) async {
     final image = await ImagePicker().pickImage(

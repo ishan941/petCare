@@ -8,6 +8,7 @@ import 'package:project_petcare/helper/customDropMenu.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
+import 'package:project_petcare/view/loader.dart';
 import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
 
@@ -93,7 +94,9 @@ class _YourProfessionState extends State<YourProfession> {
                                   ourServiceProvider.email = val;
                                 },
                               ),
-                              SizedBox(height: 15,),
+                              SizedBox(
+                                height: 15,
+                              ),
                               Text(selectProfessionStr),
                               SizedBox(
                                 height: 5,
@@ -113,7 +116,7 @@ class _YourProfessionState extends State<YourProfession> {
                               SizedBox(
                                 height: 15,
                               ),
-                              
+
                               // CustomDropDown(
                               //     onChanged: (value) {
                               //       ourServiceProvider.service = value;
@@ -239,6 +242,12 @@ class _YourProfessionState extends State<YourProfession> {
                                 child: ElevatedButton(
                                     onPressed: () async {
                                       if (_formKey.currentState!.validate()) {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    FormLoader()));
+
                                         await ourServiceProvider
                                             .saveOurServiceDto();
                                         if (ourServiceProvider
@@ -254,6 +263,7 @@ class _YourProfessionState extends State<YourProfession> {
                                             StatusUtil.error) {
                                           Helper.snackBar(
                                               failedToSaveStr, context);
+                                              Navigator.pop(context);
                                         }
                                       }
                                     },
