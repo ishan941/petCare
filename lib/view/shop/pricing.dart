@@ -213,14 +213,11 @@ class _NextPricingState extends State<NextPricing> {
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  elevation:
-                                      5, // Adjust the elevation to control the shadow
+                                  foregroundColor: Colors.white, elevation:
+                                      5, backgroundColor: ColorUtil.primaryColor, // Adjust the elevation to control the shadow
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  primary:
-                                      ColorUtil.primaryColor, // Button color
-                                  onPrimary: Colors.white, // Text color
+                                  ), // Text color
                                   shadowColor: Colors.grey
                                       .withOpacity(1), // Shadow color
                                 ),

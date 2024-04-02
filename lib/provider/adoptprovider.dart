@@ -16,16 +16,22 @@ class AdoptProvider extends ChangeNotifier {
   PetCareProvider petCareProvider = PetCareProvider();
   SignUpProvider signUpProvider = SignUpProvider();
 
-
   String? errorMessage, imageUrl;
   XFile? image;
   Dio dio = Dio();
 
-  String? id, petGender, petBreed, petAgeTime,petName,petAge,petWeight,ownerName,ownerPhone,ownerLocation,description;
+  String? id,
+      petGender,
+      petBreed,
+      petAgeTime,
+      petName,
+      petAge,
+      petWeight,
+      ownerName,
+      ownerPhone,
+      ownerLocation,
+      description;
   String? userImage;
-  
-
- 
 
   double _per = 0.0;
   double get per => _per;
@@ -34,10 +40,26 @@ class AdoptProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
   List<Adopt> adoptDetailsList = [];
 
-  
+  List<Adopt> _adoptList = []; // Your list of Adopt objects
+
+  List<Adopt> get adoptList => _adoptList;
+
+  // Function to set the list of Adopt objects
+  void setAdoptList(List<Adopt> newList) {
+    _adoptList = newList;
+    notifyListeners(); // Notify listeners of any changes
+  }
+
+  // Function to filter products based on petName
+  List<Adopt> filterByPetName(String searchTerm) {
+    return _adoptList
+        .where((adopt) =>
+            adopt.petName!.toLowerCase().contains(searchTerm.toLowerCase()))
+        .toList();
+      
+  }
 
   StatusUtil _adoptUtil = StatusUtil.idle;
   StatusUtil _uploadImageUtil = StatusUtil.idle;
@@ -49,7 +71,7 @@ class AdoptProvider extends ChangeNotifier {
   StatusUtil get getAdoptDetails => _getAdoptDetails;
   StatusUtil get deleteAdoptDetails => _deleteAdoptDetails;
 
-  setUserImage(value){
+  setUserImage(value) {
     userImage = value;
     notifyListeners();
   }
@@ -176,7 +198,6 @@ class AdoptProvider extends ChangeNotifier {
   sendAdoptValueToFireBase(BuildContext context) async {
     await uploadAdoptImageInFireBase();
     Adopt adopt = Adopt(
-     
       petName: petName,
       petAge: petAge,
       petAgeTime: petAgeTime,
@@ -192,7 +213,7 @@ class AdoptProvider extends ChangeNotifier {
     );
 
     try {
-     late ApiResponse response;
+      late ApiResponse response;
       if (adopt.id != null) {
         response = await petCareService.updateAdoptDetails(adopt);
       } else {
@@ -210,52 +231,50 @@ class AdoptProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> getAdoptdata() async {
+    if (_getAdoptDetails != StatusUtil.loading) {
+      setGetAdoptDetails(StatusUtil.loading);
+    }
 
+    try {
+      Response response = await dio
+          .get("https://78ce-103-90-147-204.ngrok-free.app/getDonationPet");
 
-Future<void> getAdoptdata() async {
-  if (_getAdoptDetails != StatusUtil.loading) {
-    setGetAdoptDetails(StatusUtil.loading);
-  }
+      if (response.statusCode == 200) {
+        dynamic responseData = response.data;
 
-  try {
-    Response response = await dio.get("https://78ce-103-90-147-204.ngrok-free.app/getDonationPet");
-    
-    if (response.statusCode == 200) {
-      dynamic responseData = response.data;
+        if (responseData is List) {
+          List<Adopt> adoptDetails =
+              responseData.map((json) => Adopt.fromJson(json)).toList();
 
-      if (responseData is List) {
-        List<Adopt> adoptDetails = responseData
-            .map((json) => Adopt.fromJson(json))
-            .toList();
-
-        adoptDetailsList = adoptDetails;
-        setGetAdoptDetails(StatusUtil.success);
+          adoptDetailsList = adoptDetails;
+          setGetAdoptDetails(StatusUtil.success);
+        } else {
+          // Handle the case when the response data is a map
+          // You may need to extract the list from the map based on your API's response structure.
+          // For example: adoptDetailsList = responseData['your_key_for_list'];
+          setGetAdoptDetails(StatusUtil.error);
+        }
       } else {
-        // Handle the case when the response data is a map
-        // You may need to extract the list from the map based on your API's response structure.
-        // For example: adoptDetailsList = responseData['your_key_for_list'];
         setGetAdoptDetails(StatusUtil.error);
       }
-    } else {
+    } on DioError catch (e) {
+      if (e.error is SocketException) {
+        errorMessage = "No internet connection.";
+      } else if (e.response != null) {
+        errorMessage =
+            "Unexpected server response: ${e.response!.statusCode} ${e.response!.statusMessage}";
+      } else {
+        errorMessage = "Unexpected error: ${e.toString()}";
+      }
       setGetAdoptDetails(StatusUtil.error);
     }
-  } on DioError catch (e) {
-    if (e.error is SocketException) {
-      errorMessage = "No internet connection.";
-    } else if (e.response != null) {
-      errorMessage = "Unexpected server response: ${e.response!.statusCode} ${e.response!.statusMessage}";
-    } else {
-      errorMessage = "Unexpected error: ${e.toString()}";
-    }
-    setGetAdoptDetails(StatusUtil.error);
+
+    // Handle any additional logic or UI updates as needed.
   }
 
-  // Handle any additional logic or UI updates as needed.
-}
-
-
-  void handleDoubleTap(int index){
-    if(index >= 0 && index < adoptDetailsList.length){
+  void handleDoubleTap(int index) {
+    if (index >= 0 && index < adoptDetailsList.length) {
       Adopt adopt = adoptDetailsList[index];
       adopt.isDoubleTapped = !adopt.isDoubleTapped;
       notifyListeners();

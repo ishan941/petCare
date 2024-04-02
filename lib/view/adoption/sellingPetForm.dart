@@ -14,7 +14,6 @@ import 'package:project_petcare/provider/adoptprovider.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/sellpetprovider.dart';
 import 'package:project_petcare/view/buttomnav.dart';
-import 'package:project_petcare/view/feeds/donatesalefeed.dart';
 import 'package:project_petcare/view/loader.dart';
 import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
@@ -51,18 +50,18 @@ class _SellingPetState extends State<SellingPet> {
   List<String> dogBredList = List.from(dogBreedList);
   List<String> catBreadList = List.from(catBreedList);
   List<String> fishBreadList = List.from(fishBreedList);
-  List<String> _getBreedList(String petCategory) {
-    switch (petCategory) {
-      case "Dog":
-        return dogBreedList;
-      case "Cat":
-        return catBreedList;
-      case "Fish":
-        return fishBreedList;
-      default:
-        return [];
-    }
-  }
+  // List<String> _getBreedList(String petCategory) {
+  //   switch (petCategory) {
+  //     case "Dog":
+  //       return dogBreedList;
+  //     case "Cat":
+  //       return catBreedList;
+  //     case "Fish":
+  //       return fishBreedList;
+  //     default:
+  //       return [];
+  //   }
+  // }
 
   @override
   void initState() {
@@ -97,7 +96,6 @@ class _SellingPetState extends State<SellingPet> {
     }
   }
 
-  bool _isLoading = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override

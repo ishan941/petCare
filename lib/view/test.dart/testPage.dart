@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:project_petcare/model/categories.dart';
 import 'package:project_petcare/provider/categoryprovider.dart';
 import 'package:project_petcare/provider/sellpetprovider.dart';
 import 'package:provider/provider.dart';

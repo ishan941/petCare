@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
-import 'package:project_petcare/provider/categoryprovider.dart';
 import 'package:project_petcare/provider/sellpetprovider.dart';
-import 'package:project_petcare/view/donate/donate_1.dart';
-import 'package:project_petcare/view/feeds/sellingPetForm.dart';
+import 'package:project_petcare/view/adoption/sellingPetForm.dart';
 import 'package:provider/provider.dart';
 
 class EditDonate extends StatefulWidget {

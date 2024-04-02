@@ -7,7 +7,6 @@ import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/practice/pincodefeld.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
-import 'package:project_petcare/view/logins/phonecode.dart';
 import 'package:provider/provider.dart';
 
 class ForgetPassword extends StatefulWidget {

@@ -11,7 +11,7 @@ import 'package:project_petcare/view/buttomnav.dart';
 import 'package:provider/provider.dart';
 
 class DonateThird extends StatefulWidget {
-    Adopt? adopt;
+ final   Adopt? adopt;
   DonateThird({Key? key, this.adopt}) : super(key: key);
 
   @override

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
-import 'package:project_petcare/provider/ads_provider.dart';
-import 'package:project_petcare/provider/categoryprovider.dart';
 import 'package:project_petcare/provider/ourservice_provider.dart';
 import 'package:project_petcare/view/edit/edit_ourservicedto.dart';
 import 'package:project_petcare/view/ourservice/dashservice_form.dart';

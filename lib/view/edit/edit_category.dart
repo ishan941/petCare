@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/helper.dart';
-import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
-import 'package:project_petcare/provider/adoptprovider.dart';
 import 'package:project_petcare/provider/categoryprovider.dart';
 import 'package:project_petcare/view/categories.dart/forms/categoriesForms.dart';
 import 'package:provider/provider.dart';

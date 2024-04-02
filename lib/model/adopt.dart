@@ -16,6 +16,7 @@ class Adopt {
   String? petPrice;
   bool isDoubleTapped;
   bool isAccepted;
+  bool isSold;
 
   Adopt({
     this.petName,
@@ -35,6 +36,7 @@ class Adopt {
     this.petPrice,
     this.isDoubleTapped = false,
     this.isAccepted = false,
+    this.isSold = false
   });
 
   Adopt.fromJson(Map<String, dynamic> json)
@@ -54,6 +56,7 @@ class Adopt {
         petPrice = json['petPrice'],
         isDoubleTapped = false,
         isAccepted = false,
+        isSold =  json['sold'] ?? false,
         userImage = json['userImage']; // Initialize isDoubleTapped here
 
   Map<String, dynamic> toJson() {
@@ -73,6 +76,7 @@ class Adopt {
     data['petPrice'] = this.petPrice;
     data['categories'] = this.categories;
     data['userImage'] = this.userImage;
+    data['isSold'] = this.isSold;
 
     return data;
   }

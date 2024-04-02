@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/model/shop.dart';
@@ -6,6 +7,7 @@ import 'package:project_petcare/provider/donateprovider.dart';
 import 'package:project_petcare/provider/payment_provider.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
+import 'package:project_petcare/view/loader.dart';
 import 'package:project_petcare/view/shop/shopall.dart';
 import 'package:provider/provider.dart';
 
@@ -384,6 +386,9 @@ class _ShopDetailsState extends State<ShopDetails> {
                 onTap: () async {
                   Helper().pay(
                       context, int.parse(widget.shop!.price!), shopProvider);
+                      if(shopProvider.isPaymentSucessfull == StatusUtil.success){
+                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> FormLoader()), (route) => false);
+                      }
                 },
                 child: Image.asset("assets/images/khalti.png",
                     height: 40, width: 70),

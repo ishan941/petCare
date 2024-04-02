@@ -147,14 +147,11 @@ class _NextDescription extends State<NextDescription> {
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  elevation:
+                                  foregroundColor: Colors.white, backgroundColor: ColorUtil.primaryColor, elevation:
                                       5, // Adjust the elevation to control the shadow
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  primary:
-                                      ColorUtil.primaryColor, // Button color
-                                  onPrimary: Colors.white, // Text color
+                                  ), // Text color
                                   shadowColor: Colors.grey
                                       .withOpacity(1), // Shadow color
                                 ),

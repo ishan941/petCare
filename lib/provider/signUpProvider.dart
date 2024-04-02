@@ -83,13 +83,11 @@ class SignUpProvider extends ChangeNotifier {
     SignUp signUp = SignUp(email: email, password: password);
 
     try {
-      ApiResponse response = await petCareService.userLogin(signUp, token);
+      ApiResponse response = await petCareService.userLogin(signUp);
 
       if (response.statusUtil == StatusUtil.success) {
         token = response.data['token'];
-
-        SaveValueToSharedPreference(true);
-
+        
         setLoginUtil(StatusUtil.success);
         notifyListeners();
       } else {
@@ -123,11 +121,11 @@ class SignUpProvider extends ChangeNotifier {
     }
   }
 
- Future<void> SaveValueToSharedPreference(bool isLoggedIn) async {
+ Future<void> SaveValueToSharedPreference(String fcmToken) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setBool("isUserLoggedIn", isLoggedIn);
-  await prefs.setBool("isGoogleLoggedIn", isLoggedIn); // Adjust this if necessary
-  await prefs.setString("token", isLoggedIn ? token : ""); // Adjust this if necessary
+  await prefs.setBool("isUserLoggedIn", true);
+  await prefs.setBool("isGoogleLoggedIn", true); // Adjust this if necessary
+  await prefs.setString("token",  fcmToken ); // Adjust this if necessary
   notifyListeners();
 }
 
@@ -144,6 +142,7 @@ class SignUpProvider extends ChangeNotifier {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token') ?? "";
     print("$token");
+    notifyListeners();
   }
 
   Future<void> clearLoginStatus(BuildContext context) async {

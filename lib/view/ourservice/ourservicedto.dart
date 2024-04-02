@@ -111,7 +111,7 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SearchHere()));
+                                    builder: (context) => SearchPage()));
                           },
                           child: ConstSearch(
                             prefixIcon: Icon(Icons.search),
@@ -523,15 +523,19 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                                             ),
                                           ),
                                         ),
+                                        SizedBox(width: 10,),
                                         Icon(
                                           Icons.location_on_outlined,
                                           size: 15,
                                           color: Colors.black.withOpacity(0.5),
                                         ),
-                                        Text(ourServiceProvider.ourServiceDtoList[index].location ?? "",
-                                        
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
+                                        SizedBox(
+                                          width: 120,
+                                          child: Text(ourServiceProvider.ourServiceDtoList[index].location ?? "",
+                                          
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          ),
                                         )
                                       ],
                                     ),

@@ -21,7 +21,6 @@ class _SplashScreenState extends State<SplashScreen>
     Future.delayed(Duration.zero, () {
       readValue();
     });
-
     super.initState();
 
     _controller = AnimationController(
@@ -51,38 +50,31 @@ class _SplashScreenState extends State<SplashScreen>
     });
   }
 
-   readValue() async {
+  readValue() async {
     var signUpProvider = Provider.of<SignUpProvider>(context, listen: false);
     try {
       await signUpProvider.readValueFromSharedPreference();
 
-      // Wait for 2 seconds before navigating to enhance user experience
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(Duration(seconds: 1));
 
-      if (signUpProvider.isUserLoggedIn) {
-        // If the user is logged in, navigate to the home screen
+      if (signUpProvider.isUserLoggedIn == true) {
+        await signUpProvider.SaveValueToSharedPreference(signUpProvider.token);
+        signUpProvider.getTokenFromSharedPref();
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => BottomNavBar()),
         );
       } else {
-        // If the user is not logged in, navigate to the login page
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => LoginPage()),
         );
       }
-
-      // Ensure that the user's login status is saved after navigation
-      await signUpProvider.SaveValueToSharedPreference(true);
     } catch (e) {
-      // Handle any errors gracefully
       print("Error: $e");
-      // You might want to display an error message to the user
     }
-    // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> LoginPage()), (route) => false);
   }
-
 
   @override
   Widget build(BuildContext context) {

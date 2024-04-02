@@ -13,7 +13,7 @@ import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
 
 class DonateFirstPage extends StatefulWidget {
-  Adopt? adopt;
+final  Adopt? adopt;
   DonateFirstPage({super.key, this.adopt});
 
   @override

@@ -1,7 +1,6 @@
 import 'package:project_petcare/model/adopt.dart';
 import 'package:project_petcare/model/ads.dart';
 import 'package:project_petcare/model/categories.dart';
-import 'package:project_petcare/model/dashservice.dart';
 import 'package:project_petcare/model/donate.dart';
 import 'package:project_petcare/model/feed.dart';
 import 'package:project_petcare/model/mypet.dart';
@@ -49,7 +48,7 @@ abstract class PetCareService {
   Future<FireResponse> saveFeedValue(Feed feed);
   Future<FireResponse> getFeedValue();
 
-  Future<ApiResponse> userLogin(SignUp signUp, String token);
+  Future<ApiResponse> userLogin(SignUp signUp);
   Future<ApiResponse> userLoginDetails(SignUp signUp, String token);
   Future<ApiResponse> saveUserDetails(SignUp signUp, String token);
   Future<ApiResponse> savePaymentDetails(Payment payment, String token);
@@ -81,6 +80,7 @@ abstract class PetCareService {
   Future<ApiResponse> getDashService(String token);
   Future<ApiResponse> getOurServiceDto(String token);
    Future<ApiResponse> getUserAddedPet(String token);
+   Future<ApiResponse> getDiseases(String token);
 
   Future<ApiResponse> getCategoriesById(
       Categories categories, int id, String token);
@@ -98,6 +98,8 @@ abstract class PetCareService {
   Future<ApiResponse> deleteSellingPetById(int id, String token);
 
   Future<ApiResponse> approvelDonated(Adopt adopt, int id, String token);
+  Future<ApiResponse> makeSold(Adopt adopt, int id, String token);
+  Future<ApiResponse> makeAdopted(Adopt adopt, int id, String token);
   Future<ApiResponse> approvelSelling(Adopt adopt, int id, String token);
 
 

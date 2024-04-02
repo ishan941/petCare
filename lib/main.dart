@@ -21,6 +21,7 @@ import 'package:project_petcare/provider/shop_provider.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/view/buttomnav.dart';
 import 'package:project_petcare/view/shop/shopall.dart';
+import 'package:project_petcare/view/splashScreen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -145,9 +146,9 @@ class _MyAppState extends State<MyApp> {
                 },
               ),
             ),
-            // home: SplashScreen(),
+            home: SplashScreen(),
             // home: LoginPage(),
-            home: BottomNavBar(),
+            // home: BottomNavBar(),
             // home: MyProfile(),
           ),
         ),

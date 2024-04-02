@@ -722,9 +722,9 @@ class PetCareImpl extends PetCareService {
   }
 
   @override
-  Future<ApiResponse> userLogin(SignUp signUp, String token) async {
+  Future<ApiResponse> userLogin(SignUp signUp) async {
     ApiResponse response =
-        await api.post(BASEURL + loginUrl, signUp.toJson(), token: token);
+        await api.post(BASEURL + loginUrl, signUp.toJson());
     return response;
   }
 
@@ -734,20 +734,20 @@ class PetCareImpl extends PetCareService {
         await api.post(BASEURL + saveUserUrl, signUp.toJson(), token: token);
     return response;
   }
+
   @override
-  Future<ApiResponse> verifyEmail(SignUp signUp)async {
-     ApiResponse response =
+  Future<ApiResponse> verifyEmail(SignUp signUp) async {
+    ApiResponse response =
         await api.post(BASEURL + verifyEmailApi, signUp.toJson());
     return response;
   }
+
   @override
-  Future<ApiResponse> changePasswordByEmail(SignUp signUp)async {
-     ApiResponse response =
+  Future<ApiResponse> changePasswordByEmail(SignUp signUp) async {
+    ApiResponse response =
         await api.post(BASEURL + newpasswordApi, signUp.toJson());
     return response;
   }
-  
-  
 
   @override
   Future<ApiResponse> saveSellingPet(Adopt adopt, String token) async {
@@ -801,58 +801,76 @@ class PetCareImpl extends PetCareService {
         await api.post(BASEURL + saveAdsImageUrl, ads.toJson(), token: token);
     return response;
   }
+
   @override
-  Future<ApiResponse> saveSymptomes(Scanner scanner, String token)async {
-  ApiResponse response =
-        await api.post(BASEURL + saveAdsImageUrl ,scanner.toJson(), token: token);
+  Future<ApiResponse> saveSymptomes(Scanner scanner, String token) async {
+    ApiResponse response = await api
+        .post(BASEURL + saveSymptomesApi, scanner.toJson(), token: token);
     return response;
   }
 
-
- @override
-  Future<ApiResponse> getApprovedDonatedPet(String token) async{
-     ApiResponse response =
+  @override
+  Future<ApiResponse> getApprovedDonatedPet(String token) async {
+    ApiResponse response =
         await api.get(BASEURL + getApproveDonationListUrl, token: token);
     return response;
   }
-    @override
-  Future<ApiResponse> getApprovedSellingPet(String token) async{
-     ApiResponse response =
+
+  @override
+  Future<ApiResponse> getApprovedSellingPet(String token) async {
+    ApiResponse response =
         await api.get(BASEURL + getApproveSellingListUrl, token: token);
     return response;
   }
-    @override
-  Future<ApiResponse> getMyPaymentDetails(String token) async{
-     ApiResponse response =
+
+  @override
+  Future<ApiResponse> getMyPaymentDetails(String token) async {
+    ApiResponse response =
         await api.get(BASEURL + getMyPaymentsApi, token: token);
     return response;
   }
-    @override
-  Future<ApiResponse> getPaymentDetails(String token) async{
-     ApiResponse response =
+
+  @override
+  Future<ApiResponse> getPaymentDetails(String token) async {
+    ApiResponse response =
         await api.get(BASEURL + getPaymentsDetailsApi, token: token);
     return response;
   }
- 
+   @override
+  Future<ApiResponse> makeAdopted(Adopt adopt, int id, String token) async{
+    ApiResponse response = await api.post(
+        BASEURL + makeAdoptedUrl + id.toString(), adopt.toJson(),
+        token: token);
+    return response;
+  }
+  
+  @override
+  Future<ApiResponse> makeSold(Adopt adopt, int id, String token)async {
+     ApiResponse response = await api.post(
+        BASEURL + makeSoldUrl + id.toString(), adopt.toJson(),
+        token: token);
+    return response;
+  }
 
   @override
-  Future<ApiResponse> approvelDonated(Adopt adopt,  int id, String token,)async {
-    ApiResponse response =
-        await api.post(BASEURL + acceptDonatedUrl + id.toString(), adopt.toJson(), token: token );
+  Future<ApiResponse> approvelDonated(
+    Adopt adopt,
+    int id,
+    String token,
+  ) async {
+    ApiResponse response = await api.post(
+        BASEURL + acceptDonatedUrl + id.toString(), adopt.toJson(),
+        token: token);
     return response;
-  }
-    @override
-  Future<ApiResponse> approvelSelling(Adopt adopt, int id, String token) async{
-     ApiResponse response =
-        await api.post(BASEURL + acceptSellingUrl + id.toString(), adopt.toJson(), token: token );
-    return response;
-   
   }
 
-   
-  
-  
-  
+  @override
+  Future<ApiResponse> approvelSelling(Adopt adopt, int id, String token) async {
+    ApiResponse response = await api.post(
+        BASEURL + acceptSellingUrl + id.toString(), adopt.toJson(),
+        token: token);
+    return response;
+  }
 
   @override
   Future<ApiResponse> getUserName(String token) async {
@@ -860,18 +878,21 @@ class PetCareImpl extends PetCareService {
         await api.get(BASEURL + getUsernameUrl, token: token);
     return response;
   }
+
   @override
   Future<ApiResponse> getUserFullName(String token) async {
     ApiResponse response =
         await api.get(BASEURL + getUserFullNameUrl, token: token);
     return response;
   }
+
   @override
   Future<ApiResponse> getUserEmail(String token) async {
     ApiResponse response =
         await api.get(BASEURL + getUserEmailUrl, token: token);
     return response;
   }
+
   @override
   Future<ApiResponse> getUserPhone(String token) async {
     ApiResponse response =
@@ -920,6 +941,12 @@ class PetCareImpl extends PetCareService {
   }
 
   @override
+  Future<ApiResponse> getDiseases(String token) async {
+    ApiResponse response = await api.get(BASEURL + getSymptomesApi, token: token);
+    return response;
+  }
+
+  @override
   Future<ApiResponse> getAdsImage(String token) async {
     ApiResponse response =
         await api.get(BASEURL + getAdsImageUrl, token: token);
@@ -939,39 +966,45 @@ class PetCareImpl extends PetCareService {
         await api.get(BASEURL + getOurServiceDtoUrl, token: token);
     return response;
   }
-   @override
-  Future<ApiResponse> getUserAddedPet(String token) async{
-      ApiResponse response =
+
+  @override
+  Future<ApiResponse> getUserAddedPet(String token) async {
+    ApiResponse response =
         await api.get(BASEURL + getUserAddedPetApi, token: token);
     return response;
-   
-  }
-  @override
-  Future<ApiResponse> getCategoriesById( Categories categories, int id, String token) async {
-    ApiResponse response =
-        await api.post(BASEURL + getCategoryByIdUrl,categories.toJson(), token: token, );
-    return response;
-  }
-@override
-  Future<ApiResponse> getDogCategory(String token)async {
-    ApiResponse response = await api.get(BASEURL + getAllCategoryApi + "Dog", token: token);
-    return response;
-   
-  }
-@override
-  Future<ApiResponse> getCatCategory(String token)async {
-    ApiResponse response = await api.get(BASEURL + getAllCategoryApi + "Cat", token: token);
-    return response;
-   
-  }
-@override
-  Future<ApiResponse> getFishCategory(String token)async {
-    ApiResponse response = await api.get(BASEURL + getAllCategoryApi + "Fish", token: token);
-    return response;
-   
   }
 
- 
+  @override
+  Future<ApiResponse> getCategoriesById(
+      Categories categories, int id, String token) async {
+    ApiResponse response = await api.post(
+      BASEURL + getCategoryByIdUrl,
+      categories.toJson(),
+      token: token,
+    );
+    return response;
+  }
+
+  @override
+  Future<ApiResponse> getDogCategory(String token) async {
+    ApiResponse response =
+        await api.get(BASEURL + getAllCategoryApi + "Dog", token: token);
+    return response;
+  }
+
+  @override
+  Future<ApiResponse> getCatCategory(String token) async {
+    ApiResponse response =
+        await api.get(BASEURL + getAllCategoryApi + "Cat", token: token);
+    return response;
+  }
+
+  @override
+  Future<ApiResponse> getFishCategory(String token) async {
+    ApiResponse response =
+        await api.get(BASEURL + getAllCategoryApi + "Fish", token: token);
+    return response;
+  }
 
 // @override
 // Future<ApiResponse> getCategoriesDetails() async {
@@ -1011,77 +1044,68 @@ class PetCareImpl extends PetCareService {
 //     }
 //   }
   @override
-  Future<ApiResponse> searchSellingPets(  String token) async {
+  Future<ApiResponse> searchSellingPets(String token) async {
     ApiResponse response =
         await api.get(BASEURL + searchSellingPetsApi, token: token);
     return response;
   }
+
   @override
-  Future<ApiResponse> searchDonatedPets(String token) async{
-    ApiResponse response =
-        await api.get(BASEURL + searchDonationPetsApi, token: token, );
+  Future<ApiResponse> searchDonatedPets(String token) async {
+    ApiResponse response = await api.get(
+      BASEURL + searchDonationPetsApi,
+      token: token,
+    );
     return response;
   }
-
 
   @override
   Future<ApiResponse> deleteCategoryById(int id, String token) async {
-    ApiResponse response =
-        await api.delete(BASEURL + deleteCategoryUrl + id.toString() ,  token: token);
+    ApiResponse response = await api
+        .delete(BASEURL + deleteCategoryUrl + id.toString(), token: token);
     return response;
   }
-   @override
-  Future<ApiResponse> deleteAdsById(int id, String token) async{
-    ApiResponse response =
-        await api.delete(BASEURL + deleteAdsUrl + id.toString() ,  token: token);
-    return response;
-  }
-    @override
-  Future<ApiResponse> deleteOurServiceById(int id, String token) async{
-    ApiResponse response =
-        await api.delete(BASEURL + deleteAdsUrl + id.toString() ,  token: token);
-    return response;
-  }
-  
+
   @override
-  Future<ApiResponse> deleteOurServiceDtoById(int id, String token) async{
-   ApiResponse response =
-        await api.delete(BASEURL + deleteAdsUrl + id.toString() ,  token: token);
-    return response;
-  }
-  
-  @override
-  Future<ApiResponse> deleteDonatedPetById(Adopt adopt, int id, String token) async{
+  Future<ApiResponse> deleteAdsById(int id, String token) async {
     ApiResponse response =
-        await api.delete(BASEURL + declineDonatedUrl + id.toString(), token: token);
+        await api.delete(BASEURL + deleteAdsUrl + id.toString(), token: token);
     return response;
   }
-  
+
   @override
-  Future<ApiResponse> deleteSellingPetById(int id, String token) async{
-   ApiResponse response =
-        await api.delete(BASEURL + deleteSellingPetUrl + id.toString(), token: token);
+  Future<ApiResponse> deleteOurServiceById(int id, String token) async {
+    ApiResponse response =
+        await api.delete(BASEURL + deleteAdsUrl + id.toString(), token: token);
     return response;
   }
-  
+
+  @override
+  Future<ApiResponse> deleteOurServiceDtoById(int id, String token) async {
+    ApiResponse response =
+        await api.delete(BASEURL + deleteAdsUrl + id.toString(), token: token);
+    return response;
+  }
+
+  @override
+  Future<ApiResponse> deleteDonatedPetById(
+      Adopt adopt, int id, String token) async {
+    ApiResponse response = await api
+        .delete(BASEURL + declineDonatedUrl + id.toString(), token: token);
+    return response;
+  }
+
+  @override
+  Future<ApiResponse> deleteSellingPetById(int id, String token) async {
+    ApiResponse response = await api
+        .delete(BASEURL + deleteSellingPetUrl + id.toString(), token: token);
+    return response;
+  }
+
   @override
   Future<ApiResponse> getAllCategory(String key, String token) {
-    // TODO: implement getAllCategory
     throw UnimplementedError();
   }
-
   
-  
-  
-  
-  
-  
- 
-  
- 
-
-  
-  
-
  
 }

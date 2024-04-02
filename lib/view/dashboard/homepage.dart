@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
+
 import 'package:project_petcare/core/smooth_scrollable.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/constSearch.dart';
@@ -17,14 +15,11 @@ import 'package:project_petcare/provider/ourservice_provider.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
 import 'package:project_petcare/provider/signUpProvider.dart';
-import 'package:project_petcare/view/adopt/adoptDetails.dart';
-import 'package:project_petcare/view/adopt/adotp.dart';
+
 import 'package:project_petcare/view/categories.dart/categoriesDetails.dart';
-import 'package:project_petcare/view/dashboard/categories.dart';
 import 'package:project_petcare/view/ourservice/ourserviceSeeMore.dart';
 import 'package:project_petcare/view/ourservice/ourservicedto.dart';
 import 'package:project_petcare/view/profile/account.dart';
-import 'package:project_petcare/view/shop/shopdetails.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -94,8 +89,9 @@ class _HomePageState extends State<HomePage> {
   getCategories() async {
     var categoriesProvider =
         Provider.of<CategoriesProvider>(context, listen: false);
-    categoriesProvider.getTokenFromSharedPref();
+    await categoriesProvider.getTokenFromSharedPref();
     await categoriesProvider.getCategoriesData();
+    
   }
 
   getAds() async {
@@ -251,10 +247,13 @@ class _HomePageState extends State<HomePage> {
                                                     //         color: ColorUtil
                                                     //             .primaryColor,
                                                     //         size: 100),
-                                                   Helper.primaryLoader(),
-                                                   SizedBox(height: 10,),
-                                                    Text("Loading...",
-                                                    style: appBarTitle,
+                                                    Helper.primaryLoader(),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Text(
+                                                      "Loading...",
+                                                      style: appBarTitle,
                                                     )
                                                   ],
                                                 ),

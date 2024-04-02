@@ -1,8 +1,9 @@
-import 'dart:io';
 import 'dart:math' as math;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project_petcare/core/statusutil.dart';
+import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/provider/scanner_provider.dart';
 import 'package:project_petcare/view/loader.dart';
@@ -40,6 +41,19 @@ class _AiScannerState extends State<AiScanner> {
   ];
 
   String? symptoms, predictedDisease;
+  @override
+  void initState() {
+    Future.delayed(Duration.zero, () {
+      getValue();
+    });
+    super.initState();
+  }
+
+  getValue() async {
+    var scannerProvider = Provider.of<ScannerProvider>(context, listen: false);
+    scannerProvider.getTokenFromSharedPref();
+    // await scannerProvider.sendSymptomesToApi();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,104 +82,215 @@ class _AiScannerState extends State<AiScanner> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 20),
-                        Text(
-                          "Select symptoms that your dog is suffering from",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Container(
-                          // height: 400,
-                          child: GridView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount:
-                                  3, // Adjust the number of columns as needed
-                              crossAxisSpacing:
-                                  10, // Adjust the horizontal spacing between items
-                              mainAxisSpacing:
-                                  10, // Adjust the vertical spacing between items
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 20),
+                            Text(
+                              "Select symptoms that your dog is suffering from",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            shrinkWrap: true,
-                            itemCount:symptomsList.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final symptom = symptomsList[index];
-
-                              // Set different sizes for specific symptoms
-
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    if (scannerProvider.selectedSymptoms
-                                        .contains(symptom)) {
-                                      scannerProvider.selectedSymptoms
-                                          .remove(symptom);
-                                    } else {
-                                      scannerProvider.selectedSymptoms
-                                          .add(symptom);
-                                    }
-                                  });
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: scannerProvider.selectedSymptoms
-                                            .contains(symptom)
-                                        ? Colors.blue
-                                        : Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                      color: Colors.blue,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      symptom,
-                                      style: TextStyle(
-                                        fontSize: 12, // Adjust as needed
-                                        color: scannerProvider.selectedSymptoms
-                                                .contains(symptom)
-                                            ? Colors.white
-                                            : Colors.black,
-                                      ),
-                                    ),
+                            SizedBox(height: 10),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.5,
+                                child: Wrap(
+                                  spacing:
+                                      5, // Set horizontal spacing between chips
+                                  runSpacing:
+                                      5, // Set vertical spacing between chips
+                                  children: List.generate(
+                                    symptomsList.length,
+                                    (index) {
+                                      final symptom = symptomsList[index];
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            if (scannerProvider.selectedSymptoms
+                                                .contains(symptom)) {
+                                              scannerProvider.selectedSymptoms
+                                                  .remove(symptom);
+                                            } else {
+                                              scannerProvider.selectedSymptoms
+                                                  .add(symptom);
+                                            }
+                                          });
+                                        },
+                                        child: Chip(
+                                          backgroundColor: scannerProvider
+                                                  .selectedSymptoms
+                                                  .contains(symptom)
+                                              ? Colors.blue
+                                              : Colors.white,
+                                          label: Text(
+                                            symptom,
+                                            style: TextStyle(
+                                              color: scannerProvider
+                                                      .selectedSymptoms
+                                                      .contains(symptom)
+                                                  ? Colors.white
+                                                  : Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
-                              );
-                            },
-                          ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
+                  // Container(
+                  //   child: Wrap(
+                  //     spacing: 5, // Set horizontal spacing between chips
+                  //     runSpacing: 5, // Set vertical spacing between chips
+                  //     children: List.generate(
+                  //       scannerProvider.selectedSymptoms.length,
+                  //       (index) {
+                  //         final symptom =
+                  //             scannerProvider.selectedSymptoms[index];
+                  //         return Chip(
+                  //           backgroundColor: ColorUtil.secondaryColor,
+                  //           deleteIconColor: Colors.white,
+                  //           label: Text(symptom),
+                  //           onDeleted: () {
+                  //             setState(() {
+                  //               scannerProvider.selectedSymptoms
+                  //                   .removeAt(index);
+                  //             });
+                  //           },
+                  //         );
+                  //       },
+                  //     ),
+                  //   ),
+                  // ),
+                  Container(
+                    height:
+                        40, // Set a fixed height for the list of selected symptoms
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: scannerProvider.selectedSymptoms.length,
+                      itemBuilder: (context, index) {
+                        final symptom = scannerProvider.selectedSymptoms[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Chip(
+                            label: Text(symptom),
+                            backgroundColor: Colors
+                                .blue, // Set default color for selected symptoms
+                            deleteIconColor:
+                                Colors.white, // Set color for delete icon
+                            onDeleted: () {
+                              setState(() {
+                                scannerProvider.selectedSymptoms.removeAt(index);
+                              });
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () async {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => FormLoader(
-                                    customText:
-                                        "Please wait we are finding diseases that your dog is suffering form according to the provided symptomes",
-                                  )));
-                      await scannerProvider.sendSymptomesToApi();
-                      if (scannerProvider.scannerUtil == StatusUtil.success) {
-                        // Helper.snackBar(successfullySavedStr, context);
-                        // Navigator.pop(context);
-                      } else {
-// Helper.snackBar(message, context)
-                        // Navigator.pop(context);
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FormLoader(
+                            customText:
+                                "Please wait we are finding diseases that your dog is suffering from according to the provided symptoms",
+                          ),
+                        ),
+                      );
+
+                      // Send symptoms to API and wait for response
+                      var response = await scannerProvider.sendSymptomesToApi();
+
+                      // Close the loader screen
+                      Navigator.pop(context);
+                      // Check if the response is successful
+                      if (scannerProvider.symptomesUtil == StatusUtil.success) {
+                        if (response != null) {
+                          // Parse the response body
+                          // var responseBody = response.data;
+
+                          // Display the response body
+
+                          // Show the response dialog
+                          // Show the response dialog
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              // Extract the list of diseases from the response
+                              List<dynamic> diseases = response['data'];
+
+                              // Create a StringBuffer to build the content of the dialog
+                              StringBuffer content = StringBuffer();
+
+                              // Iterate over the list of diseases and add them with indices
+                              for (int i = 0; i < diseases.length; i++) {
+                                content.write('${i + 1}. ${diseases[i]}');
+                                if (i < diseases.length - 1) {
+                                  content.write(
+                                      '\n'); // Add a new line if not the last disease
+                                }
+                              }
+
+                              return AlertDialog(
+                                title: Text(
+                                    "Your Dog may be suffering from following diseases :-"),
+                                content: Text(content.toString()),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("OK"),
+                                  )
+                                ],
+                              );
+                            },
+                          );
+                        } else {
+                          // Display an error message
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("Error"),
+                                content:
+                                    Text("Failed to send symptoms to API."),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("OK"),
+                                  )
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      } else if (scannerProvider.symptomesUtil ==
+                          StatusUtil.error) {
+                        Helper.snackBar("Failed", context);
                       }
                     },
                     child: Text("Submit"),
                   ),
+
                   // SizedBox(height: 20),
                   // scannerProvider.image == null && scannerProvider.photo == null
                   //     ? Text("Please add a photo to identify the dog bread ")
@@ -376,7 +501,6 @@ class _ExpandableFabState extends State<ExpandableFab>
           curve: const Interval(0.25, 1.0, curve: Curves.easeInOut),
           duration: const Duration(milliseconds: 250),
           child: FloatingActionButton(
-            
             onPressed: _toggle,
             child: const Icon(
               Icons.pets,

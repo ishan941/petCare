@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/constDescriptionForm.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
@@ -11,7 +10,6 @@ import 'package:project_petcare/model/shop.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
 import 'package:project_petcare/view/buttomnav.dart';
 import 'package:project_petcare/view/loader.dart';
-import 'package:project_petcare/view/shop/nextitem.dart';
 import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
 
@@ -237,12 +235,10 @@ class _ShopSaleState extends State<ShopSale> {
               }
             },
             style: ElevatedButton.styleFrom(
-              elevation: 5, // Adjust the elevation to control the shadow
+              foregroundColor: Colors.white, backgroundColor: ColorUtil.primaryColor, elevation: 5, // Adjust the elevation to control the shadow
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
-              ),
-              primary: ColorUtil.primaryColor, // Button color
-              onPrimary: Colors.white, // Text color
+              ), // Text color
               shadowColor: Colors.grey.withOpacity(1), // Shadow color
             ),
             child: Text(

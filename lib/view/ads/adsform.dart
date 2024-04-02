@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/string_const.dart';
-import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/model/ads.dart';
 import 'package:project_petcare/provider/ads_provider.dart';
 import 'package:project_petcare/view/buttomnav.dart';

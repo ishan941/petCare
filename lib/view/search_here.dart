@@ -1,42 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:project_petcare/provider/sellpetprovider.dart';
-import 'package:provider/provider.dart'; // Assuming ApiService class definition
+import 'package:project_petcare/model/adopt.dart';
+import 'package:project_petcare/provider/adoptprovider.dart';
+import 'package:provider/provider.dart';
 
-class SearchHere extends StatefulWidget {
-  const SearchHere({Key? key}) : super(key: key);
-
-  @override
-  State<SearchHere> createState() => _SearchHereState();
-}
-
-class _SearchHereState extends State<SearchHere> {
-  TextEditingController _searchController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    getSellingPetData();
-  }
-
-  // Method to fetch selling and donated pet data based on search query
-  void getSellingPetData() async {
-    var sellingProvider = Provider.of<SellingPetProvider>(context, listen: false);
-    var token = sellingProvider.getTokenFromSharedPref();// Assuming you have a method to get the token
-    var query = _searchController.text;
-    // await sellingProvider.getSearchSellingPet(token);
-    // await sellingProvider.getSearchDonatePet(token, query);
-  }
-
+class SearchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          SizedBox(
-            height: 100,
-          ),
-          SearchBar(onChanged: (_) {}, controller: _searchController)
-        ],
+      appBar: AppBar(
+        title: Text('Search'),
+      ),
+      body: Consumer<AdoptProvider>(
+        builder: (context, adoptProvider, child) => Column(
+          children: [
+            TextField(
+              onChanged: (value) {
+                // Update search term and notify listeners
+              adoptProvider.
+                    filterByPetName(value);
+              },
+              decoration: InputDecoration(
+                hintText: 'Search by pet name',
+                contentPadding: EdgeInsets.all(16.0),
+              ),
+            ),
+            Expanded(
+              child: Consumer<AdoptProvider>(
+                builder: (context, adoptProvider, child) {
+                  // Access filtered list from the provider
+                  List<Adopt> filteredList = adoptProvider.adoptList;
+      
+                  return ListView.builder(
+                    itemCount: filteredList.length,
+                    itemBuilder: (context, index) {
+                      // Display items from the filtered list
+                      return ListTile(
+                        title: Text(filteredList[index].petName ?? ''),
+                        // Add more details or actions as needed
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

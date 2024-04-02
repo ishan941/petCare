@@ -24,7 +24,9 @@ class _ShopAllState extends State<ShopAll> {
 
   @override
   void initState() {
-    getShopData();
+    Future.delayed(Duration.zero, () {
+      getShopData();
+    });
     super.initState();
   }
 
@@ -254,5 +256,4 @@ class _ShopAllState extends State<ShopAll> {
       ),
     );
   }
-  
 }

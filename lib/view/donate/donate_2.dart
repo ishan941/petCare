@@ -9,7 +9,7 @@ import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
 
 class DonateSecond extends StatefulWidget {
-  Adopt? adopt;
+ final Adopt? adopt;
    DonateSecond({super.key, this.adopt});
 
   @override
