@@ -143,35 +143,8 @@ class ShopProvider extends ChangeNotifier {
     return favouriteList.contains(shop);
   }
 
-  // Future<void> updateFavouriteList(Shop shop) async {
-  //   FireResponse response;
-  //   String? favoriteToJson;
-  //   print(checkFavourite(shop));
-  //   if (checkFavourite(shop)) {
-  //     favouriteList.remove(shop);
-  //     notifyListeners();
-  //     favoriteToJson =
-  //         jsonEncode(favouriteList.map((e) => e.toJson()).toList());
-  //   } else {
-  //     favouriteList.add(shop);
-  //     notifyListeners();
-  //     favoriteToJson =
-  //         jsonEncode(favouriteList.map((e) => e.toJson()).toList());
-  //   }
-  //   signUp?.favourite = favoriteToJson;
-
-  //   response = await petCareService.updateFavourite(
-  //     signUp!,
-  //   );
-
-  //   if (response.statusUtil == StatusUtil.success) {
-  //     setFavourite(true);
-  //     // await itemDetails();
-  //   }
-  // }
-
-  Future<void> updateShopFavouriteList(Shop shop) async {
-    ApiResponse response;
+  Future<void> updateFavouriteList(Shop shop) async {
+    FireResponse response;
     String? favoriteToJson;
     print(checkFavourite(shop));
     if (checkFavourite(shop)) {
@@ -186,85 +159,112 @@ class ShopProvider extends ChangeNotifier {
           jsonEncode(favouriteList.map((e) => e.toJson()).toList());
     }
     signUp?.favourite = favoriteToJson;
-    response = await petCareService.favouriteShopItems(signUp!, token);
+
+    response = await petCareService.updateFavourite(
+      signUp!,
+    );
+
     if (response.statusUtil == StatusUtil.success) {
       setFavourite(true);
-      // await itemDetails();
+      await itemDetails();
     }
   }
+
+  // Future<void> updateShopFavouriteList(Shop shop) async {
+  //   ApiResponse response;
+  //   String? favoriteToJson;
+  //   print(checkFavourite(shop));
+  //   if (checkFavourite(shop)) {
+  //     favouriteList.remove(shop);
+  //     notifyListeners();
+  //     favoriteToJson =
+  //         jsonEncode(favouriteList.map((e) => e.toJson()).toList());
+  //   } else {
+  //     favouriteList.add(shop);
+  //     notifyListeners();
+  //     favoriteToJson =
+  //         jsonEncode(favouriteList.map((e) => e.toJson()).toList());
+  //   }
+  //   signUp?.favourite = favoriteToJson;
+  //   response = await petCareService.favouriteShopItems(signUp!, token);
+  //   if (response.statusUtil == StatusUtil.success) {
+  //     setFavourite(true);
+  //     await itemDetails();
+  //   }
+  // }
 
   bool checkCart(Shop shop) {
     return shopCartList.contains(shop);
   }
 
-  // Future<void> updateCartList(Shop shop) async {
-  //   FireResponse response;
-  //   String? shopCartToJson;
+  Future<void> updateCartList(Shop shop) async {
+    FireResponse response;
+    String? shopCartToJson;
 
-  //   shopCartList.add(shop);
-  //   shopCartToJson = jsonEncode(shopCartList.map((e) => e.toJson()).toList());
+    shopCartList.add(shop);
+    shopCartToJson = jsonEncode(shopCartList.map((e) => e.toJson()).toList());
 
-  //   signUp?.shopCart = shopCartToJson;
-  //   response = await petCareService.updateCart(signUp!);
-  //   if (response.statusUtil == StatusUtil.success) {
-  //     setShopCart(true);
-  //     await itemDetails();
-  //   }
-  // }
+    signUp?.shopCart = shopCartToJson;
+    response = await petCareService.updateCart(signUp!);
+    if (response.statusUtil == StatusUtil.success) {
+      setShopCart(true);
+      await itemDetails();
+    }
+  }
 
-  // Future<void> removeCart(Shop shop) async {
-  //   String shopCartToJson;
-  //   shopCartList.remove(shop);
-  //   notifyListeners();
-  //   shopCartToJson = jsonEncode(shopCartList.map((e) => e.toJson()).toList());
-  //   signUp?.shopCart = shopCartToJson;
+  Future<void> removeCart(Shop shop) async {
+    String shopCartToJson;
+    shopCartList.remove(shop);
+    notifyListeners();
+    shopCartToJson = jsonEncode(shopCartList.map((e) => e.toJson()).toList());
+    signUp?.shopCart = shopCartToJson;
 
-  //   FireResponse response = await petCareService.updateCart(signUp!);
-  //   if (response.statusUtil == StatusUtil.success) {
-  //     setShopCart(true);
-  //     await itemDetails();
-  //   }
-  // }
+    FireResponse response = await petCareService.updateCart(signUp!);
+    if (response.statusUtil == StatusUtil.success) {
+      setShopCart(true);
+      await itemDetails();
+    }
+  }
 
-  // Future<void> removeFavourite(Shop shop) async {
-  //   String? favoriteToJson;
+  Future<void> removeFavourite(Shop shop) async {
+    String? favoriteToJson;
 
-  //   favouriteList.remove(shop);
-  //   notifyListeners();
+    favouriteList.remove(shop);
+    notifyListeners();
 
-  //   favoriteToJson = jsonEncode(favouriteList.map((e) => e.toJson()).toList());
-  //   signUp?.shopCart = favoriteToJson;
+    favoriteToJson = jsonEncode(favouriteList.map((e) => e.toJson()).toList());
+    signUp?.shopCart = favoriteToJson;
 
-  //   FireResponse response = await petCareService.updateFavourite(signUp!);
-  //   if (response.statusUtil == StatusUtil.success) {
-  //     setFavourite(true);
-  //     // await itemDetails();
-  //   }
-  // }
+    FireResponse response = await petCareService.updateFavourite(signUp!);
+    if (response.statusUtil == StatusUtil.success) {
+      setFavourite(true);
+      await itemDetails();
+    }
+  }
 
 //FireBase
-  // Future<void> itemDetails() async {
-  //   if (_getshopItemsUtil != StatusUtil.loading && !isFromFav) {
-  //     print("Fetching shop items - Setting loading status");
-  //     setgetShopItemsUtil(StatusUtil.loading);
-  //   }
-  //   try {
-  //     var response = await petCareService.getShopItems();
-  //     if (response.statusUtil == StatusUtil.success) {
-  //       shopItemsList = response.data;
-  //       print("Shop items fetched successfully");
-  //       setgetShopItemsUtil(StatusUtil.success);
-  //     } else if (response.statusUtil == StatusUtil.error) {
-  //       errorMessage = response.errorMessage;
-  //       print("Error fetching shop items: $errorMessage");
-  //       setgetShopItemsUtil(StatusUtil.error);
-  //     }
-  //   } catch (e) {
-  //     errorMessage = "$e";
-  //     print("Exception while fetching shop items: $errorMessage");
-  //     setgetShopItemsUtil(StatusUtil.error);
-  //   }
-  // }
+  Future<void> itemDetails() async {
+    if (_getshopItemsUtil != StatusUtil.loading && !isFromFav) {
+      print("Fetching shop items - Setting loading status");
+      setgetShopItemsUtil(StatusUtil.loading);
+    }
+    try {
+      var response = await petCareService.getShopItems();
+      if (response.statusUtil == StatusUtil.success) {
+        shopItemsList = response.data;
+        print("Shop items fetched successfully");
+        setgetShopItemsUtil(StatusUtil.success);
+      } else if (response.statusUtil == StatusUtil.error) {
+        errorMessage = response.errorMessage;
+        print("Error fetching shop items: $errorMessage");
+        setgetShopItemsUtil(StatusUtil.error);
+      }
+    } catch (e) {
+      errorMessage = "$e";
+      print("Exception while fetching shop items: $errorMessage");
+      setgetShopItemsUtil(StatusUtil.error);
+    }
+  }
 
   setImage(XFile? image) {
     this.image = image;
@@ -355,23 +355,23 @@ class ShopProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> getShopItems() async {
-    if (_getshopItemsUtil != StatusUtil.loading) {
-      setgetShopItemsUtil(StatusUtil.loading);
-    }
-    ApiResponse response = await petCareService.getShopItems(token);
-    try {
-      if (response.statusUtil == StatusUtil.success) {
-        shopItemsList = Shop.listFromJson(response.data['data']);
-        setgetShopItemsUtil(StatusUtil.success);
-      } else {
-        setgetShopItemsUtil(StatusUtil.error);
-      }
-    } catch (e) {
-      errorMessage = e.toString();
-      setgetShopItemsUtil(StatusUtil.error);
-    }
-  }
+  // Future<void> getShopItems() async {
+  //   if (_getshopItemsUtil != StatusUtil.loading) {
+  //     setgetShopItemsUtil(StatusUtil.loading);
+  //   }
+  //   ApiResponse response = await petCareService.getShopItems(token);
+  //   try {
+  //     if (response.statusUtil == StatusUtil.success) {
+  //       shopItemsList = Shop.listFromJson(response.data['data']);
+  //       setgetShopItemsUtil(StatusUtil.success);
+  //     } else {
+  //       setgetShopItemsUtil(StatusUtil.error);
+  //     }
+  //   } catch (e) {
+  //     errorMessage = e.toString();
+  //     setgetShopItemsUtil(StatusUtil.error);
+  //   }
+  // }
 
   clearShopItems() async {
     productController.clear();
@@ -399,7 +399,7 @@ class ShopProvider extends ChangeNotifier {
     try {
       if (response.statusUtil == StatusUtil.success) {
         setDeleteShopItem(StatusUtil.success);
-        getShopItems();
+        // getShopItems();
       } else {
         setDeleteShopItem(StatusUtil.error);
       }

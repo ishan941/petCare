@@ -34,8 +34,8 @@ class _ShopAllState extends State<ShopAll> {
     var shopProvider = Provider.of<ShopProvider>(context, listen: false);
     Future.delayed(Duration(milliseconds: 1), () async {
       await shopProvider.getTokenFromSharedPref();
-      await shopProvider.getShopItems();
-      // await shopProvider.itemDetails();
+      // await shopProvider.getShopItems();
+      await shopProvider.itemDetails();
       // shopProvider.setFavourite(false);
       // await shopProvider.getUser();
     });
@@ -195,7 +195,7 @@ class _ShopAllState extends State<ShopAll> {
                         //     : SizedBox(),
                         IconButton(
                             onPressed: () async {
-                              shopProvider.updateShopFavouriteList(
+                              shopProvider.updateFavouriteList(
                                   shopProvider.shopItemsList[index]);
                             },
                             icon: Icon(

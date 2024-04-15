@@ -27,7 +27,7 @@ abstract class PetCareService {
   Future<FireResponse> getAdoptDetails();
   Future<ApiResponse> updateAdoptDetails(Adopt adopt);
   Future<FireResponse> shopItemDetails(Shop shop);
-  // Future<FireResponse> getShopItems();
+  Future<FireResponse> getShopItems();
   // Future<FireResponse> saveDashServiceDetails(OurService ourService);
 
   Future<ApiResponse> categoriesDetails(Categories categories, String token);
@@ -70,7 +70,7 @@ abstract class PetCareService {
   Future<ApiResponse> getUserPhone(String token);
   Future<ApiResponse> getUserEmail(String token);
   Future<ApiResponse> getSellingPet(String token);
-  Future<ApiResponse> getShopItems(String token);
+  // Future<ApiResponse> getShopItems(String token);
   Future<ApiResponse> getOurService(String token);
   Future<ApiResponse> getDonatePet(String token);
   Future<ApiResponse> getCategoriesDetails(String token);

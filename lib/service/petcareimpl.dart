@@ -164,33 +164,33 @@ class PetCareImpl extends PetCareService {
     }
   }
 
-  // @override
-  // Future<FireResponse> getShopItems() async {
-  //   if (await Helper.checkInterNetConnection()) {
-  //     try {
-  //       var response =
-  //           await FirebaseFirestore.instance.collection("ShopDetails").get();
-  //       final items = response.docs;
-  //       List<Shop> shopItemsList = [];
-  //       if (items.isNotEmpty) {
-  //         for (var shopItemDetails in items) {
-  //           Shop shop = Shop.fromJson(shopItemDetails.data());
-  //           shop.id = shopItemDetails.id;
-  //           shopItemsList.add(shop);
+  @override
+  Future<FireResponse> getShopItems() async {
+    if (await Helper.checkInterNetConnection()) {
+      try {
+        var response =
+            await FirebaseFirestore.instance.collection("ShopDetails").get();
+        final items = response.docs;
+        List<Shop> shopItemsList = [];
+        if (items.isNotEmpty) {
+          for (var shopItemDetails in items) {
+            Shop shop = Shop.fromJson(shopItemDetails.data());
+            // shop.id = shopItemDetails.id;
+            shopItemsList.add(shop);
 
-  //           // shopItemsList.add(Shop.fromJson(shopItemDetails.data()));
-  //         }
-  //       }
-  //       return FireResponse(
-  //           statusUtil: StatusUtil.success, data: shopItemsList);
-  //     } catch (e) {
-  //       return FireResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
-  //     }
-  //   } else {
-  //     return FireResponse(
-  //         statusUtil: StatusUtil.error, errorMessage: noInternetStr);
-  //   }
-  // }
+            shopItemsList.add(Shop.fromJson(shopItemDetails.data()));
+          }
+        }
+        return FireResponse(
+            statusUtil: StatusUtil.success, data: shopItemsList);
+      } catch (e) {
+        return FireResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
+      }
+    } else {
+      return FireResponse(
+          statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+    }
+  }
 
   @override
   Future<FireResponse> getAdoptDetails() async {
@@ -916,12 +916,12 @@ class PetCareImpl extends PetCareService {
     return response;
   }
 
-  @override
-  Future<ApiResponse> getShopItems(String token) async {
-    ApiResponse response =
-        await api.get(BASEURL + getShopItemUrl, token: token);
-    return response;
-  }
+  // @override
+  // Future<ApiResponse> getShopItems(String token) async {
+  //   ApiResponse response =
+  //       await api.get(BASEURL + getShopItemUrl, token: token);
+  //   return response;
+  // }
 
   @override
   Future<ApiResponse> getSellingPet(String token) async {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:project_petcare/core/statusutil.dart';
 import 'package:project_petcare/helper/helper.dart';
 import 'package:project_petcare/helper/textStyle_const.dart';
-import 'package:project_petcare/provider/categoryprovider.dart';
 import 'package:project_petcare/provider/shop_provider.dart';
 import 'package:project_petcare/view/shop/post_item.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +26,9 @@ class _EditShopState extends State<EditShop> {
   getShopItems() async {
     var shopProvider = Provider.of<ShopProvider>(context, listen: false);
     shopProvider.getTokenFromSharedPref();
-    await shopProvider.getShopItems();
+    // await shopProvider.getShopItems();
+          await shopProvider.itemDetails();
+
   }
 
   @override
@@ -150,7 +151,9 @@ class _EditShopState extends State<EditShop> {
                 await shopProvider.deleteShopItem(id).then((value) async {
                   if (shopProvider.deleteShopItemUtil ==
                       StatusUtil.success) {
-                    await shopProvider.getShopItems();
+                    // await shopProvider.getShopItems();
+                          await shopProvider.itemDetails();
+
                     Helper.snackBar("Delete Successfully", context);
                     Navigator.pop(context);
                   }

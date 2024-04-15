@@ -26,7 +26,9 @@ class _MyCartState extends State<MyCart> {
   getShopCart() async {
     var shopProvider = Provider.of<ShopProvider>(context, listen: false);
      shopProvider.getTokenFromSharedPref();
-    await shopProvider.getShopItems();
+    // await shopProvider.getShopItems();
+          await shopProvider.itemDetails();
+
   }
 
   @override
