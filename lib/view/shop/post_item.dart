@@ -24,42 +24,71 @@ class ShopSale extends StatefulWidget {
 class _ShopSaleState extends State<ShopSale> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? product, condition, images, location;
+  @override
+  void initState() {
+    Future.delayed(Duration.zero, () {
+      controller();
+    });
+    super.initState();
+  }
+
+  controller() async {
+    var shopProvider = Provider.of<ShopProvider>(context, listen: false);
+    await shopProvider.getTokenFromSharedPref();
+    if (widget.shop != null) {
+      shopProvider.productController.text = widget.shop!.product ?? "";
+      shopProvider.conditionController.text = widget.shop!.condition ?? "";
+      shopProvider.locationController.text = widget.shop!.location ?? "";
+      shopProvider.typeController.text = widget.shop!.type ?? "";
+      shopProvider.negotiableController.text = widget.shop!.negotiable ?? "";
+      shopProvider.descriptionController.text = widget.shop!.description ?? "";
+      shopProvider.priceController.text = widget.shop!.price ?? "";
+      shopProvider.setImageUrl(widget.shop!.images ?? "");
+      shopProvider.setId(widget.shop!.id!);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorUtil.BackGroundColorColor,
-      appBar: AppBar(
+    return WillPopScope(
+      onWillPop: () async {
+        Provider.of<ShopProvider>(context, listen: false).clearShopItems();
+        return true;
+      },
+      child: Scaffold(
         backgroundColor: ColorUtil.BackGroundColorColor,
-        elevation: 0,
-        iconTheme: IconThemeData.fallback(),
-        title: Text(
-          "Post item",
-          style: appBarTitle,
+        appBar: AppBar(
+          backgroundColor: ColorUtil.BackGroundColorColor,
+          elevation: 0,
+          iconTheme: IconThemeData.fallback(),
+          title: Text(
+            "Post item",
+            style: appBarTitle,
+          ),
         ),
-      ),
-      body: SafeArea(
-        child: Consumer<ShopProvider>(
-          builder: (context, shopProvider, child) => Form(
-            key: _formKey,
-            child: Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Please note :",
-                      style: subTitleText,
-                    ),
-                    Text("Please fill form correctly, "),
-                    Text("if you added once you cannot edit later"),
-                    Text("contain '*' must Fill"),
-                    Divider(),
-                    ui(shopProvider, context),
-                    SizedBox(
-                      height: 20,
-                    )
-                  ],
+        body: SafeArea(
+          child: Consumer<ShopProvider>(
+            builder: (context, shopProvider, child) => Form(
+              key: _formKey,
+              child: Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Please note :",
+                        style: subTitleText,
+                      ),
+                      Text("Please fill form correctly, "),
+                      Text("if you added once you cannot edit later"),
+                      Text("contain '*' must Fill"),
+                      Divider(),
+                      ui(shopProvider, context),
+                      SizedBox(
+                        height: 20,
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -80,9 +109,7 @@ class _ShopSaleState extends State<ShopSale> {
               //product
               ShopTextForm(
                 labelText: productTileReqStr,
-                onChanged: (value) {
-                  shopProvider.product = value;
-                },
+                controller: shopProvider.productController,
                 validator: (value) {
                   if (value!.isEmpty) {
                     return productValiStr;
@@ -113,9 +140,7 @@ class _ShopSaleState extends State<ShopSale> {
               ),
               //condition
               ShopTextForm(
-                onChanged: (value) {
-                  shopProvider.condition = value;
-                },
+                controller: shopProvider.conditionController,
                 validator: (value) {
                   if (value!.isEmpty) {
                     return conditionValiStr;
@@ -130,9 +155,7 @@ class _ShopSaleState extends State<ShopSale> {
               //location
               ShopTextForm(
                 labelText: locationReqStr,
-                onChanged: (value) {
-                  shopProvider.location = value;
-                },
+                controller: shopProvider.locationController,
                 validator: (value) {
                   if (value!.isEmpty) {
                     return locationValiStr;
@@ -148,36 +171,56 @@ class _ShopSaleState extends State<ShopSale> {
                 onTap: () {
                   pickImageForShop(shopProvider);
                 },
-                child: Container(
-                  height: MediaQuery.of(context).size.height * .3,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all()),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: shopProvider.imageUrl != null
-                        ? Image.network(
-                            shopProvider.imageUrl!,
-                            fit: BoxFit.cover,
-                          )
-                        : shopProvider.image != null
-                            ? Image.file(
-                                File(shopProvider.image!.path),
+                child: Stack(
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height * .3,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all()),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: shopProvider.imageUrl != null
+                            ? Image.network(
+                                shopProvider.imageUrl!,
                                 fit: BoxFit.cover,
                               )
-                            : Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.photo_library_outlined,
-                                    color: ColorUtil.secondaryColor,
-                                    size: 60,
+                            : shopProvider.image != null
+                                ? Image.file(
+                                    File(shopProvider.image!.path),
+                                    fit: BoxFit.cover,
+                                  )
+                                : Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.photo_library_outlined,
+                                        color: ColorUtil.secondaryColor,
+                                        size: 60,
+                                      ),
+                                      Text("Uploade image from Gallery")
+                                    ],
                                   ),
-                                  Text("Uploade image from Gallery")
-                                ],
-                              ),
-                  ),
+                      ),
+                    ),
+                    shopProvider.image != null ||
+                            shopProvider.imageUrl != null
+                        ? Row(
+                            children: [
+                              Spacer(),
+                              IconButton(
+                                  onPressed: () {
+                                    shopProvider.clearImage();
+                                  },
+                                  icon: Icon(
+                                    Icons.clear,
+                                    color: Colors.red,
+                                  ))
+                            ],
+                          )
+                        : SizedBox()
+                  ],
                 ),
               ),
               SizedBox(
@@ -185,15 +228,14 @@ class _ShopSaleState extends State<ShopSale> {
               ),
               DescriptionTextForm(
                 hintText: "Description about product/type*",
-                onChanged: (value) {
-                  shopProvider.description = value;
-                },
+                controller: shopProvider.descriptionController,
               ),
               SizedBox(
                 height: 15,
               ),
               ShopTextForm(
                 hintText: "Price*",
+                controller: shopProvider.priceController,
               ),
               SizedBox(
                 height: 20,
@@ -218,24 +260,36 @@ class _ShopSaleState extends State<ShopSale> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => FormLoader()));
 
-                shopProvider.sendValueToFireBase();
-                if (shopProvider.shopIetms == StatusUtil.success) {
+                // await  shopProvider.sendValueToFireBase();
+
+                // if (shopProvider.shopIetms == StatusUtil.success) {
+                //   Helper.snackBar(successfullySavedStr, context);
+                //   Navigator.pushAndRemoveUntil(
+                //       context,
+                //       MaterialPageRoute(builder: (context) => BottomNavBar()),
+                //       (route) => false);
+                // } else {
+                //   Helper.snackBar(failedToSaveStr, context);
+                //   Navigator.pop(context);
+                // }
+                await shopProvider.sendShopItems();
+                if (shopProvider.saveShopItemsUtil == StatusUtil.success) {
                   Helper.snackBar(successfullySavedStr, context);
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => BottomNavBar()),
                       (route) => false);
-                } else {
+                  shopProvider.clearShopItems();
+                } else if (shopProvider.saveShopItemsUtil == StatusUtil.error) {
                   Helper.snackBar(failedToSaveStr, context);
                   Navigator.pop(context);
                 }
-              } else {
-                Helper.snackBar(valiPriceStr, context);
-                Navigator.pop(context);
               }
             },
             style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white, backgroundColor: ColorUtil.primaryColor, elevation: 5, // Adjust the elevation to control the shadow
+              foregroundColor: Colors.white,
+              backgroundColor: ColorUtil.primaryColor,
+              elevation: 5, // Adjust the elevation to control the shadow
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ), // Text color

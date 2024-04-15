@@ -25,7 +25,8 @@ class _MyCartState extends State<MyCart> {
 
   getShopCart() async {
     var shopProvider = Provider.of<ShopProvider>(context, listen: false);
-    await shopProvider.getUser();
+     shopProvider.getTokenFromSharedPref();
+    await shopProvider.getShopItems();
   }
 
   @override
@@ -187,7 +188,7 @@ class _MyCartState extends State<MyCart> {
             ),
             ElevatedButton(
               onPressed: () {
-                shopProvider.removeCart(shopProvider.shopCartList[index]);
+                // shopProvider.removeCart(shopProvider.shopCartList[index]);
                 Navigator.of(context).pop();
                 Helper.snackBar(
                   "You removed items form your cart",

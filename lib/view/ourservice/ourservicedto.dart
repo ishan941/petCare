@@ -43,7 +43,7 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
   void initState() {
     Future.delayed(Duration.zero, () {
       getValue();
-      SchedulerBinding.instance.addPostFrameCallback((_) {});
+      // SchedulerBinding.instance.addPostFrameCallback((_) {});
     });
     super.initState();
 
@@ -99,33 +99,30 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
               SizedBox(
                 height: 10,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SearchPage()));
+              Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SearchPage()));
+                        },
+                        child: ConstSearch(
+                          prefixIcon: Icon(Icons.search),
+                          controller: _searchController,
+                          hintText: searchHereStr,
+                          onChanged: (_) {
+                            // _searchHere(ourServiceProvider);
                           },
-                          child: ConstSearch(
-                            prefixIcon: Icon(Icons.search),
-                            controller: _searchController,
-                            hintText: searchHereStr,
-                            onChanged: (_) {
-                              // _searchHere(ourServiceProvider);
-                            },
-                          ),
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
               const SizedBox(
                 height: 15,
@@ -232,7 +229,7 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                 child: ListView.builder(
                   itemCount: ourServiceProvider.distanceServiceList.length,
                   itemBuilder: (context, index) => ourServiceProvider
-                              .getOurServiceUtil==
+                              .getOurServiceUtil ==
                           StatusUtil.loading
                       ? SimmerEffect.shimmerEffect()
                       : ourServiceProvider.getOurServiceUtil == StatusUtil.error
@@ -245,7 +242,7 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(12),
                                   child: Container(
-                                    height: 140,
+                                    height: 120,
                                     color: Colors.white,
                                     child: Row(
                                       children: [
@@ -286,14 +283,22 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                                             children: [
                                               Row(
                                                 children: [
-                                                  Text(
-                                                    ourServiceProvider
-                                                            .distanceServiceList[
-                                                                index]
-                                                            .ourServiceDto
-                                                            ?.fullName ??
-                                                        "",
-                                                    style: subTitleText,
+                                                  SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            .4,
+                                                    child: Text(
+                                                      ourServiceProvider
+                                                              .distanceServiceList[
+                                                                  index]
+                                                              .ourServiceDto
+                                                              ?.fullName ??
+                                                          "",
+                                                      maxLines: 1,
+                                                      style: subTitleText,
+                                                    ),
                                                   ),
                                                   SizedBox(
                                                     width: 5,
@@ -332,7 +337,9 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                                                           textStyleSmallSized),
                                                 ],
                                               ),
-                                              Spacer(),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
                                               Row(
                                                 children: [
                                                   Container(
@@ -365,8 +372,11 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                                                       ),
                                                     ),
                                                   ),
-                                                  IconButton(
-                                                    onPressed: () {
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  InkWell(
+                                                    onTap: () {
                                                       Helper().launchMaps(
                                                           ourServiceProvider
                                                                   .distanceServiceList[
@@ -375,14 +385,16 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                                                                   ?.location ??
                                                               "");
                                                     },
-                                                    icon: Icon(
-                                                      Icons
-                                                          .location_on_outlined,
-                                                      size: 40,
-                                                      color: Colors.black
-                                                          .withOpacity(0.5),
-                                                    ),
+                                                    child: Icon(
+                                                        Icons
+                                                            .location_on_outlined,
+                                                        size: 25,
+                                                        color: ColorUtil
+                                                            .primaryColor
+                                                        // .withOpacity(0.5),
+                                                        ),
                                                   ),
+
                                                   Text(
                                                       "${ourServiceProvider.distanceServiceList[index].distance?.toStringAsFixed(3)}" +
                                                           "KM",
@@ -433,7 +445,8 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ServiceDetails(
-                                    ourServiceDto: ourServiceProvider.ourServiceDtoList[index])));
+                                    ourServiceDto: ourServiceProvider
+                                        .ourServiceDtoList[index])));
                       },
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
@@ -448,7 +461,9 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                                   borderRadius: BorderRadius.circular(10),
                                   child: Container(
                                     child: Image.network(
-                                      ourServiceProvider.ourServiceDtoList[index].image ?? "",
+                                      ourServiceProvider
+                                              .ourServiceDtoList[index].image ??
+                                          "",
                                       fit: BoxFit.cover,
                                     ),
                                     height:
@@ -465,15 +480,29 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                                   children: [
                                     Row(
                                       children: [
-                                        Text(
-                                          ourServiceProvider.ourServiceDtoList[index].fullName ?? "",
-                                          style: subTitleText,
+                                        Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              .4,
+                                          child: Text(
+                                            ourServiceProvider
+                                                    .ourServiceDtoList[index]
+                                                    .fullName ??
+                                                "",
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: subTitleText,
+                                          ),
                                         ),
                                         SizedBox(
                                           width: 5,
                                         ),
                                         Text(
-                                           ourServiceProvider.ourServiceDtoList[index].service ?? "",
+                                          ourServiceProvider
+                                                  .ourServiceDtoList[index]
+                                                  .service ??
+                                              "",
                                           style: textStyleMini,
                                         ),
                                       ],
@@ -486,9 +515,15 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                                         Icon(
                                           Icons.phone_in_talk_outlined,
                                           size: 15,
-                                        ),SizedBox(width: 5,),
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
                                         Text(
-                                          ourServiceProvider.ourServiceDtoList[index].phone ?? "",
+                                          ourServiceProvider
+                                                  .ourServiceDtoList[index]
+                                                  .phone ??
+                                              "",
                                           style: textStyleSmallSized,
                                         ),
                                       ],
@@ -499,9 +534,14 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                                           Icons.email_outlined,
                                           size: 15,
                                         ),
-                                        SizedBox(width: 5,),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
                                         Text(
-                                           ourServiceProvider.ourServiceDtoList[index].email ?? "",
+                                            ourServiceProvider
+                                                    .ourServiceDtoList[index]
+                                                    .email ??
+                                                "",
                                             style: textStyleSmallSized),
                                       ],
                                     ),
@@ -523,18 +563,38 @@ class _OurServicesUiDtoState extends State<OurServicesUiDto>
                                             ),
                                           ),
                                         ),
-                                        SizedBox(width: 10,),
-                                        Icon(
-                                          Icons.location_on_outlined,
-                                          size: 15,
-                                          color: Colors.black.withOpacity(0.5),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            Helper().launchMaps(
+                                                ourServiceProvider
+                                                        .distanceServiceList[
+                                                            index]
+                                                        .ourServiceDto
+                                                        ?.location ??
+                                                    "");
+                                          },
+                                          child: Icon(
+                                            Icons.location_on_outlined,
+                                            size: 25,
+                                            color:
+                                                Colors.black.withOpacity(0.5),
+                                          ),
                                         ),
                                         SizedBox(
-                                          width: 120,
-                                          child: Text(ourServiceProvider.ourServiceDtoList[index].location ?? "",
-                                          
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              .25,
+                                          child: Text(
+                                            ourServiceProvider
+                                                    .ourServiceDtoList[index]
+                                                    .location ??
+                                                "",
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         )
                                       ],

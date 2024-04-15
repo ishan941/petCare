@@ -23,7 +23,8 @@ class _ShopFavouriteState extends State<ShopFavourite> {
 
   getFavourite() async {
     var shopProvider = Provider.of<ShopProvider>(context, listen: false);
-    await shopProvider.getUser();
+    shopProvider.getTokenFromSharedPref();
+    await shopProvider.getShopItems();
   }
 
   @override
@@ -110,8 +111,8 @@ class _ShopFavouriteState extends State<ShopFavourite> {
                                   Spacer(),
                                   IconButton(
                                       onPressed: () async {
-                                        shopProvider.updateFavouriteList(
-                                            shopProvider.favouriteList[index]);
+                                        // shopProvider.updateFavouriteList(
+                                        //     shopProvider.favouriteList[index]);
                                       },
                                       icon: Icon(
                                           shopProvider.checkFavourite(

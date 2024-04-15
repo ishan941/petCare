@@ -92,7 +92,7 @@ class _EditShopState extends State<EditDonate> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => SellingPet(
+                                          builder: (context) => SellingPetForm(
                                             choice: "Donate",
                                               adopt: sellingPetProvider
                                                   .donatePetList[index])));

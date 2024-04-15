@@ -27,7 +27,7 @@ abstract class PetCareService {
   Future<FireResponse> getAdoptDetails();
   Future<ApiResponse> updateAdoptDetails(Adopt adopt);
   Future<FireResponse> shopItemDetails(Shop shop);
-  Future<FireResponse> getShopItems();
+  // Future<FireResponse> getShopItems();
   // Future<FireResponse> saveDashServiceDetails(OurService ourService);
 
   Future<ApiResponse> categoriesDetails(Categories categories, String token);
@@ -51,6 +51,7 @@ abstract class PetCareService {
   Future<ApiResponse> userLogin(SignUp signUp);
   Future<ApiResponse> userLoginDetails(SignUp signUp, String token);
   Future<ApiResponse> saveUserDetails(SignUp signUp, String token);
+  Future<ApiResponse> saveShopItems(Shop shop, String token);
   Future<ApiResponse> savePaymentDetails(Payment payment, String token);
   Future<ApiResponse> saveSellingPet(Adopt adopt, String token);
   Future<ApiResponse> saveDashOurService(OurService ourService, String token);
@@ -69,6 +70,7 @@ abstract class PetCareService {
   Future<ApiResponse> getUserPhone(String token);
   Future<ApiResponse> getUserEmail(String token);
   Future<ApiResponse> getSellingPet(String token);
+  Future<ApiResponse> getShopItems(String token);
   Future<ApiResponse> getOurService(String token);
   Future<ApiResponse> getDonatePet(String token);
   Future<ApiResponse> getCategoriesDetails(String token);
@@ -95,11 +97,13 @@ abstract class PetCareService {
   Future<ApiResponse> deleteOurServiceById(int id, String token);
   Future<ApiResponse> deleteOurServiceDtoById(int id, String token);
   Future<ApiResponse> deleteDonatedPetById(Adopt adopt, int id, String token);
-  Future<ApiResponse> deleteSellingPetById(int id, String token);
+  Future<ApiResponse> deleteSellingPetById(Adopt adopt, int id, String token);
+  Future<ApiResponse> deleteShopItemsMyId(Shop shop, int id, String token);
 
   Future<ApiResponse> approvelDonated(Adopt adopt, int id, String token);
   Future<ApiResponse> makeSold(Adopt adopt, int id, String token);
   Future<ApiResponse> makeAdopted(Adopt adopt, int id, String token);
+  Future<ApiResponse> favouriteShopItems(SignUp signUp, String token);
   Future<ApiResponse> approvelSelling(Adopt adopt, int id, String token);
 
 

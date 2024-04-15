@@ -24,17 +24,17 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
   late TabController _tabController;
   @override
   void initState() {
-     Future.delayed(Duration.zero, () async {
+    Future.delayed(Duration.zero, () async {
       getToken();
-      await getFeed();
-      await getUserPhone();
+       getFeed();
+       getUserPhone();
     });
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
   }
 
   // void loadData() async {
-   
+
   // }
 
   void getToken() {
@@ -75,7 +75,8 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
         backgroundColor: ColorUtil.BackGroundColorColor,
         body: SafeArea(
           child: Consumer<SignUpProvider>(
-            builder: (context, signUpProvider, child) => Consumer<FeedProvider>(
+            builder: (context, signUpProvider, child) => 
+            Consumer<FeedProvider>(
               builder: (context, feedProvider, child) =>
                   Consumer<SellingPetProvider>(
                 builder: (context, sellingPetProvider, child) =>
@@ -88,19 +89,25 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
                         backgroundColor: ColorUtil.BackGroundColorColor,
                         elevation: 0,
                         pinned: true,
+                        // centerTitle: false,
                         flexibleSpace: LayoutBuilder(
                           builder: (BuildContext context,
                               BoxConstraints constraints) {
                             return FlexibleSpaceBar(
+                              centerTitle: true,
                               title: constraints.maxHeight > 50
                                   ? Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          'PetCare',
-                                          style: TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.w600,
-                                            color: ColorUtil.primaryColor,
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            'PetCare',
+                                            style: TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.w600,
+                                              color: ColorUtil.primaryColor,
+                                            ),
                                           ),
                                         ),
                                         Spacer(),
@@ -130,7 +137,6 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
                                       ],
                                     )
                                   : null,
-                              centerTitle: false,
                             );
                           },
                         ),
@@ -247,11 +253,10 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
                               children: [
                                 Spacer(),
                                 ClipRRect(
-                                  borderRadius: BorderRadius.only(topRight: Radius.circular(12)),
-                                  
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(12)),
                                   child: Container(
                                     color: ColorUtil.primaryColor,
-                                
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text("Sold"),
@@ -322,8 +327,8 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
                                         ),
                                         TextButton(
                                           onPressed: () async {
-                                            await sellingPetProvider.requestSold(
-                                                sellingPetProvider
+                                            await sellingPetProvider
+                                                .requestSold(sellingPetProvider
                                                     .sellingPetList[index].id!);
                                             if (sellingPetProvider
                                                     .makeSoldUtil ==
@@ -391,7 +396,6 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
                         children: [
                           Spacer(),
                           Container(
-                            
                             color: ColorUtil.primaryColor,
                             child: Center(
                               child: Padding(
@@ -528,7 +532,7 @@ class _DonateSaleFeedState extends State<DonateSaleFeed>
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => SellingPet(choice: choice),
+          builder: (context) => SellingPetForm(choice: choice),
         ),
       );
       // _CategoriesOfPet(context, choice);

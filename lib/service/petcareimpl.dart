@@ -164,33 +164,33 @@ class PetCareImpl extends PetCareService {
     }
   }
 
-  @override
-  Future<FireResponse> getShopItems() async {
-    if (await Helper.checkInterNetConnection()) {
-      try {
-        var response =
-            await FirebaseFirestore.instance.collection("ShopDetails").get();
-        final items = response.docs;
-        List<Shop> shopItemsList = [];
-        if (items.isNotEmpty) {
-          for (var shopItemDetails in items) {
-            Shop shop = Shop.fromJson(shopItemDetails.data());
-            shop.id = shopItemDetails.id;
-            shopItemsList.add(shop);
+  // @override
+  // Future<FireResponse> getShopItems() async {
+  //   if (await Helper.checkInterNetConnection()) {
+  //     try {
+  //       var response =
+  //           await FirebaseFirestore.instance.collection("ShopDetails").get();
+  //       final items = response.docs;
+  //       List<Shop> shopItemsList = [];
+  //       if (items.isNotEmpty) {
+  //         for (var shopItemDetails in items) {
+  //           Shop shop = Shop.fromJson(shopItemDetails.data());
+  //           shop.id = shopItemDetails.id;
+  //           shopItemsList.add(shop);
 
-            // shopItemsList.add(Shop.fromJson(shopItemDetails.data()));
-          }
-        }
-        return FireResponse(
-            statusUtil: StatusUtil.success, data: shopItemsList);
-      } catch (e) {
-        return FireResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
-      }
-    } else {
-      return FireResponse(
-          statusUtil: StatusUtil.error, errorMessage: noInternetStr);
-    }
-  }
+  //           // shopItemsList.add(Shop.fromJson(shopItemDetails.data()));
+  //         }
+  //       }
+  //       return FireResponse(
+  //           statusUtil: StatusUtil.success, data: shopItemsList);
+  //     } catch (e) {
+  //       return FireResponse(statusUtil: StatusUtil.error, errorMessage: "$e");
+  //     }
+  //   } else {
+  //     return FireResponse(
+  //         statusUtil: StatusUtil.error, errorMessage: noInternetStr);
+  //   }
+  // }
 
   @override
   Future<FireResponse> getAdoptDetails() async {
@@ -723,8 +723,7 @@ class PetCareImpl extends PetCareService {
 
   @override
   Future<ApiResponse> userLogin(SignUp signUp) async {
-    ApiResponse response =
-        await api.post(BASEURL + loginUrl, signUp.toJson());
+    ApiResponse response = await api.post(BASEURL + loginUrl, signUp.toJson());
     return response;
   }
 
@@ -732,6 +731,13 @@ class PetCareImpl extends PetCareService {
   Future<ApiResponse> saveUserDetails(SignUp signUp, String token) async {
     ApiResponse response =
         await api.post(BASEURL + saveUserUrl, signUp.toJson(), token: token);
+    return response;
+  }
+
+  @override
+  Future<ApiResponse> saveShopItems(Shop shop, String token) async {
+    ApiResponse response = await api
+        .post(BASEURL + saveShopeItemsUrl, shop.toJson(), token: token);
     return response;
   }
 
@@ -836,21 +842,31 @@ class PetCareImpl extends PetCareService {
         await api.get(BASEURL + getPaymentsDetailsApi, token: token);
     return response;
   }
-   @override
-  Future<ApiResponse> makeAdopted(Adopt adopt, int id, String token) async{
+
+  @override
+  Future<ApiResponse> makeAdopted(Adopt adopt, int id, String token) async {
     ApiResponse response = await api.post(
         BASEURL + makeAdoptedUrl + id.toString(), adopt.toJson(),
         token: token);
     return response;
   }
-  
+
   @override
-  Future<ApiResponse> makeSold(Adopt adopt, int id, String token)async {
-     ApiResponse response = await api.post(
+  Future<ApiResponse> makeSold(Adopt adopt, int id, String token) async {
+    ApiResponse response = await api.post(
         BASEURL + makeSoldUrl + id.toString(), adopt.toJson(),
         token: token);
     return response;
   }
+
+  @override
+  Future<ApiResponse> favouriteShopItems(
+      SignUp signUp, String token) async {
+    ApiResponse response =
+        await api.post(BASEURL + makeFavouriteShopItem,  signUp.email,  token: token);
+    return response;
+  }
+  
 
   @override
   Future<ApiResponse> approvelDonated(
@@ -901,6 +917,13 @@ class PetCareImpl extends PetCareService {
   }
 
   @override
+  Future<ApiResponse> getShopItems(String token) async {
+    ApiResponse response =
+        await api.get(BASEURL + getShopItemUrl, token: token);
+    return response;
+  }
+
+  @override
   Future<ApiResponse> getSellingPet(String token) async {
     ApiResponse response =
         await api.get(BASEURL + getSellingPetUrl, token: token);
@@ -942,7 +965,8 @@ class PetCareImpl extends PetCareService {
 
   @override
   Future<ApiResponse> getDiseases(String token) async {
-    ApiResponse response = await api.get(BASEURL + getSymptomesApi, token: token);
+    ApiResponse response =
+        await api.get(BASEURL + getSymptomesApi, token: token);
     return response;
   }
 
@@ -1096,9 +1120,18 @@ class PetCareImpl extends PetCareService {
   }
 
   @override
-  Future<ApiResponse> deleteSellingPetById(int id, String token) async {
+  Future<ApiResponse> deleteSellingPetById(
+      Adopt adopt, int id, String token) async {
     ApiResponse response = await api
         .delete(BASEURL + deleteSellingPetUrl + id.toString(), token: token);
+    return response;
+  }
+
+  @override
+  Future<ApiResponse> deleteShopItemsMyId(
+      Shop shop, int id, String token) async {
+    ApiResponse response = await api
+        .delete(BASEURL + deleteShopItemUrl + id.toString(), token: token);
     return response;
   }
 
@@ -1107,5 +1140,5 @@ class PetCareImpl extends PetCareService {
     throw UnimplementedError();
   }
   
- 
+
 }

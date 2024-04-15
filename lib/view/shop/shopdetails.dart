@@ -348,7 +348,7 @@ class _ShopDetailsState extends State<ShopDetails> {
                   Helper.snackBar("Already on the Cart", context);
                   Navigator.pop(context);
                 } else {
-                  shopProvider.updateCartList(widget.shop!);
+                  // shopProvider.updateCartList(widget.shop!);
                   Navigator.of(context).pop();
                   Helper.snackBar(
                     "Your item has been successfully saved to your cart. Please visit My Cart.",

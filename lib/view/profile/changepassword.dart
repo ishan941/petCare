@@ -4,7 +4,7 @@ import 'package:project_petcare/helper/textStyle_const.dart';
 import 'package:project_petcare/helper/string_const.dart';
 import 'package:project_petcare/practice/pincodefeld.dart';
 import 'package:project_petcare/provider/petcareprovider.dart';
-import 'package:project_petcare/view/profile/phonenumber.dart';
+import 'package:project_petcare/view/profile/verifications/phonenumber.dart';
 import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
 

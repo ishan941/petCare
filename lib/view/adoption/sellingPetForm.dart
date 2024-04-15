@@ -18,16 +18,16 @@ import 'package:project_petcare/view/loader.dart';
 import 'package:project_petcare/view/shop/shoptextform.dart';
 import 'package:provider/provider.dart';
 
-class SellingPet extends StatefulWidget {
+class SellingPetForm extends StatefulWidget {
   final String? choice;
   final Adopt? adopt;
-  SellingPet({this.choice, this.adopt, Key? key}) : super(key: key);
+  SellingPetForm({this.choice, this.adopt, Key? key}) : super(key: key);
 
   @override
-  State<SellingPet> createState() => _SellingPetState();
+  State<SellingPetForm> createState() => _SellingPetState();
 }
 
-class _SellingPetState extends State<SellingPet> {
+class _SellingPetState extends State<SellingPetForm> {
   String getTitle() {
     if (widget.choice == 'Sale') {
       return 'Sale';
@@ -250,42 +250,59 @@ class _SellingPetState extends State<SellingPet> {
                                 pickImageFromGalleryForDonate(
                                     sellingPetProvider);
                               },
-                              child: Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * .3,
-                                  width: MediaQuery.of(context).size.width,
-                                  decoration: BoxDecoration(
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    height:
+                                        MediaQuery.of(context).size.height * .3,
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all()),
+                                    child: ClipRRect(
                                       borderRadius: BorderRadius.circular(10),
-                                      border: Border.all()),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: sellingPetProvider.imageUrl != null
-                                        ? Image.network(
-                                            sellingPetProvider.imageUrl!,
-                                            fit: BoxFit.cover,
-                                          )
-                                        : sellingPetProvider.image != null
-                                            ? Image.file(
-                                                File(sellingPetProvider
-                                                    .image!.path),
-                                                fit: BoxFit.cover,
-                                              )
-                                            : Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Icon(
-                                                    Icons
-                                                        .photo_library_outlined,
-                                                    color: ColorUtil
-                                                        .secondaryColor,
-                                                    size: 60,
-                                                  ),
-                                                  Text(
-                                                      "Uploade image from Gallery")
-                                                ],
-                                              ),
-                                  )),
+                                      child: sellingPetProvider.image != null
+                                          ? Image.file(File(
+                                              sellingPetProvider.image!.path))
+                                          : sellingPetProvider.imageUrl != null
+                                              ? Image.network(
+                                                  sellingPetProvider.imageUrl!,
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : sellingPetProvider.image != null
+                                                  ? Image.file(
+                                                      File(sellingPetProvider
+                                                          .image!.path),
+                                                      fit: BoxFit.cover,
+                                                    )
+                                                  : Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Icon(
+                                                          Icons
+                                                              .photo_library_outlined,
+                                                          color: ColorUtil
+                                                              .secondaryColor,
+                                                          size: 60,
+                                                        ),
+                                                        Text(
+                                                            "Uploade image from Gallery")
+                                                      ],
+                                                    ),
+                                    ),
+                                  ),
+                                  Container(height: 100,
+                                  color: Colors.red,),
+                                  IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        Icons.clear_sharp,
+                                        color: Colors.red,
+                                      ))
+                                ],
+                              ),
                             ),
                             const SizedBox(
                               height: 20,

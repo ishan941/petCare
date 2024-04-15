@@ -14,11 +14,11 @@ import 'package:project_petcare/provider/signUpProvider.dart';
 import 'package:project_petcare/view/edit/adminedit.dart';
 import 'package:project_petcare/view/adoption/approve_selling.dart';
 import 'package:project_petcare/view/adoption/approvel.dart';
-import 'package:project_petcare/view/profile/about_us.dart';
+import 'package:project_petcare/view/profile/verifications/about_us.dart';
 import 'package:project_petcare/view/profile/changepassword.dart';
 import 'package:project_petcare/view/form_collections.dart';
 import 'package:project_petcare/view/profile/mypayments.dart';
-import 'package:project_petcare/view/profile/myprofile.dart';
+import 'package:project_petcare/view/profile/user_details.dart';
 import 'package:project_petcare/view/profile/paymentlist.dart';
 import 'package:project_petcare/view/shop/mycart.dart';
 import 'package:project_petcare/view/shop/shopFavourite.dart';
@@ -112,9 +112,9 @@ class _AccountState extends State<Account> {
                           _general(context),
                           _preferences(context, petCareProvider),
                           // petCareProvider.userEmail == "admin@gmail.com"
-                              // ? 
-                              _forms(context, petCareProvider)
-                              // : SizedBox()
+                          // ?
+                          _forms(context, petCareProvider)
+                          // : SizedBox()
                         ],
                       ),
                     ],
@@ -140,7 +140,7 @@ class _AccountState extends State<Account> {
         ),
       ),
       width: MediaQuery.of(context).size.width * .9,
-      height: MediaQuery.of(context).size.height * .1,
+      // height: MediaQuery.of(context).size.height * .1,
       child: Padding(
         padding: EdgeInsets.symmetric(
           vertical: 10,
@@ -639,153 +639,7 @@ class _AccountState extends State<Account> {
       ),
     );
   }
-
-  Widget _formCollection(
-      BuildContext context, PetCareProvider petCareProvider) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FormCollection()));
-        },
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Container(
-            height: 50,
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                        decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 244, 54, 54)
-                                .withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(30)),
-                        height: 45,
-                        width: 45,
-                        child: Icon(Icons.logout_outlined)),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    Text(
-                      "Form Collection",
-                      style: TextStyle(fontSize: 16, color: Colors.black),
-                    ),
-                    Spacer(),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 18,
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _payments(BuildContext context, PetCareProvider petCareProvider) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Payments()));
-        },
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Container(
-            height: 50,
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                        decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 244, 54, 54)
-                                .withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(30)),
-                        height: 45,
-                        width: 45,
-                        child: Icon(Icons.logout_outlined)),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    Text(
-                      "Pay ments",
-                      style: TextStyle(fontSize: 16, color: Colors.black),
-                    ),
-                    Spacer(),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 18,
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _formsEdit(BuildContext context, PetCareProvider petCareProvider) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => EditListUi()));
-        },
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Container(
-            height: 50,
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                        decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 244, 54, 54)
-                                .withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(30)),
-                        height: 45,
-                        width: 45,
-                        child: Icon(Icons.logout_outlined)),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    Text(
-                      "Edit Forms",
-                      style: TextStyle(fontSize: 16, color: Colors.red),
-                    ),
-                    Spacer(),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 18,
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _logOut(BuildContext context, PetCareProvider petCareProvider) {
+   Widget _logOut(BuildContext context, PetCareProvider petCareProvider) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: InkWell(
@@ -832,6 +686,152 @@ class _AccountState extends State<Account> {
     );
   }
 
+  Widget _formCollection(
+      BuildContext context, PetCareProvider petCareProvider) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => FormCollection()));
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                            color: ColorUtil.primaryColor.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(30)),
+                        height: 45,
+                        width: 45,
+                        child: Icon(Icons.format_line_spacing_sharp)),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      "Form Collection",
+                      style: TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _payments(BuildContext context, PetCareProvider petCareProvider) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Payments()));
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 244, 177, 54)
+                                .withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(30)),
+                        height: 45,
+                        width: 45,
+                        child: Icon(Icons.payment_rounded)),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      "Pay ments",
+                      style: TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _formsEdit(BuildContext context, PetCareProvider petCareProvider) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => EditListUi()));
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 244, 57, 54)
+                                .withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(30)),
+                        height: 45,
+                        width: 45,
+                        child: Icon(Icons.edit_note_sharp)),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      "Edit Forms",
+                      style: TextStyle(fontSize: 16, color: Colors.red),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+ 
+
   Widget _approveDonate(BuildContext context, PetCareProvider petCareProvider) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
@@ -852,18 +852,18 @@ class _AccountState extends State<Account> {
                   children: [
                     Container(
                         decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 244, 54, 54)
+                            color: Color.fromARGB(255, 54, 244, 95)
                                 .withOpacity(0.5),
                             borderRadius: BorderRadius.circular(30)),
                         height: 45,
                         width: 45,
-                        child: Icon(Icons.logout_outlined)),
+                        child: Icon(Icons.format_indent_decrease_rounded)),
                     SizedBox(
                       width: 15,
                     ),
                     Text(
                       "Approvel Donation",
-                      style: TextStyle(fontSize: 16, color: Colors.red),
+                      style: TextStyle(fontSize: 16),
                     ),
                     Spacer(),
                     Icon(
@@ -901,18 +901,18 @@ class _AccountState extends State<Account> {
                   children: [
                     Container(
                         decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 244, 54, 54)
+                            color: Color.fromARGB(255, 54, 139, 244)
                                 .withOpacity(0.5),
                             borderRadius: BorderRadius.circular(30)),
                         height: 45,
                         width: 45,
-                        child: Icon(Icons.logout_outlined)),
+                        child: Icon(Icons.format_indent_decrease_rounded)),
                     SizedBox(
                       width: 15,
                     ),
                     Text(
                       "Approve Selling",
-                      style: TextStyle(fontSize: 16, color: Colors.red),
+                      style: TextStyle(fontSize: 16),
                     ),
                     Spacer(),
                     Icon(

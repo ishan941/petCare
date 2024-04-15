@@ -1,9 +1,5 @@
-
-
-import 'package:equatable/equatable.dart';
-
-class Shop extends Equatable{
-  String? id;
+class Shop {
+  int? id;
   String? product;
   String? condition;
   String? location;
@@ -11,46 +7,62 @@ class Shop extends Equatable{
   String? description;
   String? price;
   String? negotiable;
-  bool isSold = false;
+  String? type;
+  String? userPhone;
+  bool isSold;
+  bool isFavourite;
+  bool isCart;
 
-  Shop(
-      {this.product,
-      this.condition,
-      this.location,
-      this.images,
-      this.description,
-      this.price,
-      this.id,
-      this.negotiable,
-      this.isSold = false,
-      });
+  Shop({
+    this.id,
+    this.product,
+    this.condition,
+    this.location,
+    this.images,
+    this.description,
+    this.price,
+    this.negotiable,
+    this.type,
+    this.userPhone,
+    this.isSold = false, // Initialize isSold here
+    this.isFavourite = false,
+    this.isCart = false // Initialize isSold here
+  });
 
-  Shop.fromJson(Map<String, dynamic> json) {
-    product = json['product'];
-    condition = json['condition'];
-    location = json['location'];
-    images = json['images'];
-    description = json['description'];
-    price = json['price'];
-    negotiable = json['negotiable'];
-    isSold = false;
-    id = json['id'];
-  }
+  Shop.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        product = json['product'],
+        condition = json['condition'],
+        location = json['location'],
+        images = json['images'],
+        description = json['description'],
+        price = json['price'],
+        negotiable = json['negotiable'],
+        type = json['type'],
+        userPhone = json['userPhone'],
+        isSold = json['isSold'] ?? false, // Initialize isSold here
+        isFavourite = json['favourite'] ?? false, // Initialize isSold here
+        isCart = json['cart'] ?? false; // Initialize isSold here
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['product'] = this.product;
-    data['condition'] = this.condition;
-    data['location'] = this.location;
-    data['images'] = this.images;
-    data['description'] = this.description;
-    data['price'] = this.price;
-    data['negotiable'] = this.negotiable;
-    data['id'] = this.id;
+    final Map<String, dynamic> data = {};
+    data['id'] = id;
+    data['product'] = product;
+    data['condition'] = condition;
+    data['location'] = location;
+    data['images'] = images;
+    data['description'] = description;
+    data['price'] = price;
+    data['negotiable'] = negotiable;
+    data['userPhone'] = userPhone;
+    data['type'] = type;
+    data['sold'] = isSold;
+    data['cart'] = isCart;
+    data['favourite'] = isFavourite;
     return data;
   }
-  
-@override
-  List<Object?> get props => [product, id,condition,location,images,description,price,negotiable];
- 
+
+  static List<Shop> listFromJson(List<dynamic> jsonList) {
+    return jsonList.map((json) => Shop.fromJson(json)).toList();
+  }
 }

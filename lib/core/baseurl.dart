@@ -1,4 +1,4 @@
-const BASEURL = "https://287a-2400-1a00-b060-229-b8b4-b5df-d616-dad6.ngrok-free.app/api/v1/";
+const BASEURL = "https://5964-103-90-147-95.ngrok-free.app/api/v1/";
 
 const saveUserUrl = "saveUsers";
 const loginUrl = "login";
@@ -7,6 +7,7 @@ const newpasswordApi = "newPassword";
 
 const saveSellingPetUrl ="saveSellingPet";
 const saveDonatedPetUrl ="saveDonatedPet";
+const saveShopeItemsUrl="saveShopItem";
 const savePaymentDetailsApi ="saveOrder";
 const saveCategoryUrl = "addCategory";
 const saveAdsImageUrl = "saveAdsImage";
@@ -17,6 +18,7 @@ const saveSymptomesApi = "recommendDisease";
 
 const getCategoryUrl ="getCategory";
 const getAllCategoryApi="getAllPetByCategory/";
+const getShopItemUrl="getShopItem";
 const getDonationPetUrl ="getDonationPet";
 const getSellingPetUrl ="getSellingPet";
 const getAdsImageUrl ="getAdsImage";
@@ -34,14 +36,16 @@ const declineDonatedUrl = "declineDonationPet/";
 const declineSellingUrl = "declineSellingPet/";
 const makeSoldUrl = "sold/";
 const makeAdoptedUrl = "donated/";
+const makeFavouriteShopItem = "addFavourite/";
 
 const deleteCategoryUrl = "deleteCategory/";
 const deleteAdsUrl = "deleteAds/";
 const deleteOurServiceUrl = "deleteService/";
 
 const deleteOurServiceDtoUrl = "deleteAds/";
-const deleteSellingPetUrl = "deleteSellingPet/{id}";
-const deleteDonatedPetUrl = "deleteDonatedPet/{id}";
+const deleteSellingPetUrl = "deleteSellingPet/";
+const deleteDonatedPetUrl = "deleteDonatedPet/";
+const deleteShopItemUrl = "deleteShopItem/";
 
 const getUsernameUrl = "username";
 const getUserFullNameUrl = "userFullName";

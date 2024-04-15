@@ -434,7 +434,6 @@ class SellingPetProvider extends ChangeNotifier {
         setMakeAdoptedUtil(StatusUtil.success);
         getDonatePetData();
         notifyListeners();
-        
       } else {
         errorMessage = response.errorMessage;
         setMakeAdoptedUtil(StatusUtil.error);
@@ -455,7 +454,7 @@ class SellingPetProvider extends ChangeNotifier {
           await petCareService.approvelDonated(adopt, id, token);
       if (response.statusUtil == StatusUtil.success) {
         setGetApproveDonatedPet(StatusUtil.success);
-        getSellingPetData();
+        getApproveDonationPet();
       } else {
         errorMessage = response.errorMessage;
         setGetApproveDonatedPet(StatusUtil.error);
@@ -508,6 +507,24 @@ class SellingPetProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> declineSellingPet(int id) async {
+    if (_deleteSellingPetUtil != StatusUtil.loading) {
+      setDeleteSellingPetUtil(StatusUtil.loading);
+    }
+    Adopt adopt = Adopt(id: id);
+    try {
+      ApiResponse response =
+          await petCareService.deleteSellingPetById(adopt, id, token);
+      if (response.statusUtil == StatusUtil.success) {
+        setDeleteSellingPetUtil(StatusUtil.success);
+        getSellingPetData();
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+      setDeleteSellingPetUtil(StatusUtil.error);
+    }
+  }
+
   deleteDonatedPet(int id) async {
     if (_deleteDonatedPetUtil != StatusUtil.loading) {
       setDeletedDonatedPetUtil(StatusUtil.loading);
@@ -519,6 +536,7 @@ class SellingPetProvider extends ChangeNotifier {
       if (response.statusUtil == StatusUtil.success) {
         setDeletedDonatedPetUtil(StatusUtil.success);
         getDonatePetData();
+        getMyPet();
       } else {
         errorMessage = response.errorMessage;
         setDeletedDonatedPetUtil(StatusUtil.error);
@@ -526,6 +544,28 @@ class SellingPetProvider extends ChangeNotifier {
     } catch (e) {
       errorMessage = e.toString();
       setDeletedDonatedPetUtil(StatusUtil.error);
+    }
+  }
+
+  deleteSellingPet(int id) async {
+    if (_deleteSellingPetUtil != StatusUtil.loading) {
+      setDeleteSellingPetUtil(StatusUtil.loading);
+    }
+    Adopt adopt = Adopt(id: id);
+    try {
+      ApiResponse response =
+          await petCareService.deleteSellingPetById(adopt, id, token);
+      if (response.statusUtil == StatusUtil.success) {
+        setDeleteSellingPetUtil(StatusUtil.success);
+        getDonatePetData();
+        getMyPet();
+      } else {
+        errorMessage = response.errorMessage;
+        setDeleteSellingPetUtil(StatusUtil.error);
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+      setDeleteSellingPetUtil(StatusUtil.error);
     }
   }
 
@@ -698,41 +738,6 @@ class SellingPetProvider extends ChangeNotifier {
   //     setDeletedDonatedPetUtil(StatusUtil.error);
   //   }
   // }
-
-  Future<void> declineSellingPet(int id) async {
-    if (_deleteSellingPetUtil != StatusUtil.loading) {
-      setDeleteSellingPetUtil(StatusUtil.loading);
-    }
-    try {
-      ApiResponse response =
-          await petCareService.deleteSellingPetById(id, token);
-      if (response.statusUtil == StatusUtil.success) {
-        setDeleteSellingPetUtil(StatusUtil.success);
-        getSellingPetData();
-      }
-    } catch (e) {
-      errorMessage = e.toString();
-      setDeleteSellingPetUtil(StatusUtil.error);
-    }
-  }
-
-  Future<void> deleteSellingPet(int id) async {
-    if (_deleteSellingPetUtil != StatusUtil.loading) {
-      setDeleteSellingPetUtil(StatusUtil.loading);
-    }
-    try {
-      ApiResponse response =
-          await petCareService.deleteSellingPetById(id, token);
-      if (response.statusUtil == StatusUtil.success) {
-        setDeleteSellingPetUtil(StatusUtil.success);
-        getSellingPetData();
-      }
-    } catch (e) {
-      errorMessage = e.toString();
-      setDeleteSellingPetUtil(StatusUtil.error);
-    }
-  }
-
   Future<void> getTokenFromSharedPref() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token') ?? "";

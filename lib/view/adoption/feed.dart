@@ -315,7 +315,7 @@ class _NewsFeedState extends State<NewsFeed> {
        Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => SellingPet(choice: choice),
+          builder: (context) => SellingPetForm(choice: choice),
         ),
       );
       // _CategoriesOfPet(context, choice);

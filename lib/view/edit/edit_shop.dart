@@ -26,7 +26,8 @@ class _EditShopState extends State<EditShop> {
 
   getShopItems() async {
     var shopProvider = Provider.of<ShopProvider>(context, listen: false);
-    await shopProvider.itemDetails();
+    shopProvider.getTokenFromSharedPref();
+    await shopProvider.getShopItems();
   }
 
   @override
@@ -105,15 +106,9 @@ class _EditShopState extends State<EditShop> {
                             //       showAboutDialog(context: context);
 
                             //     }, icon: Icon(Icons.delete)),
-                            GestureDetector(
-                                onTap: () {
-                                  // showDeleteConfirmationDialog(
-                                  //     context,
-                                  //     shop,
-                                  //     categoriesProvider
-                                  //         .categoriesList[index].id!);
-                                },
-                                child: Icon(Icons.delete))
+                           IconButton(onPressed: (){
+                            showDeleteConfirmationDialog(context, shopProvider, shopProvider.shopItemsList[index].id!);
+                           }, icon: Icon(Icons.delete))
                           ],
                         )
                       ],
@@ -129,7 +124,7 @@ class _EditShopState extends State<EditShop> {
   }
 
   Future<void> showDeleteConfirmationDialog(BuildContext context,
-      CategoriesProvider categoriesProvider, int id) async {
+      ShopProvider shopProvider, int id) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -152,10 +147,10 @@ class _EditShopState extends State<EditShop> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await categoriesProvider.deleteCategory(id).then((value) async {
-                  if (categoriesProvider.deleteCategoriesUtil ==
+                await shopProvider.deleteShopItem(id).then((value) async {
+                  if (shopProvider.deleteShopItemUtil ==
                       StatusUtil.success) {
-                    await categoriesProvider.getCategoriesData();
+                    await shopProvider.getShopItems();
                     Helper.snackBar("Delete Successfully", context);
                     Navigator.pop(context);
                   }
